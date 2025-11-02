@@ -1,0 +1,81 @@
+[gd_scene load_steps=10 format=3 uid="uid://bn7ogxdhuxjnk"]
+
+[ext_resource type="Texture2D" uid="uid://bwb8ybxwy10aa" path="res://assets/title/frame_0001.png" id="1_8ln24"]
+[ext_resource type="Script" uid="uid://swjdj1706oen" path="res://scripts/main_menu.gd" id="1_oa1go"]
+[ext_resource type="Texture2D" uid="uid://bshu4iuw8o5ig" path="res://assets/title/frame_0002.png" id="2_rtw2f"]
+[ext_resource type="Texture2D" uid="uid://dvepq58qr7d66" path="res://assets/title/frame_0003.png" id="3_oa1go"]
+[ext_resource type="Texture2D" uid="uid://ckqse08kxorj7" path="res://assets/title/frame_0004.png" id="4_tbmy8"]
+[ext_resource type="Texture2D" uid="uid://bjqwldqwv8j16" path="res://assets/title/frame_0005.png" id="5_jk1qb"]
+[ext_resource type="FontFile" uid="uid://du36gdi4bwn5e" path="res://fonts/PixelOperator8-Bold.ttf" id="7_tbmy8"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5dd4i"]
+animations = [{
+"frames": [{
+"duration": 2.0,
+"texture": ExtResource("1_8ln24")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_rtw2f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_oa1go")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_tbmy8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_jk1qb")
+}],
+"loop": true,
+"name": &"title",
+"speed": 10.0
+}]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jk1qb"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 11
+
+[node name="main-menu" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_oa1go")
+
+[node name="background_color" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 799.0
+offset_bottom = 797.0
+
+[node name="Title_animation" type="AnimatedSprite2D" parent="."]
+position = Vector2(400, 208)
+scale = Vector2(1.2149999, 1.3066667)
+sprite_frames = SubResource("SpriteFrames_5dd4i")
+animation = &"title"
+autoplay = "title"
+frame = 2
+frame_progress = 0.18118006
+
+[node name="start_button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 292.0
+offset_top = 410.0
+offset_right = 505.0
+offset_bottom = 487.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_hover_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("7_tbmy8")
+theme_override_font_sizes/font_size = 41
+theme_override_styles/normal = SubResource("StyleBoxFlat_jk1qb")
+text = "START"
