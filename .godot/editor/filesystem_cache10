@@ -1,0 +1,17 @@
+63f7b34db8d8cdea90c76aacccf841ec
+::res://::1762069814
+icon.svg::CompressedTexture2D::8109955437204401948::1762065919::1762069815::1::::<><><>0<>0<>b83e4f9772629319d28abd8ad4ec19fb<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
+::res://assets/::1762066604
+::res://assets/title/::1762066609
+frame_0001.png::CompressedTexture2D::3934686230385438004::1762037696::1762069815::1::::<><><>0<>0<>b5168cf3e640482c355a1b18b0894c79<>res://.godot/imported/frame_0001.png-60c657ed948d14f7ad5a413bc0ce2852.ctex::
+frame_0002.png::CompressedTexture2D::3665537093461826766::1762037696::1762069815::1::::<><><>0<>0<>c31af08508da86201ec2ed07323f218c<>res://.godot/imported/frame_0002.png-c97fad89b68f99439f7e5a65757a21a2.ctex::
+frame_0003.png::CompressedTexture2D::8642426233518194457::1762037696::1762069815::1::::<><><>0<>0<>1260165d7d114c77978c50acf77ed10c<>res://.godot/imported/frame_0003.png-d531897bfb0fe84eb70a20f484a5beaa.ctex::
+frame_0004.png::CompressedTexture2D::5508861261424857846::1762037696::1762069815::1::::<><><>0<>0<>f4240a72166608ab1221dcad930215f4<>res://.godot/imported/frame_0004.png-c8958893aef352af93a8e33a88390c85.ctex::
+frame_0005.png::CompressedTexture2D::3052505921390036815::1762037696::1762069815::1::::<><><>0<>0<>cc458f03ed0f0ab2f30cb1652176e8a0<>res://.godot/imported/frame_0005.png-07fbe98a168fbc66e52c4b252ef7f5bf.ctex::
+::res://fonts/::1762066895
+PixelOperator8-Bold.ttf::FontFile::8622734613741144468::1709819950::1762069815::1::::<><><>0<>0<>62fb4dad57d6c970ae136ff17b8f0660<>res://.godot/imported/PixelOperator8-Bold.ttf-9816dd625e887c8fd6e5634edb7d64db.fontdata::
+PixelOperator8.ttf::FontFile::5056907943688014021::1709819950::1762069815::1::::<><><>0<>0<>66bca7943261b6af09cb30d57e684900<>res://.godot/imported/PixelOperator8.ttf-47b55c2c6c56107c69fa972cdf12fcff.fontdata::
+::res://scenes/::1762069503
+main_menu.tscn::PackedScene::3365797704796750848::1762069503::0::1::::<><><>0<>0<><>::uid://bwb8ybxwy10aa::::res://assets/title/frame_0001.png<>uid://swjdj1706oen::::res://scripts/main_menu.gd<>uid://bshu4iuw8o5ig::::res://assets/title/frame_0002.png<>uid://dvepq58qr7d66::::res://assets/title/frame_0003.png<>uid://ckqse08kxorj7::::res://assets/title/frame_0004.png<>uid://bjqwldqwv8j16::::res://assets/title/frame_0005.png<>uid://du36gdi4bwn5e::::res://fonts/PixelOperator8-Bold.ttf
+::res://scripts/::1762069361
+main_menu.gd::GDScript::1309367820754153685::1762069361::0::1::::<>Control<><>0<>0<><>::
