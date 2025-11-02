@@ -1,0 +1,63 @@
+[gd_scene load_steps=8 format=3 uid="uid://ct1wxyer7vow1"]
+
+[ext_resource type="FontFile" uid="uid://du36gdi4bwn5e" path="res://fonts/PixelOperator8-Bold.ttf" id="1_lbl31"]
+[ext_resource type="Script" uid="uid://5472v0lm1nfk" path="res://scripts/choose_grid_size.gd" id="1_vjn7y"]
+[ext_resource type="Texture2D" uid="uid://douajqs02guic" path="res://assets/buttons/back.png" id="2_or1gr"]
+[ext_resource type="AudioStream" uid="uid://csjm46gsdq2em" path="res://music/button-sound.mp3" id="4_wea5t"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0cp0e"]
+atlas = ExtResource("2_or1gr")
+region = Rect2(0, 0, 128, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vjn7y"]
+atlas = ExtResource("2_or1gr")
+region = Rect2(0, 132.364, 128, 60)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wea5t"]
+atlas = ExtResource("2_or1gr")
+region = Rect2(0, 63.768925, 128, 68.59506)
+
+[node name="choose-grid-size" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vjn7y")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 499.0
+offset_bottom = 499.0
+
+[node name="label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 24.0
+offset_right = 428.0
+offset_bottom = 54.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_lbl31")
+theme_override_font_sizes/font_size = 26
+text = "Choose Grid Size"
+
+[node name="buttons" type="Node" parent="."]
+
+[node name="Button" type="Button" parent="buttons"]
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="backbutton" type="TextureButton" parent="buttons"]
+offset_left = 349.0
+offset_top = 418.0
+offset_right = 477.0
+offset_bottom = 482.0
+texture_normal = SubResource("AtlasTexture_0cp0e")
+texture_pressed = SubResource("AtlasTexture_vjn7y")
+texture_hover = SubResource("AtlasTexture_wea5t")
+
+[node name="click" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_wea5t")
+
+[connection signal="pressed" from="buttons/backbutton" to="." method="_on_backbutton_pressed"]

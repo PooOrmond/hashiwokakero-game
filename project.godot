@@ -14,13 +14,22 @@ config/name="Hashiwokakero"
 run/main_scene="uid://bn7ogxdhuxjnk"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 
+[audio]
+
+buses/default_bus_layout=""
+
+[autoload]
+
+Music="*res://scenes/music.tscn"
+
 [display]
 
-window/size/viewport_width=800
-window/size/viewport_height=800
+window/size/viewport_width=500
+window/size/viewport_height=500
 window/stretch/mode="canvas_items"
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
