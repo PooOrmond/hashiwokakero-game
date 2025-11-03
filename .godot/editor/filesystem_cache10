@@ -1,5 +1,5 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1762142705
+::res://::1762146365
 ::res://assets/::1762079125
 ::res://assets/animation/::1762079125
 ::res://assets/animation/title/::1762079126
@@ -8,7 +8,10 @@ frame_0002.png::CompressedTexture2D::3665537093461826766::1762037696::1762079126
 frame_0003.png::CompressedTexture2D::8642426233518194457::1762037696::1762079126::1::::<><><>0<>0<>ac22055da6c5abc25aa2bdde8e4daeb7<>res://.godot/imported/frame_0003.png-fd9a359cc6acb2cdec865d708b455d47.ctex::
 frame_0004.png::CompressedTexture2D::5508861261424857846::1762037696::1762079126::1::::<><><>0<>0<>46ca71cf5d12372746acf20ad69888d8<>res://.godot/imported/frame_0004.png-ce4ecb63fa5caeb029a0afb186aa0641.ctex::
 frame_0005.png::CompressedTexture2D::3052505921390036815::1762037696::1762079126::1::::<><><>0<>0<>d14bf807509cd459473f51f6c64f5082<>res://.godot/imported/frame_0005.png-2582e1f87a7c393c9063c62f77dfc0b3.ctex::
-::res://assets/buttons/::1762145184
+::res://assets/buttons/::1762147430
+3x3.png::CompressedTexture2D::2413160259536486578::1762146339::1762146365::1::::<><><>0<>0<>25990351ec6e1d1b84b50abec06a4b64<>res://.godot/imported/3x3.png-8e577bd14ea1d22a20cbf5d780cbe1ea.ctex::
+7x7.png::CompressedTexture2D::1255391217448539090::1762146987::1762146996::1::::<><><>0<>0<>9f29a46a6ba49f6e7b575d5e5e7631b4<>res://.godot/imported/7x7.png-9a35d4c9d811a29ade6591cbaddc624c.ctex::
+10x10.png::CompressedTexture2D::648948633558298794::1762147427::1762147433::1::::<><><>0<>0<>d8aba7c1222247e0250ff076af88fefa<>res://.godot/imported/10x10.png-694a60102c46fab8a7ea8b378e770052.ctex::
 back.png::CompressedTexture2D::8183210358590403810::1762143450::1762143457::1::::<><><>0<>0<>045dd7bef1e12c80a699cab75581f7d3<>res://.godot/imported/back.png-74bd71e7f00daa8274baf03e71bbb73e.ctex::
 go.png::CompressedTexture2D::422952863187534856::1762145177::1762145185::1::::<><><>0<>0<>abc9c30ef1db4800199ec28fa545c239<>res://.godot/imported/go.png-f987bf3f06cbb75371dd4fec011ed319.ctex::
 ::res://fonts/::1762069815
@@ -17,10 +20,10 @@ PixelOperator8.ttf::FontFile::5056907943688014021::1709819950::1762069815::1::::
 ::res://music/::1762079734
 button-sound.mp3::AudioStreamMP3::6055601982908950384::1762075708::1762075726::1::::<><><>0<>0<>1cb9e6c8f921d103a5173bd0bba405d3<>res://.godot/imported/button-sound.mp3-c44906b2ad6cc0b1cba2eea9c9debf5c.mp3str::
 time_for_adventure.mp3::AudioStreamMP3::2383746643613050573::1710396512::1762072046::1::::<><><>0<>0<>a3763e39f8bcc6f4fd926f385b0f2bda<>res://.godot/imported/time_for_adventure.mp3-2780301e92dd6fe7ff9355bb3f98cf7c.mp3str::
-::res://scenes/::1762144101
-choose_grid_size.tscn::PackedScene::6161481332770674822::1762144101::0::1::::<><><>0<>0<><>::uid://du36gdi4bwn5e::::res://fonts/PixelOperator8-Bold.ttf<>uid://5472v0lm1nfk::::res://scripts/choose_grid_size.gd<>uid://douajqs02guic::::res://assets/buttons/back.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3
+::res://scenes/::1762147184
+choose_grid_size.tscn::PackedScene::6161481332770674822::1762147184::0::1::::<><><>0<>0<><>::uid://du36gdi4bwn5e::::res://fonts/PixelOperator8-Bold.ttf<>uid://5472v0lm1nfk::::res://scripts/choose_grid_size.gd<>uid://douajqs02guic::::res://assets/buttons/back.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://r5ed0c7adayk::::res://assets/buttons/7x7.png
 main_menu.tscn::PackedScene::3365797704796750848::1762143284::0::1::::<><><>0<>0<><>::uid://bwb8ybxwy10aa::::res://assets/animation/title/frame_0001.png<>uid://ctonvtmcl34jn::::res://scripts/main_menu.gd<>uid://bshu4iuw8o5ig::::res://assets/animation/title/frame_0002.png<>uid://dvepq58qr7d66::::res://assets/animation/title/frame_0003.png<>uid://ckqse08kxorj7::::res://assets/animation/title/frame_0004.png<>uid://bjqwldqwv8j16::::res://assets/animation/title/frame_0005.png<>uid://ga48bqc4kllg::::res://assets/buttons/go.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3
 music.tscn::PackedScene::266733096418495037::1762078024::0::1::::<><><>0<>0<><>::uid://87x7usufpsyn::::res://music/time_for_adventure.mp3
-::res://scripts/::1762080456
-choose_grid_size.gd::GDScript::2167524566339990296::1762080456::0::1::::<>Control<><>0<>0<><>::
+::res://scripts/::1762147184
+choose_grid_size.gd::GDScript::2167524566339990296::1762147184::0::1::::<>Control<><>0<>0<><>::
 main_menu.gd::GDScript::6136158524231631747::1762079349::0::1::::<>Control<><>0<>0<><>::

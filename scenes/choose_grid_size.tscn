@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://ct1wxyer7vow1"]
+[gd_scene load_steps=16 format=3 uid="uid://ct1wxyer7vow1"]
 
 [ext_resource type="FontFile" uid="uid://du36gdi4bwn5e" path="res://fonts/PixelOperator8-Bold.ttf" id="1_lbl31"]
 [ext_resource type="Script" uid="uid://5472v0lm1nfk" path="res://scripts/choose_grid_size.gd" id="1_vjn7y"]
 [ext_resource type="Texture2D" uid="uid://douajqs02guic" path="res://assets/buttons/back.png" id="2_or1gr"]
 [ext_resource type="AudioStream" uid="uid://csjm46gsdq2em" path="res://music/button-sound.mp3" id="4_wea5t"]
+[ext_resource type="Texture2D" uid="uid://r5ed0c7adayk" path="res://assets/buttons/7x7.png" id="4_wi0rm"]
+[ext_resource type="Texture2D" uid="uid://jimdbdhjt2o1" path="res://assets/buttons/10x10.png" id="5_wi0rm"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0cp0e"]
 atlas = ExtResource("2_or1gr")
@@ -16,6 +18,30 @@ region = Rect2(0, 132.364, 128, 60)
 [sub_resource type="AtlasTexture" id="AtlasTexture_wea5t"]
 atlas = ExtResource("2_or1gr")
 region = Rect2(0, 63.768925, 128, 68.59506)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ymgre"]
+atlas = ExtResource("4_wi0rm")
+region = Rect2(0, 0, 256, 120)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tm0ii"]
+atlas = ExtResource("4_wi0rm")
+region = Rect2(0, 272.107, 256, 111)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3ofwx"]
+atlas = ExtResource("4_wi0rm")
+region = Rect2(0, 136.857, 256, 119)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_su6u0"]
+atlas = ExtResource("5_wi0rm")
+region = Rect2(0, 0, 256, 120.29192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dgb78"]
+atlas = ExtResource("5_wi0rm")
+region = Rect2(0, 271.9199, 256, 112.08011)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_egd32"]
+atlas = ExtResource("5_wi0rm")
+region = Rect2(0, 136.07153, 256, 120.077515)
 
 [node name="choose-grid-size" type="Control"]
 layout_mode = 3
@@ -44,10 +70,6 @@ text = "Choose Grid Size"
 
 [node name="buttons" type="Node" parent="."]
 
-[node name="Button" type="Button" parent="buttons"]
-offset_right = 8.0
-offset_bottom = 8.0
-
 [node name="backbutton" type="TextureButton" parent="buttons"]
 offset_left = 637.0
 offset_top = 700.0
@@ -57,7 +79,27 @@ texture_normal = SubResource("AtlasTexture_0cp0e")
 texture_pressed = SubResource("AtlasTexture_vjn7y")
 texture_hover = SubResource("AtlasTexture_wea5t")
 
+[node name="7x7-button" type="TextureButton" parent="buttons"]
+offset_left = 261.0
+offset_top = 168.0
+offset_right = 517.0
+offset_bottom = 288.0
+texture_normal = SubResource("AtlasTexture_ymgre")
+texture_pressed = SubResource("AtlasTexture_tm0ii")
+texture_hover = SubResource("AtlasTexture_3ofwx")
+
+[node name="10x10-button" type="TextureButton" parent="buttons"]
+offset_left = 263.0
+offset_top = 318.0
+offset_right = 519.0
+offset_bottom = 438.0
+texture_normal = SubResource("AtlasTexture_su6u0")
+texture_pressed = SubResource("AtlasTexture_dgb78")
+texture_hover = SubResource("AtlasTexture_egd32")
+
 [node name="click" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_wea5t")
 
 [connection signal="pressed" from="buttons/backbutton" to="." method="_on_backbutton_pressed"]
+[connection signal="pressed" from="buttons/7x7-button" to="." method="_on_x_7_button_pressed"]
+[connection signal="pressed" from="buttons/10x10-button" to="." method="_on_x_10_button_pressed"]
