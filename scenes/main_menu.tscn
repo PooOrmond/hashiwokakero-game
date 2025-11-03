@@ -54,7 +54,7 @@ script = ExtResource("1_oa1go")
 [node name="background_color" type="ColorRect" parent="."]
 layout_mode = 0
 offset_right = 795.0
-offset_bottom = 800.0
+offset_bottom = 647.0
 
 [node name="Title_animation" type="AnimatedSprite2D" parent="."]
 position = Vector2(392.93756, 164)

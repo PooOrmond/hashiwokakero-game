@@ -25,7 +25,7 @@ Music="*res://scenes/music.tscn"
 [display]
 
 window/size/viewport_width=800
-window/size/viewport_height=800
+window/size/viewport_height=650
 window/stretch/mode="canvas_items"
 
 [rendering]
