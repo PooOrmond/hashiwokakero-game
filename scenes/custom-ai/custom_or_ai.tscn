@@ -1,0 +1,105 @@
+[gd_scene load_steps=16 format=3 uid="uid://3n8oen7qme81"]
+
+[ext_resource type="Script" uid="uid://c03f7k46a6lfi" path="res://scripts/custom_or_ai.gd" id="1_h6s48"]
+[ext_resource type="FontFile" uid="uid://du36gdi4bwn5e" path="res://fonts/PixelOperator8-Bold.ttf" id="2_72bbo"]
+[ext_resource type="Texture2D" uid="uid://douajqs02guic" path="res://assets/buttons/back.png" id="3_5c384"]
+[ext_resource type="Texture2D" uid="uid://c5cnsgf4r7q88" path="res://assets/buttons/custom-made.png" id="4_72bbo"]
+[ext_resource type="AudioStream" uid="uid://csjm46gsdq2em" path="res://music/button-sound.mp3" id="4_cwjsp"]
+[ext_resource type="Texture2D" uid="uid://beeg7quk56ine" path="res://assets/buttons/made-ai.png" id="5_5c384"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sqi1k"]
+atlas = ExtResource("3_5c384")
+region = Rect2(0, 0, 128.50667, 63.723907)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iarva"]
+atlas = ExtResource("3_5c384")
+region = Rect2(0, 132.364, 128, 60)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5o8ge"]
+atlas = ExtResource("3_5c384")
+region = Rect2(0, 63.768925, 128, 68.59506)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5c384"]
+atlas = ExtResource("4_72bbo")
+region = Rect2(0, 0, 256, 120.22332)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cwjsp"]
+atlas = ExtResource("4_72bbo")
+region = Rect2(0, 271.9088, 256, 112.09119)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kw4ry"]
+atlas = ExtResource("4_72bbo")
+region = Rect2(0, 136.54643, 256, 119.98387)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7eqrt"]
+atlas = ExtResource("5_5c384")
+region = Rect2(0, 0, 256, 119.59741)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_baai1"]
+atlas = ExtResource("5_5c384")
+region = Rect2(0, 272.0205, 256, 111.97949)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qe0ns"]
+atlas = ExtResource("5_5c384")
+region = Rect2(0, 136.26982, 256, 120.10353)
+
+[node name="custom-or-ai" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_h6s48")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 798.0
+offset_bottom = 648.0
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 249.0
+offset_top = 35.0
+offset_right = 525.0
+offset_bottom = 82.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_72bbo")
+theme_override_font_sizes/font_size = 46
+text = "CHOOSE"
+
+[node name="buttons" type="Node" parent="."]
+
+[node name="backbutton" type="TextureButton" parent="buttons"]
+offset_left = 638.0
+offset_top = 556.0
+offset_right = 766.0
+offset_bottom = 620.0
+texture_normal = SubResource("AtlasTexture_sqi1k")
+texture_pressed = SubResource("AtlasTexture_iarva")
+texture_hover = SubResource("AtlasTexture_5o8ge")
+
+[node name="custom-made" type="TextureButton" parent="buttons"]
+offset_left = 257.0
+offset_top = 144.0
+offset_right = 513.0
+offset_bottom = 264.0
+texture_normal = SubResource("AtlasTexture_5c384")
+texture_pressed = SubResource("AtlasTexture_cwjsp")
+texture_hover = SubResource("AtlasTexture_kw4ry")
+
+[node name="ai-made" type="TextureButton" parent="buttons"]
+offset_left = 260.0
+offset_top = 296.0
+offset_right = 516.0
+offset_bottom = 415.0
+texture_normal = SubResource("AtlasTexture_7eqrt")
+texture_pressed = SubResource("AtlasTexture_baai1")
+texture_hover = SubResource("AtlasTexture_qe0ns")
+
+[node name="click" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_cwjsp")
+
+[connection signal="pressed" from="buttons/backbutton" to="." method="_on_backbutton_pressed"]
+[connection signal="pressed" from="buttons/custom-made" to="." method="_on_custommade_pressed"]
+[connection signal="pressed" from="buttons/ai-made" to="." method="_on_aimade_pressed"]

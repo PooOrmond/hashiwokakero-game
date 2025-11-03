@@ -1,3 +1,13 @@
-res://scenes/main_menu.tscn
-res://scenes/choose_grid_size.tscn
-res://scripts/choose_grid_size.gd
+res://scenes/grids/7x_7.tscn
+res://scripts/10x_10.gd
+res://scripts/grid-maker/grid2.gd
+res://scenes/grids/10x_10.tscn
+res://scripts/custom_or_ai_2.gd
+res://scenes/grids/15x_15.tscn
+res://scripts/grid-maker/grid3.gd
+res://scripts/custom-ai/custom_or_ai_3.gd
+res://scenes/custom-ai/custom_or_ai-3.tscn
+res://scripts/grid-maker/grid.gd
+res://scripts/7x_7.gd
+res://scenes/island.tscn
+res://scripts/island.gd
