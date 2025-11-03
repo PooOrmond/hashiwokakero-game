@@ -34,15 +34,15 @@ animations = [{
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tbmy8"]
 atlas = ExtResource("8_jk1qb")
-region = Rect2(0, 0, 128, 64)
+region = Rect2(0, 0, 255.859, 124)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jk1qb"]
 atlas = ExtResource("8_jk1qb")
-region = Rect2(0, 131.512, 128, 60)
+region = Rect2(0.12200928, 267.66193, 256.07178, 116.29901)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5dd4i"]
 atlas = ExtResource("8_jk1qb")
-region = Rect2(0, 60.463, 128, 70)
+region = Rect2(-0.100883484, 134.60185, 255.84363, 124.80553)
 
 [node name="main-menu" type="Control"]
 layout_mode = 3
@@ -53,12 +53,12 @@ script = ExtResource("1_oa1go")
 
 [node name="background_color" type="ColorRect" parent="."]
 layout_mode = 0
-offset_right = 502.0
-offset_bottom = 502.0
+offset_right = 795.0
+offset_bottom = 800.0
 
 [node name="Title_animation" type="AnimatedSprite2D" parent="."]
-position = Vector2(254.00002, 131)
-scale = Vector2(0.79374987, 0.7733334)
+position = Vector2(392.93756, 164)
+scale = Vector2(1.2568749, 1.2133334)
 sprite_frames = SubResource("SpriteFrames_5dd4i")
 animation = &"title"
 autoplay = "title"
@@ -67,10 +67,10 @@ frame_progress = 0.18118006
 
 [node name="TextureButton" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 184.0
-offset_top = 289.0
-offset_right = 312.0
-offset_bottom = 353.0
+offset_left = 257.0
+offset_top = 392.0
+offset_right = 512.0
+offset_bottom = 521.0
 texture_normal = SubResource("AtlasTexture_tbmy8")
 texture_pressed = SubResource("AtlasTexture_jk1qb")
 texture_hover = SubResource("AtlasTexture_5dd4i")
