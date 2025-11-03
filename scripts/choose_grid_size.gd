@@ -12,3 +12,6 @@ func _on_x_7_button_pressed() -> void:
 
 func _on_x_10_button_pressed() -> void:
 	click.play()
+
+func _on_x_15_button_pressed() -> void:
+	click.play()
