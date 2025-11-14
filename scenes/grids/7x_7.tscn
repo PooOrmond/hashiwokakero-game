@@ -1,10 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://dnycnmbxodojj"]
+[gd_scene load_steps=8 format=3 uid="uid://dnycnmbxodojj"]
 
 [ext_resource type="Script" uid="uid://ckkwx1ern17kb" path="res://scripts/7x_7.gd" id="1_yl70g"]
 [ext_resource type="Script" uid="uid://djl4ye2ku6vt6" path="res://scripts/grid-maker/grid.gd" id="2_ijxyn"]
-[ext_resource type="Texture2D" uid="uid://1jye1akeb16e" path="res://assets/islands/7x7/0.png" id="3_s4tbd"]
 [ext_resource type="Texture2D" uid="uid://douajqs02guic" path="res://assets/buttons/back.png" id="3_whvp7"]
-[ext_resource type="Texture2D" uid="uid://ifi86yaawkq6" path="res://assets/buttons/island.png" id="4_ijxyn"]
 [ext_resource type="AudioStream" uid="uid://csjm46gsdq2em" path="res://music/button-sound.mp3" id="4_s4tbd"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xvr6y"]
@@ -19,18 +17,6 @@ region = Rect2(0, 132.364, 128, 60)
 atlas = ExtResource("3_whvp7")
 region = Rect2(0, 63.768925, 128, 68.59506)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_whvp7"]
-atlas = ExtResource("4_ijxyn")
-region = Rect2(73.36847, 22.32537, 124.557495, 109.95838)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_s4tbd"]
-atlas = ExtResource("4_ijxyn")
-region = Rect2(84.75693, 269.20966, 114.082306, 104.888885)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ri4o3"]
-atlas = ExtResource("4_ijxyn")
-region = Rect2(73.89995, 147.54306, 123.62422, 109.2872)
-
 [node name="7x7" type="Node2D"]
 script = ExtResource("1_yl70g")
 
@@ -41,7 +27,6 @@ offset_bottom = 653.0
 [node name="grid" type="Node2D" parent="."]
 position = Vector2(170, 150)
 script = ExtResource("2_ijxyn")
-island_texture = ExtResource("3_s4tbd")
 
 [node name="buttons" type="Node" parent="."]
 
@@ -54,17 +39,7 @@ texture_normal = SubResource("AtlasTexture_xvr6y")
 texture_pressed = SubResource("AtlasTexture_afmex")
 texture_hover = SubResource("AtlasTexture_jinvy")
 
-[node name="hintbutton" type="TextureButton" parent="buttons"]
-offset_left = 635.0
-offset_top = 24.0
-offset_right = 759.0
-offset_bottom = 133.0
-texture_normal = SubResource("AtlasTexture_whvp7")
-texture_pressed = SubResource("AtlasTexture_s4tbd")
-texture_hover = SubResource("AtlasTexture_ri4o3")
-
 [node name="click" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_s4tbd")
 
 [connection signal="pressed" from="buttons/backbutton" to="." method="_on_backbutton_pressed"]
-[connection signal="pressed" from="buttons/hintbutton" to="grid" method="_on_hintbutton_pressed"]

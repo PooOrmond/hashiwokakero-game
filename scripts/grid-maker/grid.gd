@@ -73,24 +73,3 @@ func _generate_puzzle():
 		puzzle_data.append(island)
 
 	print("✅ Puzzle generated with", puzzle_data.size(), "islands")
-
-# ----------------------------
-# Hint button
-# ----------------------------
-func _on_hintbutton_pressed():
-	if hints_used >= puzzle_data.size():
-		print("No more hints!")
-		return
-
-	var island = puzzle_data[hints_used]
-	_highlight_island(island)
-	hints_used += 1
-
-func _highlight_island(island_data):
-	var hint_circle := ColorRect.new()
-	hint_circle.color = Color(1, 1, 0, 0.3)
-	hint_circle.size = Vector2(cell_size, cell_size)
-	hint_circle.position = island_data.pos * cell_size - hint_circle.size / 2
-	add_child(hint_circle)
-	await get_tree().create_timer(1.0).timeout
-	hint_circle.queue_free()

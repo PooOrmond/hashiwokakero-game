@@ -1,1 +1,2 @@
-res://scripts/choose_grid_size.gd
+res://scenes/grids/7x_7.tscn
+res://scripts/grid-maker/grid.gd
