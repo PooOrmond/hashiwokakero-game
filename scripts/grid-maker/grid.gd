@@ -1,75 +1,78 @@
 extends Node2D
 
-@export var cell_size: int = 64
 @export var grid_size: Vector2i = Vector2i(7, 7)
+@export var cell_size: int = 48
+@export var total_islands: int = 10
 
-var island_textures: Array[Texture2D] = []
-var puzzle_data = []
-var hints_used = 0
+var grid_offset := Vector2.ZERO
+var puzzle_data := []
 
 func _ready():
-	_load_island_textures()
-	_generate_puzzle()
+	_calculate_grid_offset()
+	generate_puzzle(total_islands)
 	queue_redraw()
 
-# ----------------------------
-# Load island textures (1.png–8.png)
-# ----------------------------
-func _load_island_textures():
-	island_textures.clear()
-	for i in range(1, 9):  # loads 1.png through 8.png
-		var path = "res://assets/islands/7x7/%d.png" % i
-		if ResourceLoader.exists(path):
-			island_textures.append(load(path))
-		else:
-			print("⚠️ Missing texture:", path)
-	print("✅ Loaded", island_textures.size(), "island textures")
+func _calculate_grid_offset():
+	var window_size = Vector2(800, 650)
+	var grid_pixel_size = Vector2(grid_size.x * cell_size, grid_size.y * cell_size)
+	grid_offset = (window_size - grid_pixel_size) / 2
 
-# ----------------------------
-# Draw grid lines
-# ----------------------------
 func _draw():
-	var w = grid_size.x
-	var h = grid_size.y
-	var s = cell_size
-	var line_color = Color(0, 0, 0)
-	for y in range(h + 1):
-		draw_line(Vector2(0, y * s), Vector2(w * s, y * s), line_color, 1)
-	for x in range(w + 1):
-		draw_line(Vector2(x * s, 0), Vector2(x * s, h * s), line_color, 1)
+	_draw_grid()
 
-# ----------------------------
-# Generate puzzle islands (on intersections)
-# ----------------------------
-func _generate_puzzle():
+func _draw_grid():
+	for y in range(grid_size.y + 1):
+		draw_line(grid_offset + Vector2(0, y * cell_size),
+				  grid_offset + Vector2(grid_size.x * cell_size, y * cell_size),
+				  Color(0,0,0), 1)
+	for x in range(grid_size.x + 1):
+		draw_line(grid_offset + Vector2(x * cell_size, 0),
+				  grid_offset + Vector2(x * cell_size, grid_size.y * cell_size),
+				  Color(0,0,0), 1)
+
+# ---------------- Create islands ------------------
+
+func generate_puzzle(total_islands: int):
+	# Clear previous islands
+	for isl in puzzle_data:
+		if "node" in isl and isl.node:
+			isl.node.queue_free()
 	puzzle_data.clear()
+	
+	var occupied_positions := []
 
-	# Example: fixed small pattern
-	var pattern = [
-		{ "pos": Vector2(1, 1), "bridges": 2 },
-		{ "pos": Vector2(3, 1), "bridges": 3 },
-		{ "pos": Vector2(5, 2), "bridges": 1 },
-		{ "pos": Vector2(2, 4), "bridges": 4 },
-		{ "pos": Vector2(4, 5), "bridges": 2 },
-		{ "pos": Vector2(6, 6), "bridges": 3 }
-	]
+	while puzzle_data.size() < total_islands:
+		# Pick random position inside grid (avoid borders)
+		var pos = Vector2(randi() % (grid_size.x - 2) + 1,
+						  randi() % (grid_size.y - 2) + 1)
+		if pos in occupied_positions:
+			continue
+		occupied_positions.append(pos)
 
-	for island in pattern:
-		var sprite := Sprite2D.new()
-
-		var bridge_num = clamp(island.bridges, 1, island_textures.size())
-		var texture = island_textures[bridge_num - 1]
-		sprite.texture = texture
-
-		# Position on intersection:
-		# Intersections occur at multiples of cell_size
-		sprite.position = island.pos * cell_size
-
-		# Optional: scale down slightly
-		sprite.scale = Vector2(0.8, 0.8)
+		# Create Sprite2D for this island
+		var sprite = Sprite2D.new()
+		sprite.position = grid_offset + pos * cell_size
 		sprite.centered = true
+		sprite.scale = Vector2(0.6, 0.6)
+
+		# ✅ Give it a visible appearance (simple colored square)
+		var img = Image.new()
+		img.create(48, 48, false, Image.FORMAT_RGBA8)
+		img.fill(Color(0.2, 0.6, 0.8))  # light blue
+		var tex = ImageTexture.new()
+		tex.create_from_image(img)
+		sprite.texture = tex
 
 		add_child(sprite)
+
+		# Store island data
+		var island = {
+			"pos": pos,
+			"node": sprite,
+			"bridges_target": randi_range(1, 4),
+			"connected_bridges": 0
+		}
 		puzzle_data.append(island)
 
-	print("✅ Puzzle generated with", puzzle_data.size(), "islands")
+	print("✅ Puzzle generated with ", puzzle_data.size(), " islands")
+	queue_redraw()

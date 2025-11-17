@@ -84,37 +84,41 @@ text = "Choose Grid Size"
 [node name="buttons" type="Node" parent="."]
 
 [node name="backbutton" type="TextureButton" parent="buttons"]
-offset_left = 640.0
-offset_top = 552.0
-offset_right = 768.0
-offset_bottom = 616.0
+offset_left = 616.0
+offset_top = 537.0
+offset_right = 744.0
+offset_bottom = 601.0
+scale = Vector2(1.2, 1.2)
 texture_normal = SubResource("AtlasTexture_0cp0e")
 texture_pressed = SubResource("AtlasTexture_vjn7y")
 texture_hover = SubResource("AtlasTexture_wea5t")
 
 [node name="7x7-button" type="TextureButton" parent="buttons"]
-offset_left = 264.0
-offset_top = 124.0
-offset_right = 520.0
-offset_bottom = 244.0
+offset_left = 271.0
+offset_top = 143.0
+offset_right = 527.0
+offset_bottom = 263.0
+scale = Vector2(0.9, 0.9)
 texture_normal = SubResource("AtlasTexture_ymgre")
 texture_pressed = SubResource("AtlasTexture_tm0ii")
 texture_hover = SubResource("AtlasTexture_3ofwx")
 
 [node name="10x10-button" type="TextureButton" parent="buttons"]
-offset_left = 260.0
-offset_top = 262.0
-offset_right = 516.0
-offset_bottom = 382.0
+offset_left = 274.0
+offset_top = 271.0
+offset_right = 530.0
+offset_bottom = 391.0
+scale = Vector2(0.9, 0.9)
 texture_normal = SubResource("AtlasTexture_su6u0")
 texture_pressed = SubResource("AtlasTexture_dgb78")
 texture_hover = SubResource("AtlasTexture_egd32")
 
 [node name="15x15-button" type="TextureButton" parent="buttons"]
-offset_left = 260.0
-offset_top = 404.0
-offset_right = 516.0
-offset_bottom = 524.0
+offset_left = 276.0
+offset_top = 398.0
+offset_right = 532.0
+offset_bottom = 518.0
+scale = Vector2(0.9, 0.9)
 texture_normal = SubResource("AtlasTexture_1t4pf")
 texture_pressed = SubResource("AtlasTexture_ntv6t")
 texture_hover = SubResource("AtlasTexture_ojemb")

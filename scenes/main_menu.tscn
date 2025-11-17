@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bn7ogxdhuxjnk"]
+[gd_scene load_steps=17 format=3 uid="uid://bn7ogxdhuxjnk"]
 
 [ext_resource type="Texture2D" uid="uid://bwb8ybxwy10aa" path="res://assets/animation/title/frame_0001.png" id="1_8ln24"]
 [ext_resource type="Script" uid="uid://ctonvtmcl34jn" path="res://scripts/main_menu.gd" id="1_oa1go"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://ckqse08kxorj7" path="res://assets/animation/title/frame_0004.png" id="4_tbmy8"]
 [ext_resource type="Texture2D" uid="uid://bjqwldqwv8j16" path="res://assets/animation/title/frame_0005.png" id="5_jk1qb"]
 [ext_resource type="Texture2D" uid="uid://ga48bqc4kllg" path="res://assets/buttons/go.png" id="8_jk1qb"]
+[ext_resource type="Texture2D" uid="uid://dmoa1l5wesx5k" path="res://assets/buttons/exit.png" id="9_jk1qb"]
 [ext_resource type="AudioStream" uid="uid://csjm46gsdq2em" path="res://music/button-sound.mp3" id="10_lgwnu"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_5dd4i"]
@@ -44,6 +45,18 @@ region = Rect2(0.12200928, 267.66193, 256.07178, 116.29901)
 atlas = ExtResource("8_jk1qb")
 region = Rect2(-0.100883484, 134.60185, 255.84363, 124.80553)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_lgwnu"]
+atlas = ExtResource("9_jk1qb")
+region = Rect2(0, 0, 256, 120.946)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_flqon"]
+atlas = ExtResource("9_jk1qb")
+region = Rect2(0, 270.70825, 256, 113.29175)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rcqid"]
+atlas = ExtResource("9_jk1qb")
+region = Rect2(0, 131.9799, 256, 125.170456)
+
 [node name="main-menu" type="Control"]
 layout_mode = 3
 anchors_preset = 0
@@ -68,9 +81,9 @@ frame_progress = 0.18118006
 [node name="TextureButton" type="TextureButton" parent="."]
 layout_mode = 0
 offset_left = 276.0
-offset_top = 392.0
+offset_top = 306.0
 offset_right = 531.0
-offset_bottom = 521.0
+offset_bottom = 430.0
 texture_normal = SubResource("AtlasTexture_tbmy8")
 texture_pressed = SubResource("AtlasTexture_jk1qb")
 texture_hover = SubResource("AtlasTexture_5dd4i")
@@ -79,4 +92,15 @@ texture_hover = SubResource("AtlasTexture_5dd4i")
 position = Vector2(184, 289)
 stream = ExtResource("10_lgwnu")
 
+[node name="exit" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 279.0
+offset_top = 449.0
+offset_right = 535.0
+offset_bottom = 569.0
+texture_normal = SubResource("AtlasTexture_lgwnu")
+texture_pressed = SubResource("AtlasTexture_flqon")
+texture_hover = SubResource("AtlasTexture_rcqid")
+
 [connection signal="pressed" from="TextureButton" to="." method="_on_texture_button_pressed"]
+[connection signal="pressed" from="exit" to="." method="_on_exit_pressed"]
