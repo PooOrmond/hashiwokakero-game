@@ -1,2 +1,4 @@
 res://scripts/7x_7.gd
 res://scenes/grids/7x_7.tscn
+res://assets/input/7x7/input-01.txt
+res://assets/output/7x7/output-01.txt
