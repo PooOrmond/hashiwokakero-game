@@ -1,5 +1,2 @@
-res://scripts/grid-maker/grid.gd
 res://scripts/7x_7.gd
 res://scenes/grids/7x_7.tscn
-res://scenes/grids/15x_15.tscn
-res://scenes/grids/10x_10.tscn
