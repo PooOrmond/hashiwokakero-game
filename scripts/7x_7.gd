@@ -12,6 +12,8 @@ var solution_bridges := []    # Internal solution
 var bridge_start_island = null
 var temp_bridge_line = null
 var current_puzzle_index := 1
+var hint_bridges := []        # Bridges shown as hints
+var puzzle_solved := false    # Track if puzzle is completed
 
 func _ready():
 	randomize()
@@ -21,6 +23,8 @@ func _ready():
 	var file_path = "res://assets/input/7x7/input-%02d.txt" % current_puzzle_index
 	load_custom_puzzle(file_path)
 	bridges.clear()
+	hint_bridges.clear()
+	puzzle_solved = false
 	queue_redraw()
 
 func _calculate_grid_offset():
@@ -31,6 +35,7 @@ func _calculate_grid_offset():
 func _draw():
 	_draw_grid()
 	_draw_bridges()
+	_draw_hint_bridges()
 	if temp_bridge_line:
 		draw_line(temp_bridge_line[0], temp_bridge_line[1], Color(0.2,0.8,0.2), 4)
 
@@ -48,8 +53,16 @@ func _draw_bridges():
 	for br in bridges:
 		_draw_bridge(br)
 
+func _draw_hint_bridges():
+	for br in hint_bridges:
+		_draw_hint_bridge(br)
+
 func _draw_bridge(br):
-	var color = Color(0.2,0.2,0.8,1.0)
+	var color = Color(0.2,0.2,0.8,1.0)  # Default blue color
+	# Change color to green if puzzle is solved
+	if puzzle_solved:
+		color = Color(0.2,0.8,0.2,1.0)  # Green for solved puzzle
+	
 	var width = 3
 	var start_pos = br.start_island.node.position - global_position
 	var end_pos = br.end_island.node.position - global_position
@@ -64,6 +77,35 @@ func _draw_bridge(br):
 	else:
 		draw_line(start_pos, end_pos, color, width)
 
+func _draw_hint_bridge(br):
+	var color = Color(1.0, 0.9, 0.1, 0.9)  # Bright yellow with high visibility
+	var width = 4  # Thicker than regular bridges
+	var start_pos = br.start_island.node.position - global_position
+	var end_pos = br.end_island.node.position - global_position
+
+	if br.count == 2:
+		if start_pos.x == end_pos.x: # vertical
+			draw_line(start_pos + Vector2(-4,0), end_pos + Vector2(-4,0), color, width)
+			draw_line(start_pos + Vector2(4,0), end_pos + Vector2(4,0), color, width)
+			# Add a glow effect
+			draw_line(start_pos + Vector2(-6,0), end_pos + Vector2(-6,0), Color(1.0, 1.0, 0.6, 0.4), width - 1)
+			draw_line(start_pos + Vector2(6,0), end_pos + Vector2(6,0), Color(1.0, 1.0, 0.6, 0.4), width - 1)
+		else: # horizontal
+			draw_line(start_pos + Vector2(0,-4), end_pos + Vector2(0,-4), color, width)
+			draw_line(start_pos + Vector2(0,4), end_pos + Vector2(0,4), color, width)
+			# Add a glow effect
+			draw_line(start_pos + Vector2(0,-6), end_pos + Vector2(0,-6), Color(1.0, 1.0, 0.6, 0.4), width - 1)
+			draw_line(start_pos + Vector2(0,6), end_pos + Vector2(0,6), Color(1.0, 1.0, 0.6, 0.4), width - 1)
+	else:
+		draw_line(start_pos, end_pos, color, width)
+		# Add a glow effect for single bridges
+		if start_pos.x == end_pos.x: # vertical
+			draw_line(start_pos + Vector2(-2,0), end_pos + Vector2(-2,0), Color(1.0, 1.0, 0.6, 0.4), width - 1)
+			draw_line(start_pos + Vector2(2,0), end_pos + Vector2(2,0), Color(1.0, 1.0, 0.6, 0.4), width - 1)
+		else: # horizontal
+			draw_line(start_pos + Vector2(0,-2), end_pos + Vector2(0,-2), Color(1.0, 1.0, 0.6, 0.4), width - 1)
+			draw_line(start_pos + Vector2(0,2), end_pos + Vector2(0,2), Color(1.0, 1.0, 0.6, 0.4), width - 1)
+
 # ---------------- Custom Puzzle Loader ------------------
 
 func load_custom_puzzle(file_path: String) -> void:
@@ -74,6 +116,8 @@ func load_custom_puzzle(file_path: String) -> void:
 	puzzle_data.clear()
 	bridges.clear()
 	solution_bridges.clear()
+	hint_bridges.clear()
+	puzzle_solved = false
 
 	var file = FileAccess.open(file_path, FileAccess.READ)
 	if file == null:
@@ -186,22 +230,30 @@ func _remove_bridge(br):
 	br.start_island.connected_bridges -= br.count
 	br.end_island.connected_bridges -= br.count
 	bridges.erase(br)
+	_check_puzzle_completion()
+	queue_redraw()
 
 func _try_place_bridge(a, b):
 	if a.pos.x != b.pos.x and a.pos.y != b.pos.y:
 		return
+	
+	# Check if this bridge would intersect with existing bridges
+	for br in bridges:
+		if _bridges_cross(a.node.position, b.node.position, br.start_pos, br.end_pos):
+			print("Cannot place bridge - would intersect with existing bridge")
+			return
+	
 	for br in bridges:
 		if (br.start_island == a and br.end_island == b) or (br.start_island == b and br.end_island == a):
 			if br.count < 2:
 				br.count += 1
 				a.connected_bridges += 1
 				b.connected_bridges += 1
+				_check_puzzle_completion()
 				return
 			else:
 				return
-	for br in bridges:
-		if _bridges_cross(a.node.position, b.node.position, br.start_pos, br.end_pos):
-			return
+	
 	bridges.append({
 		"start_island": a,
 		"end_island": b,
@@ -211,8 +263,353 @@ func _try_place_bridge(a, b):
 	})
 	a.connected_bridges += 1
 	b.connected_bridges += 1
+	_check_puzzle_completion()
 
-# ---------------- Solvability ------------------
+# Check if puzzle is successfully solved
+func _check_puzzle_completion():
+	var all_correct = true
+	for island in puzzle_data:
+		if island.connected_bridges != island.bridges_target:
+			all_correct = false
+			break
+	
+	if all_correct and _is_puzzle_solvable():
+		puzzle_solved = true
+		print("🎉 PUZZLE SOLVED! Congratulations!")
+		# Disable hint and solution buttons (you'll need to connect to your UI nodes)
+		_disable_hint_and_solution_buttons()
+	else:
+		puzzle_solved = false
+	
+	queue_redraw()
+
+# ---------------- Enhanced Hint System ------------------
+
+func _on_check_pressed() -> void:
+	if puzzle_solved:
+		print("Puzzle already solved! No hints needed.")
+		return
+	
+	click.play()
+	_generate_enhanced_hint()
+	queue_redraw()
+
+func _generate_enhanced_hint():
+	hint_bridges.clear()
+	
+	# Find islands that need more bridges
+	var islands_needing_bridges = []
+	for island in puzzle_data:
+		var needed_bridges = island.bridges_target - island.connected_bridges
+		if needed_bridges > 0:
+			islands_needing_bridges.append({
+				"island": island,
+				"needed": needed_bridges
+			})
+	
+	if islands_needing_bridges.is_empty():
+		print("✅ All islands have enough bridges!")
+		return
+	
+	# Sort by most needed bridges first
+	islands_needing_bridges.sort_custom(_sort_by_need)
+	
+	# Try to find the best hint - prioritize connections that need double bridges
+	for island_data in islands_needing_bridges:
+		var island = island_data["island"]
+		var needed = island_data["needed"]
+		
+		for neighbor in island.neighbors:
+			var neighbor_needed = neighbor.bridges_target - neighbor.connected_bridges
+			if neighbor_needed > 0:
+				# Check if bridge already exists
+				var bridge_exists = false
+				var existing_bridge_count = 0
+				for br in bridges:
+					if (br.start_island == island and br.end_island == neighbor) or (br.start_island == neighbor and br.end_island == island):
+						bridge_exists = true
+						existing_bridge_count = br.count
+						break
+				
+				# Check if this bridge would intersect with existing bridges
+				var would_intersect = false
+				if not bridge_exists:
+					for br in bridges:
+						if _bridges_cross(island.node.position, neighbor.node.position, br.start_pos, br.end_pos):
+							would_intersect = true
+							break
+				
+				if would_intersect:
+					continue  # Skip this hint as it would cause intersection
+				
+				# Calculate optimal bridge count for hint
+				var optimal_count = _calculate_optimal_bridge_count(island, neighbor, bridge_exists, existing_bridge_count)
+				
+				if optimal_count > 0:
+					hint_bridges.append({
+						"start_island": island,
+						"end_island": neighbor,
+						"start_pos": island.node.position,
+						"end_pos": neighbor.node.position,
+						"count": optimal_count
+					})
+					
+					if optimal_count == 2:
+						print("💡 DOUBLE BRIDGE HINT: Connect (%d,%d) to (%d,%d) with 2 bridges" % [
+							island.pos.x - 1, island.pos.y - 1,
+							neighbor.pos.x - 1, neighbor.pos.y - 1
+						])
+					else:
+						print("💡 HINT: Connect (%d,%d) to (%d,%d)" % [
+							island.pos.x - 1, island.pos.y - 1,
+							neighbor.pos.x - 1, neighbor.pos.y - 1
+						])
+					return
+	
+	# Fallback: if no optimal hints found, show any valid single bridge that doesn't intersect
+	for island_data in islands_needing_bridges:
+		var island = island_data["island"]
+		
+		for neighbor in island.neighbors:
+			# Check if bridge already exists at max capacity
+			var bridge_exists = false
+			for br in bridges:
+				if (br.start_island == island and br.end_island == neighbor) or (br.start_island == neighbor and br.end_island == island):
+					bridge_exists = true
+					break
+			
+			if not bridge_exists:
+				# Check if this bridge would intersect with existing bridges
+				var would_intersect = false
+				for br in bridges:
+					if _bridges_cross(island.node.position, neighbor.node.position, br.start_pos, br.end_pos):
+						would_intersect = true
+						break
+				
+				if not would_intersect:
+					hint_bridges.append({
+						"start_island": island,
+						"end_island": neighbor,
+						"start_pos": island.node.position,
+						"end_pos": neighbor.node.position,
+						"count": 1
+					})
+					print("💡 BASIC HINT: Connect (%d,%d) to (%d,%d)" % [
+						island.pos.x - 1, island.pos.y - 1,
+						neighbor.pos.x - 1, neighbor.pos.y - 1
+					])
+					return
+	
+	print("No hints available - try exploring different connections")
+
+func _sort_by_need(a, b):
+	# Sort by needed bridges (descending) so islands needing more bridges get priority
+	return a["needed"] > b["needed"]
+
+func _calculate_optimal_bridge_count(island, neighbor, bridge_exists: bool, existing_count: int) -> int:
+	var island_needed = island.bridges_target - island.connected_bridges
+	var neighbor_needed = neighbor.bridges_target - neighbor.connected_bridges
+	
+	# If no bridge exists and both islands need 2+ bridges, suggest double bridge
+	if not bridge_exists and island_needed >= 2 and neighbor_needed >= 2:
+		return 2
+	
+	# If single bridge exists and both islands still need 1+ bridge, suggest upgrading to double
+	if bridge_exists and existing_count == 1 and island_needed >= 1 and neighbor_needed >= 1:
+		return 2
+	
+	# If no bridge exists, suggest single bridge
+	if not bridge_exists:
+		return 1
+	
+	# Otherwise, no hint needed for this connection
+	return 0
+
+# ---------------- Robust Solution System ------------------
+
+func _on_solution_pressed() -> void:
+	if puzzle_solved:
+		print("Puzzle already solved!")
+		return
+	
+	click.play()
+	bridges.clear()
+	hint_bridges.clear()
+	# Load solution from corresponding output file
+	var output_file = "res://assets/output/7x7/output-%02d.txt" % current_puzzle_index
+	_load_solution_robust(output_file)
+	_check_puzzle_completion()
+	queue_redraw()
+
+func _load_solution_robust(file_path: String):
+	var file = FileAccess.open(file_path, FileAccess.READ)
+	if file == null:
+		print("Failed to open solution file: ", file_path)
+		return
+	
+	# Clear existing bridges
+	bridges.clear()
+	# Reset connected bridges count
+	for isl in puzzle_data:
+		isl.connected_bridges = 0
+	
+	# Read the solution file
+	var solution_grid = []
+	while not file.eof_reached():
+		var line = file.get_line().strip_edges()
+		if line.is_empty():
+			continue
+		solution_grid.append(line)
+	file.close()
+	
+	print("=== PARSING SOLUTION ===")
+	for i in range(solution_grid.size()):
+		print("%2d: %s" % [i, solution_grid[i]])
+	
+	# Create a map of all puzzle islands by their grid position
+	var island_map = {}
+	for island in puzzle_data:
+		var key = Vector2(island.pos.x - 1, island.pos.y - 1)  # Convert to 0-based
+		island_map[key] = island
+	
+	# Parse ALL horizontal bridges
+	for y in range(solution_grid.size()):
+		var row = solution_grid[y]
+		_parse_horizontal_bridges_complete(row, y, island_map)
+	
+	# Parse ALL vertical bridges
+	for x in range(solution_grid[0].length()):
+		_parse_vertical_bridges_complete(x, solution_grid, island_map)
+	
+	print("=== SOLUTION APPLIED ===")
+	print("Total bridges created: ", bridges.size())
+
+func _parse_horizontal_bridges_complete(row: String, y: int, island_map: Dictionary):
+	var x = 0
+	while x < row.length():
+		var cell = row[x]
+		
+		if cell == "-" or cell == "=":
+			# Found horizontal bridge - find the complete bridge segment
+			var bridge_start_x = x
+			var bridge_count = 2 if cell == "=" else 1
+			
+			# Find the complete bridge segment
+			var bridge_end_x = bridge_start_x
+			while bridge_end_x < row.length() and (row[bridge_end_x] == "-" or row[bridge_end_x] == "="):
+				bridge_end_x += 1
+			
+			# Now find islands on both ends of this bridge segment
+			var left_island = _find_island_horizontal(bridge_start_x - 1, y, -1, row, island_map)
+			var right_island = _find_island_horizontal(bridge_end_x, y, 1, row, island_map)
+			
+			if left_island and right_island:
+				print("Horizontal bridge: (%d,%d) to (%d,%d) count: %d" % [
+					left_island.pos.x - 1, left_island.pos.y - 1,
+					right_island.pos.x - 1, right_island.pos.y - 1,
+					bridge_count
+				])
+				_add_solution_bridge(left_island, right_island, bridge_count)
+			
+			# Skip the entire bridge segment
+			x = bridge_end_x
+		else:
+			x += 1
+
+func _find_island_horizontal(start_x: int, y: int, direction: int, row: String, island_map: Dictionary):
+	var x = start_x
+	while x >= 0 and x < row.length():
+		var cell = row[x]
+		
+		if cell >= "1" and cell <= "9":  # Found an island
+			var key = Vector2(x, y)
+			if island_map.has(key):
+				return island_map[key]
+		
+		# Stop if we hit something that's not a bridge or space
+		if cell != " " and cell != "-" and cell != "=" and cell != "|":
+			break
+		
+		x += direction
+	
+	return null
+
+func _parse_vertical_bridges_complete(x: int, grid: Array, island_map: Dictionary):
+	var y = 0
+	while y < grid.size():
+		if x < grid[y].length():
+			var cell = grid[y][x]
+			
+			if cell == "|":
+				# Found vertical bridge - find the complete bridge segment
+				var bridge_start_y = y
+				var bridge_end_y = bridge_start_y
+				
+				# Find the complete bridge segment
+				while bridge_end_y < grid.size() and x < grid[bridge_end_y].length() and grid[bridge_end_y][x] == "|":
+					bridge_end_y += 1
+				
+				# Now find islands on both ends of this bridge segment
+				var top_island = _find_island_vertical(x, bridge_start_y - 1, -1, grid, island_map)
+				var bottom_island = _find_island_vertical(x, bridge_end_y, 1, grid, island_map)
+				
+				if top_island and bottom_island:
+					print("Vertical bridge: (%d,%d) to (%d,%d) count: 1" % [
+						top_island.pos.x - 1, top_island.pos.y - 1,
+						bottom_island.pos.x - 1, bottom_island.pos.y - 1,
+						1
+					])
+					_add_solution_bridge(top_island, bottom_island, 1)
+				
+				# Skip the entire bridge segment
+				y = bridge_end_y
+			else:
+				y += 1
+		else:
+			y += 1
+
+func _find_island_vertical(x: int, start_y: int, direction: int, grid: Array, island_map: Dictionary):
+	var y = start_y
+	while y >= 0 and y < grid.size():
+		if x < grid[y].length():
+			var cell = grid[y][x]
+			
+			if cell >= "1" and cell <= "9":  # Found an island
+				var key = Vector2(x, y)
+				if island_map.has(key):
+					return island_map[key]
+			
+			# Stop if we hit something that's not a bridge or space
+			if cell != " " and cell != "|" and cell != "-" and cell != "=":
+				break
+		
+		y += direction
+	
+	return null
+
+func _add_solution_bridge(a, b, count: int):
+	# Check if bridge already exists
+	for br in bridges:
+		if (br.start_island == a and br.end_island == b) or (br.start_island == b and br.end_island == a):
+			# Update existing bridge count
+			var old_count = br.count
+			br.count = count
+			a.connected_bridges += (count - old_count)
+			b.connected_bridges += (count - old_count)
+			return
+	
+	# Create new bridge
+	bridges.append({
+		"start_island": a,
+		"end_island": b,
+		"start_pos": a.node.position,
+		"end_pos": b.node.position,
+		"count": count
+	})
+	a.connected_bridges += count
+	b.connected_bridges += count
+
+# ---------------- Solvability Check ------------------
 
 func _is_puzzle_solvable() -> bool:
 	if puzzle_data.size() == 0:
@@ -232,143 +629,6 @@ func _is_puzzle_solvable() -> bool:
 				stack.append(neighbor)
 	return visited.size() == puzzle_data.size()
 
-func _on_check_pressed() -> void:
-	click.play()
-	if _is_puzzle_solvable():
-		print("✅ Puzzle is already solvable!")
-	else:
-		print("⚠️ Puzzle is NOT solvable.")
-	queue_redraw()
-
-func _on_solution_pressed() -> void:
-	click.play()
-	bridges.clear()
-	# Load solution from corresponding output file
-	var output_file = "res://assets/output/7x7/output-%02d.txt" % current_puzzle_index
-	_load_solution_from_file(output_file)
-	queue_redraw()
-
-func _load_solution_from_file(file_path: String):
-	var file = FileAccess.open(file_path, FileAccess.READ)
-	if file == null:
-		print("Failed to open solution file: ", file_path)
-		return
-	
-	# Clear existing bridges
-	bridges.clear()
-	# Reset connected bridges count
-	for isl in puzzle_data:
-		isl.connected_bridges = 0
-	
-	# Read and parse the solution
-	var solution_grid = []
-	while not file.eof_reached():
-		var line = file.get_line().strip_edges()
-		if line.is_empty():
-			continue
-		solution_grid.append(line)
-	file.close()
-	
-	# Create a map of island positions for quick lookup
-	var island_map = {}
-	for isl in puzzle_data:
-		var key = "%d,%d" % [isl.pos.x - 1, isl.pos.y - 1]  # Convert to 0-based coordinates
-		island_map[key] = isl
-	
-	# Parse bridges by scanning the entire grid
-	for y in range(solution_grid.size()):
-		var row = solution_grid[y]
-		for x in range(row.length()):
-			var cell = row[x]
-			
-			# Check horizontal bridges to the right
-			if x < row.length() - 1:
-				var right_cell = row[x + 1]
-				if right_cell == "-" or right_cell == "=":
-					# Find the island to the left (current position or further left)
-					var left_island = _find_nearest_island_left(x, y, solution_grid, island_map)
-					# Find the island to the right (skip the bridge and find next island)
-					var right_island = _find_nearest_island_right(x + 2, y, solution_grid, island_map)
-					
-					if left_island and right_island:
-						var bridge_count = 2 if right_cell == "=" else 1
-						_add_solution_bridge(left_island, right_island, bridge_count)
-			
-			# Check vertical bridges below
-			if y < solution_grid.size() - 1:
-				var below_cell = solution_grid[y + 1][x] if x < solution_grid[y + 1].length() else " "
-				if below_cell == "|":
-					# Find the island above (current position or further up)
-					var top_island = _find_nearest_island_up(x, y, solution_grid, island_map)
-					# Find the island below (skip the bridge and find next island)
-					var bottom_island = _find_nearest_island_down(x, y + 2, solution_grid, island_map)
-					
-					if top_island and bottom_island:
-						_add_solution_bridge(top_island, bottom_island, 1)
-
-func _find_nearest_island_left(start_x: int, y: int, grid: Array, island_map: Dictionary) -> Variant:
-	for x in range(start_x, -1, -1):
-		var key = "%d,%d" % [x, y]
-		if island_map.has(key):
-			return island_map[key]
-	return null
-
-func _find_nearest_island_right(start_x: int, y: int, grid: Array, island_map: Dictionary) -> Variant:
-	for x in range(start_x, grid[y].length()):
-		var key = "%d,%d" % [x, y]
-		if island_map.has(key):
-			return island_map[key]
-	return null
-
-func _find_nearest_island_up(x: int, start_y: int, grid: Array, island_map: Dictionary) -> Variant:
-	for y in range(start_y, -1, -1):
-		if x >= grid[y].length():
-			continue
-		var key = "%d,%d" % [x, y]
-		if island_map.has(key):
-			return island_map[key]
-	return null
-
-func _find_nearest_island_down(x: int, start_y: int, grid: Array, island_map: Dictionary) -> Variant:
-	for y in range(start_y, grid.size()):
-		if x >= grid[y].length():
-			continue
-		var key = "%d,%d" % [x, y]
-		if island_map.has(key):
-			return island_map[key]
-	return null
-
-func _find_island_at_grid_pos(grid_x: int, grid_y: int):
-	# Convert from solution grid coordinates to our internal coordinates
-	# In the solution file, positions are 0-based without border
-	var pos = Vector2(grid_x + 1, grid_y + 1) # +1 for border offset
-	
-	for isl in puzzle_data:
-		if isl.pos == pos:
-			return isl
-	return null
-
-func _add_solution_bridge(a, b, count: int):
-	# Check if bridge already exists
-	for br in bridges:
-		if (br.start_island == a and br.end_island == b) or (br.start_island == b and br.end_island == a):
-			# Update existing bridge count
-			br.count = count
-			a.connected_bridges = count
-			b.connected_bridges = count
-			return
-	
-	# Create new bridge
-	bridges.append({
-		"start_island": a,
-		"end_island": b,
-		"start_pos": a.node.position,
-		"end_pos": b.node.position,
-		"count": count
-	})
-	a.connected_bridges += count
-	b.connected_bridges += count
-	
 func _on_backbutton_pressed() -> void:
 	click.play()
 	await get_tree().create_timer(0.1).timeout
@@ -380,3 +640,12 @@ func _bridges_cross(p1: Vector2, p2: Vector2, q1: Vector2, q2: Vector2) -> bool:
 	if p1.y == p2.y and q1.x == q2.x:
 		return (p1.y > min(q1.y,q2.y) and p1.y < max(q1.y,q2.y)) and (q1.x > min(p1.x,p2.x) and q1.x < max(p1.x,p2.x))
 	return false
+
+# ---------------- UI Control Functions ------------------
+
+func _disable_hint_and_solution_buttons():
+	# You'll need to implement this based on your UI structure
+	# For example, if you have reference to the buttons:
+	# $HintButton.disabled = true
+	# $SolutionButton.disabled = true
+	print("Hint and Solution buttons disabled - puzzle solved!")
