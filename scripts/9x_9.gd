@@ -566,7 +566,7 @@ func _on_hintbutton_pressed() -> void:
 	_generate_enhanced_hint()
 	queue_redraw()
 
-func _on_texture_button_pressed() -> void:
+func _on_solvebutton_pressed() -> void:
 	if puzzle_solved:
 		print("Puzzle already solved!")
 		return

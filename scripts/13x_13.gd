@@ -579,3 +579,7 @@ func _on_texture_button_pressed() -> void:
 	_load_solution_robust(output_file)
 	_check_puzzle_completion()
 	queue_redraw()
+
+
+func _on_solvebutton_pressed() -> void:
+	pass # Replace with function body.

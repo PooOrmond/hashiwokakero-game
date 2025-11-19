@@ -1,6 +1,6 @@
 [gd_scene load_steps=15 format=3 uid="uid://b2tbb8b1rk0bg"]
 
-[ext_resource type="Script" path="res://scripts/9x_9.gd" id="1_a7600"]
+[ext_resource type="Script" uid="uid://lyklbctpoyoc" path="res://scripts/9x_9.gd" id="1_a7600"]
 [ext_resource type="Texture2D" uid="uid://douajqs02guic" path="res://assets/buttons/back.png" id="3_kb5me"]
 [ext_resource type="Texture2D" uid="uid://nha5vkl3mqx5" path="res://assets/buttons/hint.png" id="3_os6ix"]
 [ext_resource type="Texture2D" uid="uid://bampjpg003esd" path="res://assets/buttons/solve.png" id="4_6xauk"]
@@ -85,3 +85,5 @@ texture_hover = SubResource("AtlasTexture_2hofp")
 stream = ExtResource("4_nnymg")
 
 [connection signal="pressed" from="buttons/backbutton" to="." method="_on_backbutton_pressed"]
+[connection signal="pressed" from="buttons/hint-button" to="." method="_on_hintbutton_pressed"]
+[connection signal="pressed" from="buttons/solve-button" to="." method="_on_solvebutton_pressed"]
