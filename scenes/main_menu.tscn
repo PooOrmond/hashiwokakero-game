@@ -30,7 +30,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"title",
-"speed": 10.0
+"speed": 14.0
 }]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tbmy8"]
@@ -75,8 +75,8 @@ scale = Vector2(1.325, 1.2133334)
 sprite_frames = SubResource("SpriteFrames_5dd4i")
 animation = &"title"
 autoplay = "title"
-frame = 2
-frame_progress = 0.18118006
+frame = 4
+frame_progress = 0.9556955
 
 [node name="TextureButton" type="TextureButton" parent="."]
 layout_mode = 0
