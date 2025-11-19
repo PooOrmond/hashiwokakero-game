@@ -285,15 +285,6 @@ func _check_puzzle_completion():
 
 # ---------------- Enhanced Hint System ------------------
 
-func _on_check_pressed() -> void:
-	if puzzle_solved:
-		print("Puzzle already solved! No hints needed.")
-		return
-	
-	click.play()
-	_generate_enhanced_hint()
-	queue_redraw()
-
 func _generate_enhanced_hint():
 	hint_bridges.clear()
 	
@@ -426,20 +417,6 @@ func _calculate_optimal_bridge_count(island, neighbor, bridge_exists: bool, exis
 	return 0
 
 # ---------------- Robust Solution System ------------------
-
-func _on_solution_pressed() -> void:
-	if puzzle_solved:
-		print("Puzzle already solved!")
-		return
-	
-	click.play()
-	bridges.clear()
-	hint_bridges.clear()
-	# Load solution from corresponding output file
-	var output_file = "res://assets/output/7x7/output-%02d.txt" % current_puzzle_index
-	_load_solution_robust(output_file)
-	_check_puzzle_completion()
-	queue_redraw()
 
 func _load_solution_robust(file_path: String):
 	var file = FileAccess.open(file_path, FileAccess.READ)
@@ -649,3 +626,28 @@ func _disable_hint_and_solution_buttons():
 	# $HintButton.disabled = true
 	# $SolutionButton.disabled = true
 	print("Hint and Solution buttons disabled - puzzle solved!")
+
+
+func _on_hintbutton_pressed() -> void:
+	if puzzle_solved:
+		print("Puzzle already solved! No hints needed.")
+		return
+	
+	click.play()
+	_generate_enhanced_hint()
+	queue_redraw()
+
+
+func _on_texture_button_pressed() -> void:
+	if puzzle_solved:
+		print("Puzzle already solved!")
+		return
+	
+	click.play()
+	bridges.clear()
+	hint_bridges.clear()
+	# Load solution from corresponding output file
+	var output_file = "res://assets/output/7x7/output-%02d.txt" % current_puzzle_index
+	_load_solution_robust(output_file)
+	_check_puzzle_completion()
+	queue_redraw()

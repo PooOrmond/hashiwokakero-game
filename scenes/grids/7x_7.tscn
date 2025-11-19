@@ -1,8 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://c03yflbko25d1"]
+[gd_scene load_steps=15 format=3 uid="uid://c03yflbko25d1"]
 
 [ext_resource type="Script" uid="uid://ckkwx1ern17kb" path="res://scripts/7x_7.gd" id="1_yl70g"]
 [ext_resource type="Texture2D" uid="uid://douajqs02guic" path="res://assets/buttons/back.png" id="3_whvp7"]
 [ext_resource type="AudioStream" uid="uid://csjm46gsdq2em" path="res://music/button-sound.mp3" id="4_s4tbd"]
+[ext_resource type="Texture2D" uid="uid://nha5vkl3mqx5" path="res://assets/buttons/hint.png" id="4_yl70g"]
+[ext_resource type="Texture2D" uid="uid://bampjpg003esd" path="res://assets/buttons/solve.png" id="5_ijxyn"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xvr6y"]
 atlas = ExtResource("3_whvp7")
@@ -15,6 +17,30 @@ region = Rect2(0, 132.364, 128, 60)
 [sub_resource type="AtlasTexture" id="AtlasTexture_jinvy"]
 atlas = ExtResource("3_whvp7")
 region = Rect2(0, 63.768925, 128, 68.59506)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ijxyn"]
+atlas = ExtResource("4_yl70g")
+region = Rect2(0, 0, 256, 119.527374)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_whvp7"]
+atlas = ExtResource("4_yl70g")
+region = Rect2(0, 270.1097, 256, 113.89029)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s4tbd"]
+atlas = ExtResource("4_yl70g")
+region = Rect2(0, 136.68521, 256, 119.740845)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ri4o3"]
+atlas = ExtResource("5_ijxyn")
+region = Rect2(0, 0, 256, 120.06871)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cpsan"]
+atlas = ExtResource("5_ijxyn")
+region = Rect2(0, 271.0268, 256, 112.973206)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_py16d"]
+atlas = ExtResource("5_ijxyn")
+region = Rect2(0, 136.09758, 256, 121.1212)
 
 [node name="7x7" type="Node2D"]
 script = ExtResource("1_yl70g")
@@ -38,20 +64,26 @@ texture_hover = SubResource("AtlasTexture_jinvy")
 [node name="click" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_s4tbd")
 
-[node name="solution" type="Button" parent="."]
-offset_left = 171.0
-offset_top = 26.0
-offset_right = 265.0
-offset_bottom = 83.0
-text = "button"
+[node name="hint-button" type="TextureButton" parent="."]
+offset_left = 630.0
+offset_top = 27.0
+offset_right = 886.0
+offset_bottom = 146.0
+scale = Vector2(0.5, 0.5)
+texture_normal = SubResource("AtlasTexture_ijxyn")
+texture_pressed = SubResource("AtlasTexture_whvp7")
+texture_hover = SubResource("AtlasTexture_s4tbd")
 
-[node name="check" type="Button" parent="."]
-offset_left = 285.0
-offset_top = 28.0
-offset_right = 382.0
-offset_bottom = 81.0
-text = "check"
+[node name="TextureButton" type="TextureButton" parent="."]
+offset_left = 484.0
+offset_top = 26.0
+offset_right = 740.0
+offset_bottom = 146.0
+scale = Vector2(0.5, 0.5)
+texture_normal = SubResource("AtlasTexture_ri4o3")
+texture_pressed = SubResource("AtlasTexture_cpsan")
+texture_hover = SubResource("AtlasTexture_py16d")
 
 [connection signal="pressed" from="buttons/backbutton" to="." method="_on_backbutton_pressed"]
-[connection signal="pressed" from="solution" to="." method="_on_solution_pressed"]
-[connection signal="pressed" from="check" to="." method="_on_check_pressed"]
+[connection signal="pressed" from="hint-button" to="." method="_on_hintbutton_pressed"]
+[connection signal="pressed" from="TextureButton" to="." method="_on_texture_button_pressed"]
