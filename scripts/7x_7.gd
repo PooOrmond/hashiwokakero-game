@@ -15,6 +15,11 @@ var current_puzzle_index := 1
 var hint_bridges := []        # Bridges shown as hints
 var puzzle_solved := false    # Track if puzzle is completed
 
+# Backtracking variables
+var is_solving := false
+var solution_found := false
+var solving_step_delay := 0.1  # Delay between steps for visualization
+
 func _ready():
 	randomize()
 	_calculate_grid_offset()
@@ -118,6 +123,7 @@ func load_custom_puzzle(file_path: String) -> void:
 	solution_bridges.clear()
 	hint_bridges.clear()
 	puzzle_solved = false
+	is_solving = false
 
 	var file = FileAccess.open(file_path, FileAccess.READ)
 	if file == null:
@@ -282,6 +288,199 @@ func _check_puzzle_completion():
 		puzzle_solved = false
 	
 	queue_redraw()
+
+# ---------------- Backtracking Solver ------------------
+
+func solve_with_backtracking():
+	if is_solving:
+		print("Already solving!")
+		return
+	
+	print("Starting backtracking solver...")
+	is_solving = true
+	solution_found = false
+	
+	# Create a copy of the current state for backtracking
+	var initial_bridges = _copy_bridges()
+	var initial_connected = _get_connected_bridges_state()
+	
+	# Start the backtracking process
+	_backtrack_solve(0, initial_bridges, initial_connected)
+	
+	if solution_found:
+		print("✅ Solution found with backtracking!")
+	else:
+		print("❌ No solution found with backtracking.")
+		# Restore original state if no solution found
+		_restore_state(initial_bridges, initial_connected)
+	
+	is_solving = false
+	_check_puzzle_completion()
+	queue_redraw()
+
+func _backtrack_solve(island_index: int, current_bridges: Array, current_connected: Dictionary) -> bool:
+	if island_index >= puzzle_data.size():
+		# All islands processed, check if solution is valid
+		if _is_valid_solution(current_bridges):
+			# Apply the solution
+			_apply_solution(current_bridges)
+			solution_found = true
+			return true
+		return false
+	
+	var current_island = puzzle_data[island_index]
+	var needed_bridges = current_island.bridges_target - current_connected[current_island]
+	
+	# If this island already has enough bridges, move to next
+	if needed_bridges <= 0:
+		return _backtrack_solve(island_index + 1, current_bridges, current_connected)
+	
+	# Try all possible connections from this island
+	for neighbor in current_island.neighbors:
+		# Skip if neighbor is already processed (to avoid duplicate bridges)
+		if puzzle_data.find(neighbor) < island_index:
+			continue
+		
+		# Try adding 0, 1, or 2 bridges to this connection
+		for bridge_count in [0, 1, 2]:
+			# Check if this bridge count is feasible
+			if not _is_bridge_feasible(current_island, neighbor, bridge_count, current_bridges, current_connected):
+				continue
+			
+			# Add the bridge
+			var new_bridges = _copy_bridges_array(current_bridges)
+			var new_connected = current_connected.duplicate()
+			
+			if bridge_count > 0:
+				_add_bridge_to_state(new_bridges, new_connected, current_island, neighbor, bridge_count)
+			
+			# Recursively solve
+			if _backtrack_solve(island_index + 1, new_bridges, new_connected):
+				return true
+	
+	return false
+
+func _is_bridge_feasible(island_a, island_b, bridge_count: int, current_bridges: Array, current_connected: Dictionary) -> bool:
+	if bridge_count == 0:
+		return true
+	
+	# Check if adding this bridge would exceed island capacity
+	var a_remaining = island_a.bridges_target - current_connected[island_a]
+	var b_remaining = island_b.bridges_target - current_connected[island_b]
+	
+	if a_remaining < bridge_count or b_remaining < bridge_count:
+		return false
+	
+	# Check if bridge already exists
+	for bridge in current_bridges:
+		if (bridge.start_island == island_a and bridge.end_island == island_b) or \
+		   (bridge.start_island == island_b and bridge.end_island == island_a):
+			return false  # Bridge already exists
+	
+	# Check for intersections with existing bridges
+	var would_intersect = false
+	for bridge in current_bridges:
+		if _bridges_cross(island_a.node.position, island_b.node.position, 
+						 bridge.start_island.node.position, bridge.end_island.node.position):
+			would_intersect = true
+			break
+	
+	if would_intersect:
+		return false
+	
+	return true
+
+func _is_valid_solution(bridges_state: Array) -> bool:
+	# Check if all islands have exactly their target number of bridges
+	var connected_count = {}
+	for island in puzzle_data:
+		connected_count[island] = 0
+	
+	for bridge in bridges_state:
+		connected_count[bridge.start_island] += bridge.count
+		connected_count[bridge.end_island] += bridge.count
+	
+	for island in puzzle_data:
+		if connected_count[island] != island.bridges_target:
+			return false
+	
+	# Check if the graph is connected
+	return _is_graph_connected(bridges_state)
+
+func _is_graph_connected(bridges_state: Array) -> bool:
+	if puzzle_data.is_empty():
+		return true
+	
+	var visited = {}
+	var stack = [puzzle_data[0]]
+	
+	while not stack.is_empty():
+		var current = stack.pop_back()
+		visited[current] = true
+		
+		# Find all neighbors connected by bridges
+		for bridge in bridges_state:
+			var neighbor = null
+			if bridge.start_island == current:
+				neighbor = bridge.end_island
+			elif bridge.end_island == current:
+				neighbor = bridge.start_island
+			
+			if neighbor and not visited.has(neighbor):
+				stack.append(neighbor)
+	
+	return visited.size() == puzzle_data.size()
+
+func _copy_bridges() -> Array:
+	return _copy_bridges_array(bridges)
+
+func _copy_bridges_array(bridges_array: Array) -> Array:
+	var copy = []
+	for bridge in bridges_array:
+		copy.append({
+			"start_island": bridge.start_island,
+			"end_island": bridge.end_island,
+			"start_pos": bridge.start_pos,
+			"end_pos": bridge.end_pos,
+			"count": bridge.count
+		})
+	return copy
+
+func _get_connected_bridges_state() -> Dictionary:
+	var state = {}
+	for island in puzzle_data:
+		state[island] = island.connected_bridges
+	return state
+
+func _add_bridge_to_state(bridges_state: Array, connected_state: Dictionary, island_a, island_b, count: int):
+	bridges_state.append({
+		"start_island": island_a,
+		"end_island": island_b,
+		"start_pos": island_a.node.position,
+		"end_pos": island_b.node.position,
+		"count": count
+	})
+	connected_state[island_a] += count
+	connected_state[island_b] += count
+
+func _apply_solution(solution_bridges: Array):
+	# Clear current bridges
+	bridges.clear()
+	
+	# Reset connected bridges count
+	for island in puzzle_data:
+		island.connected_bridges = 0
+	
+	# Apply the solution
+	for bridge in solution_bridges:
+		bridges.append(bridge)
+		bridge.start_island.connected_bridges += bridge.count
+		bridge.end_island.connected_bridges += bridge.count
+
+func _restore_state(original_bridges: Array, original_connected: Dictionary):
+	bridges = original_bridges
+	for island in puzzle_data:
+		island.connected_bridges = original_connected[island]
 
 # ---------------- Enhanced Hint System ------------------
 
@@ -651,3 +850,12 @@ func _on_texture_button_pressed() -> void:
 	_load_solution_robust(output_file)
 	_check_puzzle_completion()
 	queue_redraw()
+
+# New function to call backtracking solver
+func _on_solve_button_pressed() -> void:
+	if puzzle_solved:
+		print("Puzzle already solved!")
+		return
+	
+	click.play()
+	solve_with_backtracking()

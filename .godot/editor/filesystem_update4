@@ -1,3 +1,13 @@
 res://scenes/choose_grid_size.tscn
 res://scripts/7x_7.gd
 res://scenes/grids/7x_7.tscn
+res://scenes/main_menu.tscn
+res://assets/output/7x7/output-05.txt
+res://assets/input/7x7/input-04.txt
+res://assets/input/9x9/input-01.txt
+res://assets/input/7x7/input-02.txt
+res://assets/input/9x9/input-02.txt
+res://assets/input/7x7/input-03.txt
+res://assets/input/9x9/input-03.txt
+res://assets/input/9x9/input-04.txt
+res://assets/input/9x9/input-05.txt
