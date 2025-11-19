@@ -1,7 +1,7 @@
 extends Node2D
 
 @export var cell_size: int = 64
-@export var grid_size: Vector2i = Vector2i(16, 16)
+@export var grid_size: Vector2i = Vector2i(15, 15)
 
 func _draw():
 	var w = grid_size.x

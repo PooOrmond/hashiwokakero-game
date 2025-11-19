@@ -1,8 +1,10 @@
-res://scripts/7x_7.gd
+res://scenes/grids/10x_10.tscn
+res://scenes/grids/15x_15.tscn
+res://scenes/choose_grid_size.tscn
+res://scripts/choose_grid_size.gd
 res://scenes/grids/7x_7.tscn
-res://assets/input/7x7/input-01.txt
-res://assets/output/7x7/output-01.txt
-res://assets/output/7x7/output-02.txt
-res://assets/output/7x7/output-03.txt
-res://assets/output/7x7/output-04.txt
-res://assets/output/7x7/output-05.txt
+res://scenes/grids/13x_13.tscn
+res://scenes/grids/9x_9.tscn
+res://scripts/7x_7.gd
+res://scripts/grid-maker/grid3.gd
+res://scripts/grid-maker/grid2.gd
