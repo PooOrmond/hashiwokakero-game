@@ -46,20 +46,20 @@ func _draw():
 	_draw_bridges()
 	_draw_hint_bridges()
 	if temp_bridge_line:
-		draw_line(temp_bridge_line[0], temp_bridge_line[1], Color(0.2,0.8,0.2), 4)
+		draw_line(temp_bridge_line[0], temp_bridge_line[1], Color(0,0,0), 4)
 
 func _draw_grid():
 	# Draw horizontal lines with same thickness as other grids
-	for y in range(grid_size.y + 1):
+	for y in range(1, grid_size.y ):
 		draw_line(grid_offset + Vector2(0, y*cell_size),
 				  grid_offset + Vector2(grid_size.x*cell_size, y*cell_size),
-				  Color(0,0,0), 2.0)  # Changed to 2.0 to match other grids
+				  Color(0.7, 0.7, 0.7, 1.0), 2.0)  # Changed to 2.0 to match other grids
 	
 	# Draw vertical lines with same thickness as other grids
-	for x in range(grid_size.x + 1):
+	for x in range(1, grid_size.x):
 		draw_line(grid_offset + Vector2(x*cell_size, 0),
 				  grid_offset + Vector2(x*cell_size, grid_size.y*cell_size),
-				  Color(0,0,0), 2.0)  # Changed to 2.0 to match other grids
+				  Color(0.7, 0.7, 0.7, 1.0), 2.0)  # Changed to 2.0 to match other grids
 
 func _draw_bridges():
 	for br in bridges:
@@ -70,11 +70,11 @@ func _draw_hint_bridges():
 		_draw_hint_bridge(br)
 
 func _draw_bridge(br):
-	var color = Color(0.2,0.2,0.8,1.0)  # Default blue color
+	var color = Color(0,0,0,)  # Default blue color
 	if puzzle_solved:
-		color = Color(0.2,0.8,0.2,1.0)  # Green for solved puzzle
+		color = Color(0,0,0)  # Green for solved puzzle
 	
-	var width = 3
+	var width = 4
 	var start_pos = br.start_island.node.position - global_position
 	var end_pos = br.end_island.node.position - global_position
 
