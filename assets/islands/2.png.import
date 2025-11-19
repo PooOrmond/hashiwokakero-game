@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4je4sni2wpq1"
-path="res://.godot/imported/1.png-4ae777981d0c7ef35269d4f719dbbf65.ctex"
+uid="uid://cvisx41uc0wiv"
+path="res://.godot/imported/2.png-3f0e4cbb6e359068d4ceb789c9dc5cc9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/islands/7x7/1.png"
-dest_files=["res://.godot/imported/1.png-4ae777981d0c7ef35269d4f719dbbf65.ctex"]
+source_file="res://assets/islands/2.png"
+dest_files=["res://.godot/imported/2.png-3f0e4cbb6e359068d4ceb789c9dc5cc9.ctex"]
 
 [params]
 

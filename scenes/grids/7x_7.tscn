@@ -61,10 +61,7 @@ texture_normal = SubResource("AtlasTexture_xvr6y")
 texture_pressed = SubResource("AtlasTexture_afmex")
 texture_hover = SubResource("AtlasTexture_jinvy")
 
-[node name="click" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("4_s4tbd")
-
-[node name="hint-button" type="TextureButton" parent="."]
+[node name="hint-button" type="TextureButton" parent="buttons"]
 offset_left = 630.0
 offset_top = 27.0
 offset_right = 886.0
@@ -74,7 +71,7 @@ texture_normal = SubResource("AtlasTexture_ijxyn")
 texture_pressed = SubResource("AtlasTexture_whvp7")
 texture_hover = SubResource("AtlasTexture_s4tbd")
 
-[node name="TextureButton" type="TextureButton" parent="."]
+[node name="solve-button" type="TextureButton" parent="buttons"]
 offset_left = 484.0
 offset_top = 26.0
 offset_right = 740.0
@@ -84,6 +81,9 @@ texture_normal = SubResource("AtlasTexture_ri4o3")
 texture_pressed = SubResource("AtlasTexture_cpsan")
 texture_hover = SubResource("AtlasTexture_py16d")
 
+[node name="click" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_s4tbd")
+
 [connection signal="pressed" from="buttons/backbutton" to="." method="_on_backbutton_pressed"]
-[connection signal="pressed" from="hint-button" to="." method="_on_hintbutton_pressed"]
-[connection signal="pressed" from="TextureButton" to="." method="_on_texture_button_pressed"]
+[connection signal="pressed" from="buttons/hint-button" to="." method="_on_hintbutton_pressed"]
+[connection signal="pressed" from="buttons/solve-button" to="." method="_on_texture_button_pressed"]

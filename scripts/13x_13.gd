@@ -1,9 +1,9 @@
 extends Node2D
 
-# Configuration for 7x7
-@export var grid_size: Vector2i = Vector2i(8, 8) # 7x7 grid with border
-@export var cell_size: int = 48
-@export var puzzle_folder: String = "7x7"
+# Configuration for 13x13
+@export var grid_size: Vector2i = Vector2i(14, 14) # 13x13 grid with border
+@export var cell_size: int = 32
+@export var puzzle_folder: String = "13x13"
 
 # Audio
 @onready var click: AudioStreamPlayer2D = $click
@@ -40,6 +40,8 @@ func _calculate_grid_offset():
 	var window_size = Vector2(800, 650)
 	var grid_pixel_size = Vector2(grid_size.x * cell_size, grid_size.y * cell_size)
 	grid_offset = (window_size - grid_pixel_size) / 2
+	print("Grid offset: ", grid_offset)
+	print("Grid pixel size: ", grid_pixel_size)
 
 func _draw():
 	_draw_grid()
@@ -49,17 +51,37 @@ func _draw():
 		draw_line(temp_bridge_line[0], temp_bridge_line[1], Color(0.2,0.8,0.2), 4)
 
 func _draw_grid():
-	# Draw horizontal lines with same thickness as other grids
-	for y in range(grid_size.y + 1):
-		draw_line(grid_offset + Vector2(0, y*cell_size),
-				  grid_offset + Vector2(grid_size.x*cell_size, y*cell_size),
-				  Color(0,0,0), 2.0)  # Changed to 2.0 to match other grids
+	# Draw horizontal lines
+	for y in range(grid_size.y):
+		draw_line(
+			grid_offset + Vector2(0, y * cell_size),
+			grid_offset + Vector2(grid_size.x * cell_size, y * cell_size),
+			Color(0, 0, 0, 1.0),
+			2.0
+		)
 	
-	# Draw vertical lines with same thickness as other grids
-	for x in range(grid_size.x + 1):
-		draw_line(grid_offset + Vector2(x*cell_size, 0),
-				  grid_offset + Vector2(x*cell_size, grid_size.y*cell_size),
-				  Color(0,0,0), 2.0)  # Changed to 2.0 to match other grids
+	# Draw vertical lines
+	for x in range(grid_size.x):
+		draw_line(
+			grid_offset + Vector2(x * cell_size, 0),
+			grid_offset + Vector2(x * cell_size, grid_size.y * cell_size),
+			Color(0, 0, 0, 1.0),
+			2.0
+		)
+	
+	# Draw the final border lines
+	draw_line(
+		grid_offset + Vector2(0, grid_size.y * cell_size),
+		grid_offset + Vector2(grid_size.x * cell_size, grid_size.y * cell_size),
+		Color(0, 0, 0, 1.0),
+		2.0
+	)
+	draw_line(
+		grid_offset + Vector2(grid_size.x * cell_size, 0),
+		grid_offset + Vector2(grid_size.x * cell_size, grid_size.y * cell_size),
+		Color(0, 0, 0, 1.0),
+		2.0
+	)
 
 func _draw_bridges():
 	for br in bridges:
@@ -74,7 +96,23 @@ func _draw_bridge(br):
 	if puzzle_solved:
 		color = Color(0.2,0.8,0.2,1.0)  # Green for solved puzzle
 	
-	var width = 3
+	var width = 2  # Thinner bridges for smaller grid
+	var start_pos = br.start_island.node.position - global_position
+	var end_pos = br.end_island.node.position - global_position
+
+	if br.count == 2:
+		if start_pos.x == end_pos.x: # vertical
+			draw_line(start_pos + Vector2(-2,0), end_pos + Vector2(-2,0), color, width)
+			draw_line(start_pos + Vector2(2,0), end_pos + Vector2(2,0), color, width)
+		else: # horizontal
+			draw_line(start_pos + Vector2(0,-2), end_pos + Vector2(0,-2), color, width)
+			draw_line(start_pos + Vector2(0,2), end_pos + Vector2(0,2), color, width)
+	else:
+		draw_line(start_pos, end_pos, color, width)
+
+func _draw_hint_bridge(br):
+	var color = Color(1.0, 0.9, 0.1, 0.9)  # Bright yellow
+	var width = 3  # Thinner hint bridges
 	var start_pos = br.start_island.node.position - global_position
 	var end_pos = br.end_island.node.position - global_position
 
@@ -85,22 +123,6 @@ func _draw_bridge(br):
 		else: # horizontal
 			draw_line(start_pos + Vector2(0,-3), end_pos + Vector2(0,-3), color, width)
 			draw_line(start_pos + Vector2(0,3), end_pos + Vector2(0,3), color, width)
-	else:
-		draw_line(start_pos, end_pos, color, width)
-
-func _draw_hint_bridge(br):
-	var color = Color(1.0, 0.9, 0.1, 0.9)  # Bright yellow
-	var width = 4
-	var start_pos = br.start_island.node.position - global_position
-	var end_pos = br.end_island.node.position - global_position
-
-	if br.count == 2:
-		if start_pos.x == end_pos.x: # vertical
-			draw_line(start_pos + Vector2(-4,0), end_pos + Vector2(-4,0), color, width)
-			draw_line(start_pos + Vector2(4,0), end_pos + Vector2(4,0), color, width)
-		else: # horizontal
-			draw_line(start_pos + Vector2(0,-4), end_pos + Vector2(0,-4), color, width)
-			draw_line(start_pos + Vector2(0,4), end_pos + Vector2(0,4), color, width)
 	else:
 		draw_line(start_pos, end_pos, color, width)
 
@@ -137,7 +159,7 @@ func load_custom_puzzle(file_path: String) -> void:
 			var sprite = Sprite2D.new()
 			sprite.position = grid_offset + pos * cell_size
 			sprite.centered = true
-			sprite.scale = Vector2(0.6, 0.6)
+			sprite.scale = Vector2(0.4, 0.4)  # Smaller islands for 13x13
 			var texture_path = "res://assets/islands/%d.png" % bridges_target
 			if ResourceLoader.exists(texture_path):
 				sprite.texture = load(texture_path)
@@ -206,7 +228,7 @@ func _input(event):
 
 func _get_island_at_pos(pos: Vector2):
 	for isl in puzzle_data:
-		if pos.distance_to(isl.node.position) < cell_size * 0.6:
+		if pos.distance_to(isl.node.position) < cell_size * 0.5:  # Smaller hitbox for smaller islands
 			return isl
 	return null
 
@@ -215,10 +237,10 @@ func _get_bridge_at_pos(pos: Vector2):
 		var start = br.start_island.node.position
 		var end = br.end_island.node.position
 		# Simple bounding box check
-		var min_x = min(start.x,end.x) - 5
-		var max_x = max(start.x,end.x) + 5
-		var min_y = min(start.y,end.y) - 5
-		var max_y = max(start.y,end.y) + 5
+		var min_x = min(start.x,end.x) - 4
+		var max_x = max(start.x,end.x) + 4
+		var min_y = min(start.y,end.y) - 4
+		var max_y = max(start.y,end.y) + 4
 		if pos.x >= min_x and pos.x <= max_x and pos.y >= min_y and pos.y <= max_y:
 			return br
 	return null
