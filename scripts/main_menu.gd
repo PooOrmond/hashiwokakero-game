@@ -7,7 +7,6 @@ func _on_texture_button_pressed():
 	await get_tree().create_timer(0.1).timeout
 	get_tree().change_scene_to_file("res://scenes/choose_grid_size.tscn")
 	
-
 func _on_exit_pressed() -> void:
 	click.play()
 	get_tree().quit()

@@ -1,3 +1,6 @@
-res://scenes/choose_grid_size.tscn
+res://scenes/grids/13x_13.tscn
 res://scripts/7x_7.gd
 res://scenes/grids/7x_7.tscn
+res://scenes/grids/9x_9.tscn
+res://scripts/gamestate.gd
+res://scripts/main_menu.gd

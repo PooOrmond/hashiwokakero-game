@@ -3,6 +3,7 @@ extends Node2D
 @export var grid_size: Vector2i = Vector2i(8, 8) # 9x9 grid with border
 @export var cell_size: int = 48
 @export var total_islands: int = 10
+@export var puzzle_folder: String = "7x7"
 @onready var click: AudioStreamPlayer2D = $click
 
 var grid_offset := Vector2.ZERO
@@ -15,12 +16,16 @@ var current_puzzle_index := 1
 var hint_bridges := []        # Bridges shown as hints
 var puzzle_solved := false    # Track if puzzle is completed
 
+func _get_puzzle_folder() -> String:
+	var size := grid_size.x - 1  # remove the +1 border offset
+	return "%dx%d" % [size, size]
+
 func _ready():
 	randomize()
 	_calculate_grid_offset()
 	# Randomly pick a puzzle file from input-01.txt to input-05.txt
 	current_puzzle_index = randi() % 5 + 1
-	var file_path = "res://assets/input/7x7/input-%02d.txt" % current_puzzle_index
+	var file_path = "res://assets/input/%s/input-%02d.txt" % [puzzle_folder, current_puzzle_index]
 	load_custom_puzzle(file_path)
 	bridges.clear()
 	hint_bridges.clear()
@@ -637,7 +642,6 @@ func _on_hintbutton_pressed() -> void:
 	_generate_enhanced_hint()
 	queue_redraw()
 
-
 func _on_texture_button_pressed() -> void:
 	if puzzle_solved:
 		print("Puzzle already solved!")
@@ -647,7 +651,7 @@ func _on_texture_button_pressed() -> void:
 	bridges.clear()
 	hint_bridges.clear()
 	# Load solution from corresponding output file
-	var output_file = "res://assets/output/7x7/output-%02d.txt" % current_puzzle_index
+	var output_file = "res://assets/output/%s/output-%02d.txt" % [puzzle_folder, current_puzzle_index]
 	_load_solution_robust(output_file)
 	_check_puzzle_completion()
 	queue_redraw()
