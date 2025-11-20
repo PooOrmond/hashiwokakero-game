@@ -1,11 +1,6 @@
 extends Control
 
 @onready var click: AudioStreamPlayer2D = $click
-
-func _on_texture_button_pressed():
-	click.play()
-	await get_tree().create_timer(0.1).timeout
-	get_tree().change_scene_to_file("res://scenes/choose_grid_size.tscn")
 	
 func _on_exit_pressed() -> void:
 	click.play()
@@ -14,4 +9,4 @@ func _on_exit_pressed() -> void:
 func _on_gobutton_pressed() -> void:
 	click.play()
 	await get_tree().create_timer(0.1).timeout
-	get_tree().change_scene_to_file("res://scenes/choose_grid_size.tscn")
+	SceneTransition.change_scene_to_file("res://scenes/choose_grid_size.tscn")

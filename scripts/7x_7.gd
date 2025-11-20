@@ -547,7 +547,7 @@ func _add_solution_bridge(a, b, count: int):
 func _on_backbutton_pressed() -> void:
 	click.play()
 	await get_tree().create_timer(0.1).timeout
-	get_tree().change_scene_to_file("res://scenes/choose_grid_size.tscn")
+	SceneTransition.change_scene_to_file("res://scenes/choose_grid_size.tscn")
 
 func _on_hintbutton_pressed() -> void:
 	if puzzle_solved:
@@ -571,3 +571,4 @@ func _on_texture_button_pressed() -> void:
 	_load_solution_robust(output_file)
 	_check_puzzle_completion()
 	queue_redraw()
+	

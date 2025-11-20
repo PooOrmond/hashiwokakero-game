@@ -21,6 +21,7 @@ buses/default_bus_layout=""
 [autoload]
 
 Music="*res://scenes/music.tscn"
+SceneTransition="*res://scenes/scene_transition.tscn"
 
 [display]
 

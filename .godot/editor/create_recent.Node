@@ -1,10 +1,11 @@
-TextureButton
-AnimatedSprite2D
-Sprite2D
 AnimationPlayer
-Button
-Node
-Label
 ColorRect
+CanvasLayer
+Sprite2D
+Node
+AnimatedSprite2D
+TextureButton
+Button
+Label
 Node2D
 AudioStreamPlayer2D
