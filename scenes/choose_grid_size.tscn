@@ -1,24 +1,127 @@
-[gd_scene load_steps=20 format=3 uid="uid://ct1wxyer7vow1"]
+[gd_scene load_steps=39 format=3 uid="uid://ct1wxyer7vow1"]
 
-[ext_resource type="FontFile" uid="uid://du36gdi4bwn5e" path="res://fonts/PixelOperator8-Bold.ttf" id="1_lbl31"]
 [ext_resource type="Script" uid="uid://5472v0lm1nfk" path="res://scripts/choose_grid_size.gd" id="1_vjn7y"]
+[ext_resource type="Texture2D" uid="uid://c6q53hbadsdhn" path="res://assets/animation/background/nature_4/1.png" id="2_0dxux"]
 [ext_resource type="Texture2D" uid="uid://douajqs02guic" path="res://assets/buttons/back.png" id="2_or1gr"]
+[ext_resource type="Texture2D" uid="uid://bofb6w4p78k0u" path="res://assets/animation/background/nature_4/2.png" id="3_luaip"]
+[ext_resource type="Texture2D" uid="uid://dn8to0lwc6jmg" path="res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 1.png" id="4_60qra"]
 [ext_resource type="AudioStream" uid="uid://csjm46gsdq2em" path="res://music/button-sound.mp3" id="4_wea5t"]
 [ext_resource type="Texture2D" uid="uid://r5ed0c7adayk" path="res://assets/buttons/7x7.png" id="4_wi0rm"]
+[ext_resource type="Texture2D" uid="uid://d156snrou3m1a" path="res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 2.png" id="5_3y3rp"]
 [ext_resource type="Texture2D" uid="uid://2xahvbhkydg3" path="res://assets/buttons/9x9.png" id="5_ymgre"]
+[ext_resource type="Texture2D" uid="uid://bwcdddpqp8h3u" path="res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 3.png" id="6_3jl5k"]
 [ext_resource type="Texture2D" uid="uid://4birnkvc50xn" path="res://assets/buttons/13x13.png" id="6_tm0ii"]
+[ext_resource type="Texture2D" uid="uid://d4k6w8rylkvjr" path="res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 4.png" id="7_31ets"]
+[ext_resource type="Texture2D" uid="uid://cq6alqiqu0oxq" path="res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 5.png" id="8_h3i2w"]
+[ext_resource type="Texture2D" uid="uid://cr2lqdgupdt1e" path="res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 6.png" id="9_64dmr"]
+[ext_resource type="Texture2D" uid="uid://d2iumses7do8p" path="res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 7.png" id="10_57kxc"]
+[ext_resource type="Texture2D" uid="uid://dhdresqvv08ln" path="res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 8.png" id="11_mnp5u"]
+[ext_resource type="Texture2D" uid="uid://ceekywfdd1rpq" path="res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 9.png" id="12_f5o6j"]
+[ext_resource type="Texture2D" uid="uid://8asebldklucx" path="res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 10.png" id="13_dwnoh"]
+[ext_resource type="Texture2D" uid="uid://pn2xu6f7soio" path="res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 11.png" id="14_0mfph"]
+[ext_resource type="Texture2D" uid="uid://mtsxkqqsbklj" path="res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 12.png" id="15_64fcj"]
+[ext_resource type="Texture2D" uid="uid://cbpbwqy6631k4" path="res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 13.png" id="16_8pjmr"]
+[ext_resource type="Texture2D" uid="uid://cgkjlntjb145h" path="res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 14.png" id="17_w07y4"]
+
+[sub_resource type="Animation" id="Animation_pmwux"]
+resource_name = "cloud"
+length = 20.0
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("cloud:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 20),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(531, 475), Vector2(447.00003, 475.00003)]
+}
+
+[sub_resource type="Animation" id="Animation_j76yf"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("cloud:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(531, 475)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_nkinv"]
+_data = {
+&"RESET": SubResource("Animation_j76yf"),
+&"cloud": SubResource("Animation_pmwux")
+}
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_i3sad"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_60qra")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_3y3rp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_3jl5k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_31ets")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_h3i2w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_64dmr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_57kxc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_mnp5u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_f5o6j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_dwnoh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_0mfph")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_64fcj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_8pjmr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_w07y4")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0cp0e"]
 atlas = ExtResource("2_or1gr")
-region = Rect2(0, 0, 128.50667, 63.723907)
+region = Rect2(0, 0, 255.50668, 119.95656)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vjn7y"]
 atlas = ExtResource("2_or1gr")
-region = Rect2(0, 132.364, 128, 60)
+region = Rect2(-0.47233582, 273.9316, 256.8357, 110.07242)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wea5t"]
 atlas = ExtResource("2_or1gr")
-region = Rect2(0, 63.768925, 128, 68.59506)
+region = Rect2(0.18688965, 136.72728, 256.27118, 119.46248)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ymgre"]
 atlas = ExtResource("4_wi0rm")
@@ -65,60 +168,72 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_vjn7y")
 
-[node name="ColorRect" type="ColorRect" parent="."]
-layout_mode = 0
-offset_right = 799.0
-offset_bottom = 646.0
+[node name="background" type="Node" parent="."]
 
-[node name="label" type="Label" parent="."]
-layout_mode = 0
-offset_left = 64.0
-offset_top = 38.0
-offset_right = 732.0
-offset_bottom = 85.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = ExtResource("1_lbl31")
-theme_override_font_sizes/font_size = 46
-text = "Choose Grid Size"
+[node name="sky" type="Sprite2D" parent="background"]
+z_index = -100
+position = Vector2(400.5, 328)
+scale = Vector2(1.3871528, 1.9938271)
+texture = ExtResource("2_0dxux")
+
+[node name="cloud" type="Sprite2D" parent="background"]
+position = Vector2(531, 475)
+scale = Vector2(2.2317708, 2.771605)
+texture = ExtResource("3_luaip")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="background"]
+libraries = {
+&"": SubResource("AnimationLibrary_nkinv")
+}
+autoplay = "cloud"
+speed_scale = 0.5
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(407.99997, 91.00001)
+scale = Vector2(3.4475, 3.1346157)
+sprite_frames = SubResource("SpriteFrames_i3sad")
+autoplay = "default"
+frame = 12
+frame_progress = 0.7780917
 
 [node name="buttons" type="Node" parent="."]
 
 [node name="backbutton" type="TextureButton" parent="buttons"]
 offset_left = 616.0
-offset_top = 537.0
-offset_right = 744.0
-offset_bottom = 601.0
-scale = Vector2(1.2, 1.2)
+offset_top = 535.0
+offset_right = 871.0
+offset_bottom = 654.0
+scale = Vector2(0.6, 0.6)
 texture_normal = SubResource("AtlasTexture_0cp0e")
 texture_pressed = SubResource("AtlasTexture_vjn7y")
 texture_hover = SubResource("AtlasTexture_wea5t")
 
 [node name="7x7-button" type="TextureButton" parent="buttons"]
-offset_left = 271.0
-offset_top = 143.0
-offset_right = 527.0
-offset_bottom = 263.0
-scale = Vector2(0.9, 0.9)
+offset_left = 294.0
+offset_top = 187.0
+offset_right = 550.0
+offset_bottom = 307.0
+scale = Vector2(0.8, 0.8)
 texture_normal = SubResource("AtlasTexture_ymgre")
 texture_pressed = SubResource("AtlasTexture_tm0ii")
 texture_hover = SubResource("AtlasTexture_3ofwx")
 
 [node name="9x9-button" type="TextureButton" parent="buttons"]
-offset_left = 274.0
-offset_top = 271.0
-offset_right = 530.0
-offset_bottom = 391.0
-scale = Vector2(0.9, 0.9)
+offset_left = 295.0
+offset_top = 307.0
+offset_right = 551.0
+offset_bottom = 429.0
+scale = Vector2(0.8, 0.8)
 texture_normal = SubResource("AtlasTexture_su6u0")
 texture_pressed = SubResource("AtlasTexture_dgb78")
 texture_hover = SubResource("AtlasTexture_egd32")
 
 [node name="13x13-button" type="TextureButton" parent="buttons"]
-offset_left = 276.0
-offset_top = 398.0
-offset_right = 532.0
-offset_bottom = 518.0
-scale = Vector2(0.9, 0.9)
+offset_left = 294.00003
+offset_top = 426.00003
+offset_right = 550.0
+offset_bottom = 546.0
+scale = Vector2(0.8, 0.8)
 texture_normal = SubResource("AtlasTexture_1t4pf")
 texture_pressed = SubResource("AtlasTexture_ntv6t")
 texture_hover = SubResource("AtlasTexture_ojemb")

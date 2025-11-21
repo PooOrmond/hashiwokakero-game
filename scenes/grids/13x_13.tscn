@@ -1,54 +1,95 @@
-[gd_scene load_steps=15 format=3 uid="uid://crql8ly5qquni"]
+[gd_scene load_steps=24 format=3 uid="uid://crql8ly5qquni"]
 
 [ext_resource type="Script" uid="uid://n85qf43fsn06" path="res://scripts/13x_13.gd" id="1_uykxq"]
+[ext_resource type="Texture2D" uid="uid://du7xbqtjabqcd" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 1.png" id="2_48r4w"]
 [ext_resource type="Texture2D" uid="uid://nha5vkl3mqx5" path="res://assets/buttons/hint.png" id="3_80qnd"]
+[ext_resource type="Texture2D" uid="uid://nnrrsk8an14x" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 2.png" id="3_m5d5k"]
 [ext_resource type="Texture2D" uid="uid://douajqs02guic" path="res://assets/buttons/back.png" id="3_qvy4r"]
 [ext_resource type="AudioStream" uid="uid://csjm46gsdq2em" path="res://music/button-sound.mp3" id="4_2bgud"]
+[ext_resource type="Texture2D" uid="uid://vf6b1fa5xgr8" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 3.png" id="4_b4y3x"]
 [ext_resource type="Texture2D" uid="uid://bampjpg003esd" path="res://assets/buttons/solve.png" id="4_qvy4r"]
+[ext_resource type="Texture2D" uid="uid://gnwd841on3am" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 4.png" id="5_3kvyr"]
+[ext_resource type="Texture2D" uid="uid://b5bq1a4md3jqr" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 5.png" id="6_m8syp"]
+[ext_resource type="Texture2D" uid="uid://c7yi4yu11k2n7" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 6.png" id="7_i7775"]
+[ext_resource type="Texture2D" uid="uid://cbropxq5yc00n" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 7.png" id="8_nppe2"]
+[ext_resource type="Texture2D" uid="uid://3r3arps5fcqy" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 8.png" id="9_wec5l"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_xvr6y"]
-atlas = ExtResource("3_qvy4r")
-region = Rect2(0, 0, 128.50667, 63.723907)
+[sub_resource type="SpriteFrames" id="SpriteFrames_0f8bs"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_48r4w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_m5d5k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_b4y3x")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_3kvyr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_m8syp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_i7775")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_nppe2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_wec5l")
+}],
+"loop": true,
+"name": &"default",
+"speed": 7.0
+}]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_afmex"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_80qnd"]
 atlas = ExtResource("3_qvy4r")
-region = Rect2(0, 132.364, 128, 60)
+region = Rect2(-1.0084839, -0.241642, 256.8132, 120.89343)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_jinvy"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_qvy4r"]
 atlas = ExtResource("3_qvy4r")
-region = Rect2(0, 63.768925, 128, 68.59506)
+region = Rect2(-1.2625961, 271.53223, 259.20377, 113.44861)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_48r4w"]
+atlas = ExtResource("3_qvy4r")
+region = Rect2(1.0001831, 136.90007, 254.10016, 118.80008)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2bgud"]
 atlas = ExtResource("3_80qnd")
-region = Rect2(0, 0, 256, 119.527374)
+region = Rect2(-0.38011932, 0.08026886, 136.60278, 151.8436)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_let3w"]
 atlas = ExtResource("3_80qnd")
-region = Rect2(0, 270.1097, 256, 113.89029)
+region = Rect2(0.33729553, 327.63437, 138.29625, 136.60281)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jmi68"]
 atlas = ExtResource("3_80qnd")
-region = Rect2(0, 136.68521, 256, 119.740845)
+region = Rect2(-1.6183243, 163.19617, 139.98965, 151.8396)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3prr6"]
 atlas = ExtResource("4_qvy4r")
-region = Rect2(0, 0, 256, 120.06871)
+region = Rect2(0.4380951, 0.5493393, 136.73944, 151.76575)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_x4n7s"]
 atlas = ExtResource("4_qvy4r")
-region = Rect2(0, 271.0268, 256, 112.973206)
+region = Rect2(-0.5453186, 328.2893, 138.84311, 136.36377)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ouu17"]
 atlas = ExtResource("4_qvy4r")
-region = Rect2(0, 136.09758, 256, 121.1212)
+region = Rect2(-0.5115967, 162.57872, 138.01666, 154.54561)
 
 [node name="13x13" type="Node2D"]
 script = ExtResource("1_uykxq")
 
-[node name="ColorRect" type="ColorRect" parent="."]
-z_index = -1
-offset_right = 797.0
-offset_bottom = 653.0
+[node name="background" type="AnimatedSprite2D" parent="."]
+z_index = -100
+position = Vector2(400, 325)
+sprite_frames = SubResource("SpriteFrames_0f8bs")
+autoplay = "default"
 
 [node name="NodesContainer" type="Node2D" parent="."]
 
@@ -57,27 +98,28 @@ offset_bottom = 653.0
 [node name="backbutton" type="TextureButton" parent="buttons"]
 offset_left = 20.0
 offset_top = 24.0
-offset_right = 148.0
-offset_bottom = 88.0
-texture_normal = SubResource("AtlasTexture_xvr6y")
-texture_pressed = SubResource("AtlasTexture_afmex")
-texture_hover = SubResource("AtlasTexture_jinvy")
+offset_right = 276.0
+offset_bottom = 144.0
+scale = Vector2(0.5, 0.5)
+texture_normal = SubResource("AtlasTexture_80qnd")
+texture_pressed = SubResource("AtlasTexture_qvy4r")
+texture_hover = SubResource("AtlasTexture_48r4w")
 
 [node name="hint-button" type="TextureButton" parent="buttons"]
-offset_left = 630.0
-offset_top = 27.0
-offset_right = 886.0
-offset_bottom = 146.0
+offset_left = 675.0
+offset_top = 10.0
+offset_right = 811.0
+offset_bottom = 161.0
 scale = Vector2(0.5, 0.5)
 texture_normal = SubResource("AtlasTexture_2bgud")
 texture_pressed = SubResource("AtlasTexture_let3w")
 texture_hover = SubResource("AtlasTexture_jmi68")
 
 [node name="solve-button" type="TextureButton" parent="buttons"]
-offset_left = 484.0
-offset_top = 26.0
-offset_right = 740.0
-offset_bottom = 146.0
+offset_left = 563.0
+offset_top = 9.0
+offset_right = 699.0
+offset_bottom = 160.0
 scale = Vector2(0.5, 0.5)
 texture_normal = SubResource("AtlasTexture_3prr6")
 texture_pressed = SubResource("AtlasTexture_x4n7s")

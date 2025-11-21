@@ -21,6 +21,7 @@ var temp_bridge_line = null
 # Puzzle state
 var current_puzzle_index := 1
 
+
 func _ready():
 	randomize()
 	_calculate_grid_offset()
@@ -28,13 +29,15 @@ func _ready():
 	# Initialize puzzle solver
 	puzzle_solver = load("res://scripts/solver.gd").new()
 	puzzle_solver.initialize(grid_size, cell_size, grid_offset)
+	
+	current_puzzle_index = randi() % 5 + 1
+	# Set puzzle info BEFORE loading the puzzle
 	puzzle_solver.set_puzzle_info(puzzle_folder, current_puzzle_index)
 	
-	# Randomly pick a puzzle file from input-01.txt to input-05.txt
-	current_puzzle_index = randi() % 5 + 1
 	var file_path = "res://assets/input/%s/input-%02d.txt" % [puzzle_folder, current_puzzle_index]
 	puzzle_solver.load_custom_puzzle(file_path, self)
 	queue_redraw()
+
 
 func _process(delta):
 	# Update the puzzle solver for hint timer functionality

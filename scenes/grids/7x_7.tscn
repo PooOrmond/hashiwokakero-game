@@ -1,81 +1,125 @@
-[gd_scene load_steps=15 format=3 uid="uid://c03yflbko25d1"]
+[gd_scene load_steps=24 format=3 uid="uid://c03yflbko25d1"]
 
 [ext_resource type="Script" uid="uid://ckkwx1ern17kb" path="res://scripts/7x_7.gd" id="1_yl70g"]
+[ext_resource type="Texture2D" uid="uid://du7xbqtjabqcd" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 1.png" id="2_e84ru"]
+[ext_resource type="Texture2D" uid="uid://nnrrsk8an14x" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 2.png" id="3_d2o8y"]
 [ext_resource type="Texture2D" uid="uid://douajqs02guic" path="res://assets/buttons/back.png" id="3_whvp7"]
+[ext_resource type="Texture2D" uid="uid://vf6b1fa5xgr8" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 3.png" id="4_06k4t"]
 [ext_resource type="AudioStream" uid="uid://csjm46gsdq2em" path="res://music/button-sound.mp3" id="4_s4tbd"]
 [ext_resource type="Texture2D" uid="uid://nha5vkl3mqx5" path="res://assets/buttons/hint.png" id="4_yl70g"]
 [ext_resource type="Texture2D" uid="uid://bampjpg003esd" path="res://assets/buttons/solve.png" id="5_ijxyn"]
+[ext_resource type="Texture2D" uid="uid://gnwd841on3am" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 4.png" id="5_rt5bn"]
+[ext_resource type="Texture2D" uid="uid://b5bq1a4md3jqr" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 5.png" id="6_4meat"]
+[ext_resource type="Texture2D" uid="uid://c7yi4yu11k2n7" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 6.png" id="7_0msmn"]
+[ext_resource type="Texture2D" uid="uid://cbropxq5yc00n" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 7.png" id="8_b5688"]
+[ext_resource type="Texture2D" uid="uid://3r3arps5fcqy" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 8.png" id="9_h0i5i"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ekg8d"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_e84ru")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_d2o8y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_06k4t")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_rt5bn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_4meat")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_0msmn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_b5688")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_h0i5i")
+}],
+"loop": true,
+"name": &"default",
+"speed": 7.0
+}]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xvr6y"]
 atlas = ExtResource("3_whvp7")
-region = Rect2(0, 0, 128.50667, 63.723907)
+region = Rect2(-1.0084839, -0.241642, 256.8132, 120.89343)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_afmex"]
 atlas = ExtResource("3_whvp7")
-region = Rect2(0, 132.364, 128, 60)
+region = Rect2(-1.2625961, 271.53223, 259.20377, 113.44861)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jinvy"]
 atlas = ExtResource("3_whvp7")
-region = Rect2(0, 63.768925, 128, 68.59506)
+region = Rect2(1.0001831, 136.90007, 254.10016, 118.80008)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ijxyn"]
 atlas = ExtResource("4_yl70g")
-region = Rect2(0, 0, 256, 119.527374)
+region = Rect2(-0.38011932, 0.08026886, 136.60278, 151.8436)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_whvp7"]
 atlas = ExtResource("4_yl70g")
-region = Rect2(0, 270.1097, 256, 113.89029)
+region = Rect2(0.33729553, 327.63437, 138.29625, 136.60281)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_s4tbd"]
 atlas = ExtResource("4_yl70g")
-region = Rect2(0, 136.68521, 256, 119.740845)
+region = Rect2(-1.6183243, 163.19617, 139.98965, 151.8396)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ri4o3"]
 atlas = ExtResource("5_ijxyn")
-region = Rect2(0, 0, 256, 120.06871)
+region = Rect2(0.4380951, 0.5493393, 136.73944, 151.76575)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cpsan"]
 atlas = ExtResource("5_ijxyn")
-region = Rect2(0, 271.0268, 256, 112.973206)
+region = Rect2(-0.5453186, 328.2893, 138.84311, 136.36377)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_py16d"]
 atlas = ExtResource("5_ijxyn")
-region = Rect2(0, 136.09758, 256, 121.1212)
+region = Rect2(-0.5115967, 162.57872, 138.01666, 154.54561)
 
 [node name="7x7" type="Node2D"]
 script = ExtResource("1_yl70g")
 
-[node name="ColorRect" type="ColorRect" parent="."]
-z_index = -1
-offset_right = 797.0
-offset_bottom = 653.0
+[node name="background" type="Node" parent="."]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="background"]
+z_index = -100
+position = Vector2(400, 325)
+sprite_frames = SubResource("SpriteFrames_ekg8d")
+autoplay = "default"
 
 [node name="buttons" type="Node" parent="."]
 
 [node name="backbutton" type="TextureButton" parent="buttons"]
-offset_left = 20.0
-offset_top = 24.0
-offset_right = 148.0
-offset_bottom = 88.0
+offset_left = 169.0
+offset_top = 14.0
+offset_right = 425.0
+offset_bottom = 134.0
+scale = Vector2(0.5, 0.5)
 texture_normal = SubResource("AtlasTexture_xvr6y")
 texture_pressed = SubResource("AtlasTexture_afmex")
 texture_hover = SubResource("AtlasTexture_jinvy")
 
 [node name="hint-button" type="TextureButton" parent="buttons"]
-offset_left = 630.0
-offset_top = 27.0
-offset_right = 886.0
-offset_bottom = 146.0
+offset_left = 675.0
+offset_top = 10.0
+offset_right = 811.0
+offset_bottom = 161.0
 scale = Vector2(0.5, 0.5)
 texture_normal = SubResource("AtlasTexture_ijxyn")
 texture_pressed = SubResource("AtlasTexture_whvp7")
 texture_hover = SubResource("AtlasTexture_s4tbd")
 
 [node name="solve-button" type="TextureButton" parent="buttons"]
-offset_left = 484.0
-offset_top = 26.0
-offset_right = 740.0
-offset_bottom = 146.0
+offset_left = 563.0
+offset_top = 9.0
+offset_right = 699.0
+offset_bottom = 160.0
 scale = Vector2(0.5, 0.5)
 texture_normal = SubResource("AtlasTexture_ri4o3")
 texture_pressed = SubResource("AtlasTexture_cpsan")
@@ -85,6 +129,8 @@ texture_hover = SubResource("AtlasTexture_py16d")
 stream = ExtResource("4_s4tbd")
 
 [node name="PopupPanel" type="PopupPanel" parent="."]
+title = "menu"
+initial_position = 2
 
 [connection signal="pressed" from="buttons/backbutton" to="." method="_on_backbutton_pressed"]
 [connection signal="pressed" from="buttons/hint-button" to="." method="_on_hintbutton_pressed"]

@@ -1,10 +1,12 @@
+TextureRect
+VBoxContainer
 PopupPanel
+AnimatedSprite2D
+Node
 AnimationPlayer
+Sprite2D
 ColorRect
 CanvasLayer
-Sprite2D
-Node
-AnimatedSprite2D
 TextureButton
 Button
 Label
