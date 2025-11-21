@@ -28,11 +28,20 @@ func _ready():
 	# Initialize puzzle solver - use direct reference instead of preload
 	puzzle_solver = load("res://scripts/solver.gd").new()
 	puzzle_solver.initialize(grid_size, cell_size, grid_offset)
+	puzzle_solver.set_puzzle_info(puzzle_folder, current_puzzle_index)
 	
 	current_puzzle_index = randi() % 5 + 1
 	var file_path = "res://assets/input/%s/input-%02d.txt" % [puzzle_folder, current_puzzle_index]
 	puzzle_solver.load_custom_puzzle(file_path, self)
 	queue_redraw()
+
+func _process(delta):
+	# Update the puzzle solver for hint timer functionality
+	if puzzle_solver:
+		puzzle_solver.update(delta)
+		# Redraw if hints were cleared by the timer
+		if puzzle_solver.get_hint_bridges().is_empty():
+			queue_redraw()
 
 func _calculate_grid_offset():
 	var window_size = Vector2(800, 650)
@@ -159,7 +168,7 @@ func _on_hintbutton_pressed() -> void:
 	click.play()
 	_generate_enhanced_hint()
 
-func _on_texture_button_pressed() -> void:
+func _on_solvebutton_pressed() -> void:
 	if puzzle_solver.is_puzzle_solved():
 		print("Puzzle already solved!")
 		return

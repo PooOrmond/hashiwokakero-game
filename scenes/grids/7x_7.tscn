@@ -84,6 +84,8 @@ texture_hover = SubResource("AtlasTexture_py16d")
 [node name="click" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_s4tbd")
 
+[node name="PopupPanel" type="PopupPanel" parent="."]
+
 [connection signal="pressed" from="buttons/backbutton" to="." method="_on_backbutton_pressed"]
 [connection signal="pressed" from="buttons/hint-button" to="." method="_on_hintbutton_pressed"]
-[connection signal="pressed" from="buttons/solve-button" to="." method="_on_texture_button_pressed"]
+[connection signal="pressed" from="buttons/solve-button" to="." method="_on_solvebutton_pressed"]

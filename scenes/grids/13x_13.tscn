@@ -87,3 +87,5 @@ texture_hover = SubResource("AtlasTexture_ouu17")
 stream = ExtResource("4_2bgud")
 
 [connection signal="pressed" from="buttons/backbutton" to="." method="_on_backbutton_pressed"]
+[connection signal="pressed" from="buttons/hint-button" to="." method="_on_hintbutton_pressed"]
+[connection signal="pressed" from="buttons/solve-button" to="." method="_on_solvebutton_pressed"]

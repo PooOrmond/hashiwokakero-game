@@ -25,11 +25,23 @@ var puzzle_folder: String = ""
 var hints_used := 0
 var max_hints_to_use := 0
 
+# Hint timer
+var hint_timer: float = 0.0
+var hint_visible: bool = false
+
 # Initialize method
 func initialize(grid_size_param: Vector2i, cell_size_param: int, grid_offset_param: Vector2) -> void:
 	grid_size = grid_size_param
 	cell_size = cell_size_param
 	grid_offset = grid_offset_param
+
+# Update method for handling hint timer
+func update(delta: float) -> void:
+	if hint_visible:
+		hint_timer -= delta
+		if hint_timer <= 0:
+			clear_hint_bridges()
+			hint_visible = false
 
 # Set puzzle info for hint system
 func set_puzzle_info(folder: String, index: int):
@@ -47,6 +59,7 @@ func load_custom_puzzle(file_path: String, parent_node: Node) -> void:
 	bridges.clear()
 	hint_bridges.clear()
 	puzzle_solved = false
+	hint_visible = false
 
 	var file = FileAccess.open(file_path, FileAccess.READ)
 	if file == null:
@@ -506,6 +519,7 @@ func _generate_enhanced_hint():
 	Generate hints for the player
 	"""
 	hint_bridges.clear()
+	hint_visible = false
 	
 	var islands_needing_bridges = []
 	for island in puzzle_data:
@@ -557,6 +571,10 @@ func _generate_enhanced_hint():
 						"end_pos": neighbor.node.position,
 						"count": optimal_count
 					})
+					
+					# Start the hint timer
+					hint_visible = true
+					hint_timer = 1.0  # 1 second
 					
 					if optimal_count == 2:
 						print("💡 DOUBLE BRIDGE HINT: Connect (%d,%d) to (%d,%d) with 2 bridges" % [
@@ -681,3 +699,4 @@ func is_puzzle_solved():
 
 func clear_hint_bridges():
 	hint_bridges.clear()
+	hint_visible = false

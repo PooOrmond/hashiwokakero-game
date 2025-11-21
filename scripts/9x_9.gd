@@ -1,8 +1,8 @@
 extends Node2D
 
-# Configuration for 9x9
+# Configuration for 9x9 - Updated values for 9x9 grid
 @export var grid_size: Vector2i = Vector2i(10, 10) # 9x9 grid with border
-@export var cell_size: int = 44
+@export var cell_size: int = 42  # Reduced from 48 to make grid smaller
 @export var puzzle_folder: String = "9x9"
 
 # Audio
@@ -25,19 +25,29 @@ func _ready():
 	randomize()
 	_calculate_grid_offset()
 	
-	# Initialize puzzle solver
+	# Initialize puzzle solver - use direct reference instead of preload
 	puzzle_solver = load("res://scripts/solver.gd").new()
 	puzzle_solver.initialize(grid_size, cell_size, grid_offset)
+	puzzle_solver.set_puzzle_info(puzzle_folder, current_puzzle_index)
 	
 	current_puzzle_index = randi() % 5 + 1
 	var file_path = "res://assets/input/%s/input-%02d.txt" % [puzzle_folder, current_puzzle_index]
 	puzzle_solver.load_custom_puzzle(file_path, self)
 	queue_redraw()
 
+func _process(delta):
+	# Update the puzzle solver for hint timer functionality
+	if puzzle_solver:
+		puzzle_solver.update(delta)
+		# Redraw if hints were cleared by the timer
+		if puzzle_solver.get_hint_bridges().is_empty():
+			queue_redraw()
+
 func _calculate_grid_offset():
 	var window_size = Vector2(800, 650)
 	var grid_pixel_size = Vector2(grid_size.x * cell_size, grid_size.y * cell_size)
 	grid_offset = (window_size - grid_pixel_size) / 2
+	# Keep the grid centered but with the new smaller cell size
 
 func _draw():
 	_draw_grid()
@@ -70,7 +80,26 @@ func _draw_bridge(br):
 		return
 		
 	var color = Color(0,0,0)
-	var width = 4
+	var width = 3  # Slightly thinner for smaller grid
+	var start_pos = br.start_island.node.position - global_position
+	var end_pos = br.end_island.node.position - global_position
+
+	if br.count == 2:
+		if start_pos.x == end_pos.x: # vertical
+			draw_line(start_pos + Vector2(-2,0), end_pos + Vector2(-2,0), color, width)
+			draw_line(start_pos + Vector2(2,0), end_pos + Vector2(2,0), color, width)
+		else: # horizontal
+			draw_line(start_pos + Vector2(0,-2), end_pos + Vector2(0,-2), color, width)
+			draw_line(start_pos + Vector2(0,2), end_pos + Vector2(0,2), color, width)
+	else:
+		draw_line(start_pos, end_pos, color, width)
+
+func _draw_hint_bridge(br):
+	if not br or not br.start_island or not br.end_island:
+		return
+		
+	var color = Color(1.0, 0.9, 0.1, 0.9)
+	var width = 3  # Slightly thinner for smaller grid
 	var start_pos = br.start_island.node.position - global_position
 	var end_pos = br.end_island.node.position - global_position
 
@@ -81,25 +110,6 @@ func _draw_bridge(br):
 		else: # horizontal
 			draw_line(start_pos + Vector2(0,-3), end_pos + Vector2(0,-3), color, width)
 			draw_line(start_pos + Vector2(0,3), end_pos + Vector2(0,3), color, width)
-	else:
-		draw_line(start_pos, end_pos, color, width)
-
-func _draw_hint_bridge(br):
-	if not br or not br.start_island or not br.end_island:
-		return
-		
-	var color = Color(1.0, 0.9, 0.1, 0.9)
-	var width = 4
-	var start_pos = br.start_island.node.position - global_position
-	var end_pos = br.end_island.node.position - global_position
-
-	if br.count == 2:
-		if start_pos.x == end_pos.x: # vertical
-			draw_line(start_pos + Vector2(-4,0), end_pos + Vector2(-4,0), color, width)
-			draw_line(start_pos + Vector2(4,0), end_pos + Vector2(4,0), color, width)
-		else: # horizontal
-			draw_line(start_pos + Vector2(0,-4), end_pos + Vector2(0,-4), color, width)
-			draw_line(start_pos + Vector2(0,4), end_pos + Vector2(0,4), color, width)
 	else:
 		draw_line(start_pos, end_pos, color, width)
 
