@@ -218,6 +218,74 @@ func _load_solution_robust():
 	puzzle_solver._load_solution_robust(output_file)
 	queue_redraw()
 
+# ==================== ALGORITHMIC SOLVER CONTROLS ====================
+
+func _on_ai_solve_pressed() -> void:
+	"""
+	Solve using the algorithmic solver instead of output files
+	"""
+	if puzzle_solver.is_puzzle_solved():
+		print("Puzzle already solved!")
+		return
+	
+	click.play()
+	puzzle_solver.clear_hint_bridges()
+	
+	var success = puzzle_solver.solve_with_algorithm()
+	if success:
+		print("🎉 Algorithmic solver completed!")
+	else:
+		print("❌ Algorithmic solver failed!")
+	
+	queue_redraw()
+
+func _on_ai_hint_pressed() -> void:
+	"""
+	Get a hint using the algorithmic solver
+	"""
+	if puzzle_solver.is_puzzle_solved():
+		print("Puzzle already solved! No hints needed.")
+		return
+	
+	click.play()
+	
+	# Prepare step-by-step solution
+	if puzzle_solver.solve_step_by_step():
+		var next_step = puzzle_solver.get_next_step()
+		if next_step:
+			show_ai_hint_popup(next_step.description)
+			
+			# Also show it as a visual hint
+			puzzle_solver.clear_hint_bridges()
+			var start_island = puzzle_solver._find_island_by_pos(next_step.start.pos)
+			var end_island = puzzle_solver._find_island_by_pos(next_step.end.pos)
+			
+			if start_island and end_island:
+				puzzle_solver.hint_bridges.append({
+					"start_island": start_island,
+					"end_island": end_island,
+					"start_pos": start_island.node.position,
+					"end_pos": end_island.node.position,
+					"count": next_step.count
+				})
+	
+	queue_redraw()
+
+func _on_next_step_pressed() -> void:
+	"""
+	Apply the next step in the algorithmic solution
+	"""
+	if puzzle_solver.is_puzzle_solved():
+		print("Puzzle already solved!")
+		return
+	
+	click.play()
+	
+	if puzzle_solver.apply_next_step():
+		queue_redraw()
+	else:
+		print("No more steps or failed to apply step")
+
 # ==================== UI CONTROL FUNCTIONS ====================
 
 func _on_hintbutton_pressed() -> void:
@@ -226,7 +294,34 @@ func _on_hintbutton_pressed() -> void:
 		return
 	
 	click.play()
-	_generate_enhanced_hint()
+	
+	# Use algorithmic hints instead of output file hints
+	if puzzle_solver.solve_step_by_step():
+		var next_step = puzzle_solver.get_next_step()
+		if next_step:
+			show_ai_hint_popup(next_step.description)
+			
+			# Also show it as a visual hint
+			puzzle_solver.clear_hint_bridges()
+			var start_island = puzzle_solver._find_island_by_pos(next_step.start.pos)
+			var end_island = puzzle_solver._find_island_by_pos(next_step.end.pos)
+			
+			if start_island and end_island:
+				puzzle_solver.hint_bridges.append({
+					"start_island": start_island,
+					"end_island": end_island,
+					"start_pos": start_island.node.position,
+					"end_pos": end_island.node.position,
+					"count": next_step.count
+				})
+		else:
+			print("No more steps available")
+	else:
+		print("❌ Could not generate algorithmic hints, using file-based hints")
+		# Fallback to file-based hints
+		_generate_enhanced_hint()
+	
+	queue_redraw()
 
 func _on_solvebutton_pressed() -> void:
 	if puzzle_solver.is_puzzle_solved():
@@ -236,14 +331,22 @@ func _on_solvebutton_pressed() -> void:
 	click.play()
 	puzzle_solver.clear_hint_bridges()
 	
-	# Use the backtracking solver
-	if puzzle_solver.solve_with_backtracking():
-		print("✅ Puzzle solved with backtracking!")
-		queue_redraw()
+	# Try simple solver first
+	print("🔄 Trying simple backtracking solver...")
+	var success = puzzle_solver.solve_with_simple_backtracking()
+	
+	if not success:
+		print("🔄 Simple solver failed, trying advanced solver...")
+		success = puzzle_solver.solve_with_algorithm()
+	
+	if success:
+		print("🎉 Solver completed!")
 	else:
-		print("❌ Backtracking failed, falling back to file solution")
-		puzzle_solver._load_solution_robust("res://assets/output/%s/output-%02d.txt" % [puzzle_folder, current_puzzle_index])
-		queue_redraw()
+		print("❌ All solvers failed! Falling back to output file...")
+		# Fallback to output file if algorithm fails
+		_load_solution_robust()
+	
+	queue_redraw()
 	
 func show_menu_panel():
 	if not panel:
@@ -303,6 +406,7 @@ func _clear_current_puzzle():
 		puzzle_solver.bridges.clear()
 		puzzle_solver.hint_bridges.clear()
 		puzzle_solver.puzzle_solved = false
+		puzzle_solver.reset_solver()
 		
 		# Reset all islands' connected bridges count
 		for island in puzzle_solver.get_puzzle_data():
@@ -336,3 +440,38 @@ func _reload_puzzle():
 	_update_ui_state()
 	queue_redraw()
 	print("✅ Puzzle reloaded successfully!")
+
+
+# ==================== AI SOLVER SUPPORT FUNCTIONS ====================
+
+func start_auto_solve_mode():
+	print("🚀 Starting auto-solve mode")
+	# Start a timer to auto-complete steps
+	if not has_node("AutoSolveTimer"):
+		var timer = Timer.new()
+		timer.name = "AutoSolveTimer"
+		timer.timeout.connect(_on_auto_solve_timer_timeout)
+		add_child(timer)
+	
+	$AutoSolveTimer.start(0.3)  # One step every 0.3 seconds
+
+func show_ai_hint_popup(hint_text: String):
+	# Show AI-generated hint
+	print("💡 AI HINT: ", hint_text)
+	
+	# If you have a UI label for hints, update it:
+	# $UI/HintLabel.text = hint_text
+	
+	# Optional: Show the hint as a visual bridge
+	puzzle_solver.show_next_hint_as_bridge()
+	queue_redraw()
+
+func _on_auto_solve_timer_timeout():
+	if puzzle_solver.has_next_step():
+		puzzle_solver.apply_next_step()
+		queue_redraw()
+	else:
+		$AutoSolveTimer.stop()
+		print("✅ Auto-solve completed!")
+		puzzle_solver.clear_hint_bridges()
+		queue_redraw()

@@ -28,6 +28,10 @@ var hint_visible: bool = false
 # Solution data for hints
 var solution_bridges := []
 
+# Algorithmic solver variables
+var solving_steps := []
+var current_step := 0
+
 # Initialize method
 func initialize(grid_size_param: Vector2i, cell_size_param: int, grid_offset_param: Vector2) -> void:
 	grid_size = grid_size_param
@@ -46,6 +50,582 @@ func update(delta: float) -> void:
 func set_puzzle_info(folder: String, index: int):
 	puzzle_folder = folder
 	current_puzzle_index = index
+
+# ==================== SIMPLE BACKTRACKING SOLVER ====================
+
+func solve_with_simple_backtracking() -> bool:
+	"""
+	Simpler backtracking solver that might work better for initial testing
+	"""
+	print("🧠 Starting simple backtracking solver...")
+	
+	# Save current state
+	var original_bridges = _duplicate_bridges()
+	var original_island_states = _save_island_states()
+	
+	# Clear for fresh start
+	bridges.clear()
+	for island in puzzle_data:
+		island.connected_bridges = 0
+	
+	var solver_islands = _create_island_copy()
+	var solver_bridges = []
+	
+	var start_time = Time.get_ticks_msec()
+	var success = _simple_backtrack(solver_islands, solver_bridges, 0)
+	var end_time = Time.get_ticks_msec()
+	
+	if success:
+		print("✅ Simple backtracking found solution in %d ms!" % (end_time - start_time))
+		_apply_solution(solver_bridges)
+		puzzle_solved = true
+		return true
+	else:
+		print("❌ Simple backtracking failed")
+		_restore_bridges(original_bridges)
+		_restore_island_states(original_island_states)
+		puzzle_solved = false
+		return false
+
+func _simple_backtrack(islands: Array, current_bridges: Array, depth: int) -> bool:
+	"""
+	Simpler backtracking algorithm
+	"""
+	if _is_solution_complete(islands, current_bridges):
+		return true
+	
+	if depth > 2000:  # Prevent infinite recursion
+		return false
+	
+	# Find first unsatisfied island
+	var target_island = null
+	for island in islands:
+		if island.connected_bridges < island.bridges_target:
+			target_island = island
+			break
+	
+	if not target_island:
+		return false
+	
+	# Try all possible connections
+	for neighbor in _get_available_neighbors(target_island, islands):
+		for count in [1, 2]:
+			# Check if this move is valid
+			if (target_island.connected_bridges + count <= target_island.bridges_target and
+				neighbor.connected_bridges + count <= neighbor.bridges_target):
+				
+				# Check if bridge already exists
+				var existing_bridge = _find_existing_bridge(target_island, neighbor, current_bridges)
+				if existing_bridge and existing_bridge.count + count > 2:
+					continue
+				
+				# Check intersections
+				if _would_cause_intersection(target_island, neighbor, current_bridges):
+					continue
+				
+				# Apply the move
+				var bridge_added = false
+				if existing_bridge:
+					existing_bridge.count += count
+					target_island.connected_bridges += count
+					neighbor.connected_bridges += count
+				else:
+					var new_bridge = {
+						"start_island": target_island,
+						"end_island": neighbor,
+						"start_pos": target_island.node.position,
+						"end_pos": neighbor.node.position,
+						"count": count
+					}
+					current_bridges.append(new_bridge)
+					target_island.connected_bridges += count
+					neighbor.connected_bridges += count
+					bridge_added = true
+				
+				# Recursively solve
+				if _simple_backtrack(islands, current_bridges, depth + 1):
+					return true
+				
+				# Backtrack
+				if existing_bridge:
+					existing_bridge.count -= count
+					target_island.connected_bridges -= count
+					neighbor.connected_bridges -= count
+				elif bridge_added:
+					current_bridges.pop_back()
+					target_island.connected_bridges -= count
+					neighbor.connected_bridges -= count
+	
+	return false
+
+# ==================== ADVANCED BACKTRACKING SOLVER ====================
+
+func solve_with_algorithm() -> bool:
+	"""
+	Solve the puzzle using constraint-based backtracking algorithm
+	"""
+	print("🧠 Starting algorithmic solver...")
+	
+	# Save current state
+	var original_bridges = _duplicate_bridges()
+	var original_island_states = _save_island_states()
+	
+	# Clear for fresh start
+	bridges.clear()
+	for island in puzzle_data:
+		island.connected_bridges = 0
+	
+	# Create a copy for the solver to work with
+	var solver_islands = _create_island_copy()
+	var solver_bridges = []
+	
+	var start_time = Time.get_ticks_msec()
+	var success = _backtrack_solve(solver_islands, solver_bridges, 0)
+	var end_time = Time.get_ticks_msec()
+	
+	if success:
+		print("✅ Algorithm found solution in %d ms!" % (end_time - start_time))
+		# Apply the solution
+		_apply_solution(solver_bridges)
+		puzzle_solved = true
+		return true
+	else:
+		print("❌ Algorithm could not find solution")
+		_restore_bridges(original_bridges)
+		_restore_island_states(original_island_states)
+		puzzle_solved = false
+		return false
+
+func _backtrack_solve(islands: Array, current_bridges: Array, depth: int) -> bool:
+	"""
+	Recursive backtracking solver with constraint propagation
+	"""
+	# Base case: check if puzzle is solved
+	if _is_solution_complete(islands, current_bridges):
+		print("✅ Found solution at depth ", depth)
+		return true
+	
+	if depth > 1000:  # Prevent infinite recursion
+		print("⚠️  Depth limit reached at depth ", depth)
+		return false
+	
+	# Select the most constrained island (MRV heuristic)
+	var island = _select_most_constrained_island(islands)
+	if not island:
+		print("❌ No constrained island found at depth ", depth)
+		return false
+	
+	# Get possible bridge moves for this island
+	var possible_moves = _get_possible_bridge_moves(island, islands, current_bridges)
+	
+	# Try each possible move
+	for move in possible_moves:
+		# Apply the move
+		var bridge_added = _apply_bridge_move(move, current_bridges)
+		
+		# Check constraints
+		if _is_state_valid(islands, current_bridges):
+			# Recursively solve
+			if _backtrack_solve(islands, current_bridges, depth + 1):
+				return true
+		
+		# Backtrack - remove the bridge
+		if bridge_added:
+			_remove_bridge_move(move, current_bridges)
+	
+	return false
+
+func _select_most_constrained_island(islands: Array):
+	"""
+	Select island with fewest remaining bridge possibilities (MRV heuristic)
+	"""
+	var best_island = null
+	var best_score = INF
+	
+	for island in islands:
+		var remaining = island.bridges_target - island.connected_bridges
+		if remaining <= 0:
+			continue
+		
+		# Score based on remaining bridges and available neighbors
+		var available_neighbors = _get_available_neighbors(island, islands)
+		var score = remaining * 10 + available_neighbors.size()
+		
+		if score < best_score:
+			best_score = score
+			best_island = island
+	
+	return best_island
+
+func _get_possible_bridge_moves(island, islands: Array, current_bridges: Array) -> Array:
+	"""
+	Generate all possible valid bridge moves for an island
+	"""
+	var moves = []
+	var remaining = island.bridges_target - island.connected_bridges
+	
+	if remaining <= 0:
+		return moves
+	
+	# Check each possible neighbor
+	for neighbor in _get_available_neighbors(island, islands):
+		# Check if bridge already exists
+		var existing_bridge = _find_existing_bridge(island, neighbor, current_bridges)
+		var current_count = existing_bridge.count if existing_bridge else 0
+		
+		# Possible bridge counts (1 or 2, but respect limits)
+		for count in [1, 2]:
+			if current_count + count <= 2 and count <= remaining:
+				# Check if this would exceed neighbor's capacity
+				var neighbor_remaining = neighbor.bridges_target - neighbor.connected_bridges
+				if count <= neighbor_remaining:
+					# Check for intersections
+					if not _would_cause_intersection(island, neighbor, current_bridges):
+						moves.append({
+							"start": island,
+							"end": neighbor,
+							"count": count,
+							"existing": existing_bridge
+						})
+	
+	return moves
+
+func _get_available_neighbors(island, islands: Array) -> Array:
+	"""
+	Get all neighbors that can be connected to this island
+	"""
+	var neighbors = []
+	
+	for other in islands:
+		if other == island:
+			continue
+		
+		# Check if they're aligned and no islands between them
+		if _can_connect_directly(island, other, islands):
+			neighbors.append(other)
+	
+	return neighbors
+
+func _can_connect_directly(a, b, all_islands: Array) -> bool:
+	"""
+	Check if two islands can be connected directly (no islands in between)
+	"""
+	if a.pos.x != b.pos.x and a.pos.y != b.pos.y:
+		return false
+	
+	for island in all_islands:
+		if island == a or island == b:
+			continue
+		
+		if a.pos.x == b.pos.x and island.pos.x == a.pos.x:
+			if (island.pos.y > min(a.pos.y, b.pos.y) and 
+				island.pos.y < max(a.pos.y, b.pos.y)):
+				return false
+		elif a.pos.y == b.pos.y and island.pos.y == a.pos.y:
+			if (island.pos.x > min(a.pos.x, b.pos.x) and 
+				island.pos.x < max(a.pos.x, b.pos.x)):
+				return false
+	
+	return true
+
+func _would_cause_intersection(start_island, end_island, current_bridges: Array) -> bool:
+	"""
+	Check if adding this bridge would cause intersections
+	"""
+	var start_pos = start_island.node.position
+	var end_pos = end_island.node.position
+	
+	for bridge in current_bridges:
+		if (bridge.start_island == start_island and bridge.end_island == end_island) or \
+		   (bridge.start_island == end_island and bridge.end_island == start_island):
+			continue  # Same bridge, no intersection
+		
+		if _bridges_cross(start_pos, end_pos, bridge.start_pos, bridge.end_pos):
+			return true
+	
+	return false
+
+func _apply_bridge_move(move, current_bridges: Array) -> bool:
+	"""
+	Apply a bridge move to the current state
+	"""
+	if move.existing:
+		# Update existing bridge
+		move.existing.count += move.count
+		move.start.connected_bridges += move.count
+		move.end.connected_bridges += move.count
+		return false  # Not a new bridge
+	else:
+		# Create new bridge
+		var new_bridge = {
+			"start_island": move.start,
+			"end_island": move.end,
+			"start_pos": move.start.node.position,
+			"end_pos": move.end.node.position,
+			"count": move.count
+		}
+		current_bridges.append(new_bridge)
+		move.start.connected_bridges += move.count
+		move.end.connected_bridges += move.count
+		return true  # New bridge added
+
+func _remove_bridge_move(move, current_bridges: Array):
+	"""
+	Remove a bridge move from the current state
+	"""
+	if move.existing:
+		# Revert existing bridge
+		move.existing.count -= move.count
+		move.start.connected_bridges -= move.count
+		move.end.connected_bridges -= move.count
+	else:
+		# Remove new bridge
+		for i in range(current_bridges.size() - 1, -1, -1):
+			var br = current_bridges[i]
+			if br.start_island == move.start and br.end_island == move.end:
+				current_bridges.remove_at(i)
+				move.start.connected_bridges -= move.count
+				move.end.connected_bridges -= move.count
+				break
+
+func _is_state_valid(islands: Array, current_bridges: Array) -> bool:
+	"""
+	Check if current state doesn't violate constraints
+	"""
+	# Check if any island exceeds its target
+	for island in islands:
+		if island.connected_bridges > island.bridges_target:
+			return false
+	
+	# Check for bridge intersections
+	for i in range(current_bridges.size()):
+		for j in range(i + 1, current_bridges.size()):
+			var br1 = current_bridges[i]
+			var br2 = current_bridges[j]
+			if _bridges_cross(br1.start_pos, br1.end_pos, br2.start_pos, br2.end_pos):
+				return false
+	
+	return true
+
+func _is_solution_complete(islands: Array, current_bridges: Array) -> bool:
+	"""
+	Check if puzzle is completely solved
+	"""
+	# All islands have correct number of bridges
+	for island in islands:
+		if island.connected_bridges != island.bridges_target:
+			return false
+	
+	# Check connectivity
+	return _is_fully_connected(islands, current_bridges)
+
+func _is_fully_connected(islands: Array, current_bridges: Array) -> bool:
+	"""
+	Check if all islands are connected in a single component
+	"""
+	if islands.is_empty():
+		return true
+	
+	var visited = {}
+	var stack = [islands[0]]
+	
+	while stack.size() > 0:
+		var island = stack.pop_back()
+		visited[island] = true
+		
+		# Find all connected neighbors via bridges
+		for bridge in current_bridges:
+			var neighbor = null
+			if bridge.start_island == island:
+				neighbor = bridge.end_island
+			elif bridge.end_island == island:
+				neighbor = bridge.start_island
+			
+			if neighbor and not visited.has(neighbor):
+				stack.append(neighbor)
+	
+	return visited.size() == islands.size()
+
+func _create_island_copy() -> Array:
+	"""
+	Create a deep copy of islands for the solver
+	"""
+	var copy = []
+	for original in puzzle_data:
+		copy.append({
+			"pos": original.pos,
+			"node": original.node,  # Reference to actual node
+			"bridges_target": original.bridges_target,
+			"connected_bridges": original.connected_bridges
+		})
+	return copy
+
+func _apply_solution(solver_bridges: Array):
+	"""
+	Apply the found solution to the actual puzzle state
+	"""
+	bridges.clear()
+	
+	# Update bridge counts on actual islands
+	for island in puzzle_data:
+		island.connected_bridges = 0
+	
+	# Add all bridges from solution
+	for solver_br in solver_bridges:
+		# Find corresponding actual islands
+		var actual_start = _find_corresponding_island(solver_br.start_island)
+		var actual_end = _find_corresponding_island(solver_br.end_island)
+		
+		if actual_start and actual_end:
+			bridges.append({
+				"start_island": actual_start,
+				"end_island": actual_end,
+				"start_pos": actual_start.node.position,
+				"end_pos": actual_end.node.position,
+				"count": solver_br.count
+			})
+			actual_start.connected_bridges += solver_br.count
+			actual_end.connected_bridges += solver_br.count
+
+func _find_corresponding_island(solver_island):
+	"""
+	Find the actual island corresponding to a solver island
+	"""
+	for actual_island in puzzle_data:
+		if actual_island.pos == solver_island.pos:
+			return actual_island
+	return null
+
+func _find_existing_bridge(a, b, bridge_list: Array):
+	"""
+	Find existing bridge between two islands
+	"""
+	for bridge in bridge_list:
+		if (bridge.start_island == a and bridge.end_island == b) or \
+		   (bridge.start_island == b and bridge.end_island == a):
+			return bridge
+	return null
+
+# ==================== STEP-BY-STEP SOLVER ====================
+
+func solve_step_by_step() -> bool:
+	"""
+	Prepare for step-by-step solving
+	"""
+	print("🔍 Preparing step-by-step solution...")
+	
+	# Clear previous steps
+	solving_steps.clear()
+	current_step = 0
+	
+	# Solve completely to get all steps
+	var temp_islands = _create_island_copy()
+	var temp_bridges = []
+	
+	if _backtrack_solve_with_steps(temp_islands, temp_bridges, 0):
+		print("✅ Step-by-step solution prepared with %d steps" % solving_steps.size())
+		return true
+	
+	return false
+
+func _backtrack_solve_with_steps(islands: Array, current_bridges: Array, depth: int) -> bool:
+	"""
+	Backtracking solver that records steps
+	"""
+	if _is_solution_complete(islands, current_bridges):
+		return true
+	
+	var island = _select_most_constrained_island(islands)
+	if not island:
+		return false
+	
+	var possible_moves = _get_possible_bridge_moves(island, islands, current_bridges)
+	
+	for move in possible_moves:
+		var bridge_added = _apply_bridge_move(move, current_bridges)
+		
+		if _is_state_valid(islands, current_bridges):
+			# Record this step
+			solving_steps.append({
+				"start": {"pos": move.start.pos, "bridges_target": move.start.bridges_target},
+				"end": {"pos": move.end.pos, "bridges_target": move.end.bridges_target},
+				"count": move.count,
+				"description": "Add %d bridge(s) between (%d,%d) and (%d,%d)" % [
+					move.count, move.start.pos.x-1, move.start.pos.y-1,
+					move.end.pos.x-1, move.end.pos.y-1
+				]
+			})
+			
+			if _backtrack_solve_with_steps(islands, current_bridges, depth + 1):
+				return true
+			
+			# Remove step if backtracking (we'll keep the successful path)
+			solving_steps.pop_back()
+		
+		if bridge_added:
+			_remove_bridge_move(move, current_bridges)
+	
+	return false
+
+func has_next_step() -> bool:
+	return current_step < solving_steps.size()
+
+func get_next_step():
+	if current_step < solving_steps.size():
+		return solving_steps[current_step]
+	return null
+
+func apply_next_step() -> bool:
+	"""
+	Apply the next step in the solution
+	"""
+	if current_step >= solving_steps.size():
+		return false
+	
+	var step = solving_steps[current_step]
+	
+	# Find the actual islands
+	var start_island = _find_island_by_pos(step.start.pos)
+	var end_island = _find_island_by_pos(step.end.pos)
+	
+	if start_island and end_island:
+		# Add the bridge
+		if _can_add_bridge(start_island, end_island, step.count):
+			_add_bridge_internal(start_island, end_island, step.count)
+			print("🔧 Applied step %d: %s" % [current_step + 1, step.description])
+			current_step += 1
+			return true
+	
+	return false
+
+func _find_island_by_pos(pos: Vector2):
+	"""
+	Find island by position
+	"""
+	for island in puzzle_data:
+		if island.pos == pos:
+			return island
+	return null
+
+func show_next_hint_as_bridge():
+	"""
+	Show the next step as a visual hint bridge
+	"""
+	if current_step < solving_steps.size():
+		var step = solving_steps[current_step]
+		var start_island = _find_island_by_pos(step.start.pos)
+		var end_island = _find_island_by_pos(step.end.pos)
+		
+		if start_island and end_island:
+			hint_bridges.append({
+				"start_island": start_island,
+				"end_island": end_island,
+				"start_pos": start_island.node.position,
+				"end_pos": end_island.node.position,
+				"count": step.count
+			})
+			hint_visible = true
+			hint_timer = 2.0  # Show for 2 seconds
 
 # ==================== SIMPLE GUIDED SOLVER ====================
 
@@ -947,6 +1527,8 @@ func provide_ai_hint():
 
 func reset_solver():
 	solution_bridges.clear()
+	solving_steps.clear()
+	current_step = 0
 
 # ==================== GETTERS ====================
 
