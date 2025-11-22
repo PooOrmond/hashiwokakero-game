@@ -1,8 +1,8 @@
+Node
 AnimatedSprite2D
 VBoxContainer
 MarginContainer
 TextureButton
-Node
 Button
 TextureRect
 NinePatchRect
