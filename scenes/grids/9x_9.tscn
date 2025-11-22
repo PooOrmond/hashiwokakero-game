@@ -149,13 +149,15 @@ region = Rect2(0, 163.79451, 138, 152.00017)
 [node name="9x9" type="Node2D"]
 script = ExtResource("1_a7600")
 
-[node name="background" type="AnimatedSprite2D" parent="."]
+[node name="background" type="Node" parent="."]
+
+[node name="normal_bg" type="AnimatedSprite2D" parent="background"]
 z_index = -100
 position = Vector2(400, 324)
 sprite_frames = SubResource("SpriteFrames_wbdsf")
 autoplay = "default"
 
-[node name="congrats_bg" type="AnimatedSprite2D" parent="."]
+[node name="congrats_bg" type="AnimatedSprite2D" parent="background"]
 visible = false
 z_index = -1
 position = Vector2(401, 325)
