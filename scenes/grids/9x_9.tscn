@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://b2tbb8b1rk0bg"]
+[gd_scene load_steps=39 format=3 uid="uid://b2tbb8b1rk0bg"]
 
 [ext_resource type="Script" uid="uid://lyklbctpoyoc" path="res://scripts/9x_9.gd" id="1_a7600"]
 [ext_resource type="Texture2D" uid="uid://du7xbqtjabqcd" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 1.png" id="2_2kfur"]
@@ -12,7 +12,21 @@
 [ext_resource type="Texture2D" uid="uid://c7yi4yu11k2n7" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 6.png" id="7_mv1pp"]
 [ext_resource type="Texture2D" uid="uid://cbropxq5yc00n" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 7.png" id="8_0afsy"]
 [ext_resource type="Texture2D" uid="uid://3r3arps5fcqy" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 8.png" id="9_31plf"]
+[ext_resource type="Texture2D" uid="uid://rnee02fq0vwg" path="res://assets/animation/background/congrats/congrats-bg - 1.png" id="10_wnarp"]
+[ext_resource type="Texture2D" uid="uid://bvcmvh1bt26li" path="res://assets/animation/background/congrats/congrats-bg - 2.png" id="11_g211h"]
 [ext_resource type="Texture2D" uid="uid://pkp20ysqadal" path="res://assets/buttons/setting.png" id="12_2kfur"]
+[ext_resource type="Texture2D" uid="uid://hfukqmc8arax" path="res://assets/animation/background/congrats/congrats-bg - 3.png" id="12_illac"]
+[ext_resource type="Texture2D" uid="uid://cl6p7tn4og0s7" path="res://assets/animation/background/congrats/congrats-bg - 4.png" id="13_tiurl"]
+[ext_resource type="Texture2D" uid="uid://d1e8onskqoo1v" path="res://assets/animation/background/congrats/congrats-bg - 5.png" id="14_ntpdo"]
+[ext_resource type="Texture2D" uid="uid://c0lgjyd6hpx13" path="res://assets/animation/background/congrats/congrats-bg - 6.png" id="15_tpltc"]
+[ext_resource type="Texture2D" uid="uid://dm0ha63iba0an" path="res://assets/animation/background/congrats/congrats-bg - 7.png" id="16_o46xj"]
+[ext_resource type="Texture2D" uid="uid://cald1hkeqqlqq" path="res://assets/animation/background/congrats/congrats-bg - 8.png" id="17_mnjof"]
+[ext_resource type="Texture2D" uid="uid://cpf1dvam78aee" path="res://assets/animation/background/congrats/congrats-bg - 9.png" id="18_bailr"]
+[ext_resource type="Texture2D" uid="uid://53nimkai24w1" path="res://assets/animation/background/congrats/congrats-bg - 10.png" id="19_3cmlr"]
+[ext_resource type="Texture2D" uid="uid://irmbhnef658a" path="res://assets/animation/background/congrats/congrats-bg - 11.png" id="20_41bh5"]
+[ext_resource type="Texture2D" uid="uid://hew2x8w8oxgj" path="res://assets/animation/background/congrats/congrats-bg - 12.png" id="21_gq08l"]
+[ext_resource type="Texture2D" uid="uid://caisl3ns7rfm" path="res://assets/animation/background/congrats/congrats-bg - 13.png" id="22_uv1f5"]
+[ext_resource type="Texture2D" uid="uid://phb2sx3s1t70" path="res://assets/animation/background/congrats/congrats-bg - 14.png" id="23_6wylc"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_wbdsf"]
 animations = [{
@@ -44,6 +58,56 @@ animations = [{
 "loop": true,
 "name": &"default",
 "speed": 7.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wnarp"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_wnarp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_g211h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_illac")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_tiurl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_ntpdo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_tpltc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_o46xj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_mnjof")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_bailr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_3cmlr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_41bh5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_gq08l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_uv1f5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_6wylc")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
 }]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6xauk"]
@@ -90,6 +154,12 @@ z_index = -100
 position = Vector2(400, 324)
 sprite_frames = SubResource("SpriteFrames_wbdsf")
 autoplay = "default"
+
+[node name="congrats_bg" type="AnimatedSprite2D" parent="."]
+visible = false
+z_index = -1
+position = Vector2(401, 325)
+sprite_frames = SubResource("SpriteFrames_wnarp")
 
 [node name="buttons" type="Node" parent="."]
 

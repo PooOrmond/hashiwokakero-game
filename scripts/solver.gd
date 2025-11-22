@@ -945,7 +945,7 @@ func _bridges_cross(p1: Vector2, p2: Vector2, q1: Vector2, q2: Vector2) -> bool:
 
 func _check_puzzle_completion():
 	"""
-	Check if puzzle is solved (for manual play)
+	Check if puzzle is solved (for manual play) - simplified version
 	"""
 	var all_correct = true
 	for island in puzzle_data:
@@ -953,29 +953,11 @@ func _check_puzzle_completion():
 			all_correct = false
 			break
 	
-	if all_correct and _is_puzzle_solvable():
+	if all_correct:
 		puzzle_solved = true
 		print("🎉 PUZZLE SOLVED! Congratulations!")
 	else:
 		puzzle_solved = false
-
-func _is_puzzle_solvable() -> bool:
-	if puzzle_data.size() == 0:
-		return false
-	var visited = {}
-	var stack = [puzzle_data[0]]
-	while stack.size() > 0:
-		var isl = stack.pop_back()
-		visited[isl] = true
-		for br in bridges:
-			var neighbor = null
-			if br.start_island == isl:
-				neighbor = br.end_island
-			elif br.end_island == isl:
-				neighbor = br.start_island
-			if neighbor != null and neighbor not in visited:
-				stack.append(neighbor)
-	return visited.size() == puzzle_data.size()
 
 # ==================== GETTERS ====================
 

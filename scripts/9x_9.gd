@@ -5,9 +5,17 @@ extends Node2D
 @export var cell_size: int = 42  # Reduced from 48 to make grid smaller
 @export var puzzle_folder: String = "9x9"
 
+# Background
+@onready var congrats_bg: AnimatedSprite2D = $congrats_bg
+@onready var normal_bg: AnimatedSprite2D = $normal_bg
+
 # Audio
 @onready var click: AudioStreamPlayer2D = $click
 @onready var menu_panel = preload("res://scenes/menu_popup_panel.tscn")
+
+# UI Buttons - Only these two will be invisible when solved
+@onready var solve_button: TextureButton = $"buttons/solve-button"
+@onready var hint_button: TextureButton = $"buttons/hint-button"
 
 var panel
 
@@ -23,6 +31,7 @@ var temp_bridge_line = null
 
 # Puzzle state
 var current_puzzle_index := 1
+var was_solved := false  # Track if puzzle was just solved
 
 func _ready():
 	# Add this line to register this node for group calls
@@ -40,6 +49,10 @@ func _ready():
 	
 	var file_path = "res://assets/input/%s/input-%02d.txt" % [puzzle_folder, current_puzzle_index]
 	puzzle_solver.load_custom_puzzle(file_path, self)
+	
+	# Initialize background and button states
+	_reset_background_to_normal()
+	_update_ui_state()
 	queue_redraw()
 
 func _process(delta):
@@ -49,6 +62,51 @@ func _process(delta):
 		# Redraw if hints were cleared by the timer
 		if puzzle_solver.get_hint_bridges().is_empty():
 			queue_redraw()
+	
+	# Check if puzzle was just solved to update UI
+	if puzzle_solver and puzzle_solver.is_puzzle_solved() and not was_solved:
+		was_solved = true
+		_on_puzzle_solved()
+	elif puzzle_solver and not puzzle_solver.is_puzzle_solved() and was_solved:
+		was_solved = false
+		_on_puzzle_unsolved()
+
+func _on_puzzle_solved():
+	"""Called when puzzle is solved"""
+	print("🎉 Puzzle solved! Updating UI...")
+	_update_ui_state()
+	
+	# Show congratulations background
+	if congrats_bg:
+		congrats_bg.visible = true
+		congrats_bg.play()  # Play animation if it's an AnimatedSprite2D
+	if normal_bg:
+		normal_bg.visible = false
+
+func _on_puzzle_unsolved():
+	"""Called when puzzle is no longer solved (restart/new game)"""
+	print("🔄 Puzzle reset, restoring normal UI...")
+	_update_ui_state()
+	_reset_background_to_normal()
+
+func _reset_background_to_normal():
+	"""Force reset background to normal state"""
+	print("🔄 Resetting background to normal...")
+	if congrats_bg:
+		congrats_bg.visible = false
+		congrats_bg.stop()  # Stop animation if it's an AnimatedSprite2D
+	if normal_bg:
+		normal_bg.visible = true
+
+func _update_ui_state():
+	"""Update button visibility based on puzzle state"""
+	var is_solved = puzzle_solver and puzzle_solver.is_puzzle_solved()
+	
+	# Only hide solve and hint buttons when puzzle is solved
+	if hint_button:
+		hint_button.visible = not is_solved
+	if solve_button:
+		solve_button.visible = not is_solved
 
 func _calculate_grid_offset():
 	var window_size = Vector2(800, 650)
@@ -209,6 +267,9 @@ func load_new_puzzle():
 	
 	# Reload with new puzzle
 	_reload_puzzle()
+	
+	# Force reset background
+	_reset_background_to_normal()
 
 func restart_current_puzzle():
 	"""
@@ -222,6 +283,9 @@ func restart_current_puzzle():
 	# Reload with same puzzle index
 	print("🔄 Reloading puzzle index: ", current_puzzle_index)
 	_reload_puzzle()
+	
+	# Force reset background
+	_reset_background_to_normal()
 
 func _clear_current_puzzle():
 	"""
@@ -261,6 +325,9 @@ func _reload_puzzle():
 		if has_node("AutoSolveTimer"):
 			$AutoSolveTimer.stop()
 	
+	# Reset UI state
+	was_solved = false
+	_update_ui_state()
 	queue_redraw()
 	print("✅ Puzzle reloaded successfully!")
 

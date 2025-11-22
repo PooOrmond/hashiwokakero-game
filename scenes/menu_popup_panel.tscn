@@ -56,7 +56,7 @@ region = Rect2(0, 331.38443, 138, 132.61557)
 atlas = ExtResource("6_u387i")
 region = Rect2(0, 167.69194, 138, 144.20528)
 
-[node name="menu" type="Control"]
+[node name="popup-menu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
