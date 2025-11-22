@@ -1,0 +1,131 @@
+[gd_scene load_steps=20 format=3 uid="uid://cjnpyndudoqj6"]
+
+[ext_resource type="Script" uid="uid://go4unjo12d6o" path="res://scripts/menu-panel.gd" id="1_ma64t"]
+[ext_resource type="Texture2D" uid="uid://dtq77lpxhe54j" path="res://assets/window/menu-window.png" id="2_f1gwq"]
+[ext_resource type="Texture2D" uid="uid://ds2npb75hcd4y" path="res://assets/buttons/Restart.png" id="3_yn06i"]
+[ext_resource type="Texture2D" uid="uid://c71mg5m6q3xfj" path="res://assets/buttons/New-game.png" id="4_v236h"]
+[ext_resource type="Texture2D" uid="uid://wvh4xnp37qfg" path="res://assets/buttons/Quit.png" id="5_7wp6i"]
+[ext_resource type="Texture2D" uid="uid://5bu8vxys2apf" path="res://assets/buttons/Cancel.png" id="6_u387i"]
+[ext_resource type="AudioStream" uid="uid://csjm46gsdq2em" path="res://music/button-sound.mp3" id="7_6fmeu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_13sgg"]
+atlas = ExtResource("3_yn06i")
+region = Rect2(0, 0, 256, 119.897064)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i6lef"]
+atlas = ExtResource("3_yn06i")
+region = Rect2(21.794739, 271.89722, 234.20526, 112.10278)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_70i5f"]
+atlas = ExtResource("3_yn06i")
+region = Rect2(0, 135.48683, 256, 118.8719)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mj5lg"]
+atlas = ExtResource("4_v236h")
+region = Rect2(0, 0, 256, 119.897064)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ufwb2"]
+atlas = ExtResource("4_v236h")
+region = Rect2(19.846008, 271.89722, 236.15399, 112.10278)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6cdou"]
+atlas = ExtResource("4_v236h")
+region = Rect2(0, 137.43555, 256, 116.92319)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i42df"]
+atlas = ExtResource("5_7wp6i")
+region = Rect2(0, 0, 256, 119.897064)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7jp70"]
+atlas = ExtResource("5_7wp6i")
+region = Rect2(21.794739, 271.89722, 234.20526, 112.10278)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mxgkd"]
+atlas = ExtResource("5_7wp6i")
+region = Rect2(0, 135.48683, 256, 120.82063)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g6gyw"]
+atlas = ExtResource("6_u387i")
+region = Rect2(0, 0, 138, 152.10219)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3dmrc"]
+atlas = ExtResource("6_u387i")
+region = Rect2(0, 331.38443, 138, 132.61557)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_81l6r"]
+atlas = ExtResource("6_u387i")
+region = Rect2(0, 167.69194, 138, 144.20528)
+
+[node name="menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ma64t")
+
+[node name="menu-background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -291.0
+offset_top = -227.5
+offset_right = 293.0
+offset_bottom = 247.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_f1gwq")
+
+[node name="button" type="Node" parent="."]
+
+[node name="restart-button" type="TextureButton" parent="button"]
+offset_left = 312.00003
+offset_top = 195.0
+offset_right = 568.0
+offset_bottom = 314.0
+scale = Vector2(0.7, 0.7)
+texture_normal = SubResource("AtlasTexture_13sgg")
+texture_pressed = SubResource("AtlasTexture_i6lef")
+texture_hover = SubResource("AtlasTexture_70i5f")
+
+[node name="new_game-button" type="TextureButton" parent="button"]
+offset_left = 313.00003
+offset_top = 294.00003
+offset_right = 569.0
+offset_bottom = 413.00003
+scale = Vector2(0.7, 0.7)
+texture_normal = SubResource("AtlasTexture_mj5lg")
+texture_pressed = SubResource("AtlasTexture_ufwb2")
+texture_hover = SubResource("AtlasTexture_6cdou")
+
+[node name="quit-button" type="TextureButton" parent="button"]
+offset_left = 314.0
+offset_top = 392.0
+offset_right = 570.0
+offset_bottom = 511.0
+scale = Vector2(0.7, 0.7)
+texture_normal = SubResource("AtlasTexture_i42df")
+texture_pressed = SubResource("AtlasTexture_7jp70")
+texture_hover = SubResource("AtlasTexture_mxgkd")
+
+[node name="cancel-button" type="TextureButton" parent="button"]
+offset_left = 255.0
+offset_top = 143.0
+offset_right = 393.0
+offset_bottom = 295.0
+scale = Vector2(0.3, 0.3)
+texture_normal = SubResource("AtlasTexture_g6gyw")
+texture_pressed = SubResource("AtlasTexture_3dmrc")
+texture_hover = SubResource("AtlasTexture_81l6r")
+
+[node name="click" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_6fmeu")
+
+[connection signal="pressed" from="button/restart-button" to="." method="_on_restartbutton_pressed"]
+[connection signal="pressed" from="button/new_game-button" to="." method="_on_new_gamebutton_pressed"]
+[connection signal="pressed" from="button/quit-button" to="." method="_on_quitbutton_pressed"]
+[connection signal="pressed" from="button/cancel-button" to="." method="_on_cancelbutton_pressed"]

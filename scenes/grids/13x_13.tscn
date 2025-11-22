@@ -4,7 +4,6 @@
 [ext_resource type="Texture2D" uid="uid://du7xbqtjabqcd" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 1.png" id="2_48r4w"]
 [ext_resource type="Texture2D" uid="uid://nha5vkl3mqx5" path="res://assets/buttons/hint.png" id="3_80qnd"]
 [ext_resource type="Texture2D" uid="uid://nnrrsk8an14x" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 2.png" id="3_m5d5k"]
-[ext_resource type="Texture2D" uid="uid://douajqs02guic" path="res://assets/buttons/back.png" id="3_qvy4r"]
 [ext_resource type="AudioStream" uid="uid://csjm46gsdq2em" path="res://music/button-sound.mp3" id="4_2bgud"]
 [ext_resource type="Texture2D" uid="uid://vf6b1fa5xgr8" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 3.png" id="4_b4y3x"]
 [ext_resource type="Texture2D" uid="uid://bampjpg003esd" path="res://assets/buttons/solve.png" id="4_qvy4r"]
@@ -13,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://c7yi4yu11k2n7" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 6.png" id="7_i7775"]
 [ext_resource type="Texture2D" uid="uid://cbropxq5yc00n" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 7.png" id="8_nppe2"]
 [ext_resource type="Texture2D" uid="uid://3r3arps5fcqy" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 8.png" id="9_wec5l"]
+[ext_resource type="Texture2D" uid="uid://pkp20ysqadal" path="res://assets/buttons/setting.png" id="12_48r4w"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_0f8bs"]
 animations = [{
@@ -46,18 +46,6 @@ animations = [{
 "speed": 7.0
 }]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_80qnd"]
-atlas = ExtResource("3_qvy4r")
-region = Rect2(-1.0084839, -0.241642, 256.8132, 120.89343)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_qvy4r"]
-atlas = ExtResource("3_qvy4r")
-region = Rect2(-1.2625961, 271.53223, 259.20377, 113.44861)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_48r4w"]
-atlas = ExtResource("3_qvy4r")
-region = Rect2(1.0001831, 136.90007, 254.10016, 118.80008)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_2bgud"]
 atlas = ExtResource("3_80qnd")
 region = Rect2(-0.38011932, 0.08026886, 136.60278, 151.8436)
@@ -82,6 +70,18 @@ region = Rect2(-0.5453186, 328.2893, 138.84311, 136.36377)
 atlas = ExtResource("4_qvy4r")
 region = Rect2(-0.5115967, 162.57872, 138.01666, 154.54561)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_m5d5k"]
+atlas = ExtResource("12_48r4w")
+region = Rect2(0, 0, 138, 152.10219)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b4y3x"]
+atlas = ExtResource("12_48r4w")
+region = Rect2(0, 329.4357, 138, 134.5643)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3kvyr"]
+atlas = ExtResource("12_48r4w")
+region = Rect2(0, 163.79451, 138, 152.00017)
+
 [node name="13x13" type="Node2D"]
 script = ExtResource("1_uykxq")
 
@@ -91,43 +91,41 @@ position = Vector2(400, 325)
 sprite_frames = SubResource("SpriteFrames_0f8bs")
 autoplay = "default"
 
-[node name="NodesContainer" type="Node2D" parent="."]
-
 [node name="buttons" type="Node" parent="."]
 
-[node name="backbutton" type="TextureButton" parent="buttons"]
-offset_left = 20.0
-offset_top = 24.0
-offset_right = 276.0
-offset_bottom = 144.0
-scale = Vector2(0.5, 0.5)
-texture_normal = SubResource("AtlasTexture_80qnd")
-texture_pressed = SubResource("AtlasTexture_qvy4r")
-texture_hover = SubResource("AtlasTexture_48r4w")
-
 [node name="hint-button" type="TextureButton" parent="buttons"]
-offset_left = 675.0
-offset_top = 10.0
-offset_right = 811.0
-offset_bottom = 161.0
+offset_left = 402.0
+offset_top = 9.0
+offset_right = 538.0
+offset_bottom = 160.0
 scale = Vector2(0.5, 0.5)
 texture_normal = SubResource("AtlasTexture_2bgud")
 texture_pressed = SubResource("AtlasTexture_let3w")
 texture_hover = SubResource("AtlasTexture_jmi68")
 
 [node name="solve-button" type="TextureButton" parent="buttons"]
-offset_left = 563.0
+offset_left = 311.0
 offset_top = 9.0
-offset_right = 699.0
+offset_right = 447.0
 offset_bottom = 160.0
 scale = Vector2(0.5, 0.5)
 texture_normal = SubResource("AtlasTexture_3prr6")
 texture_pressed = SubResource("AtlasTexture_x4n7s")
 texture_hover = SubResource("AtlasTexture_ouu17")
 
+[node name="menu-panel-button" type="TextureButton" parent="buttons"]
+offset_left = 19.0
+offset_top = 524.0
+offset_right = 157.0
+offset_bottom = 676.0
+scale = Vector2(0.6, 0.6)
+texture_normal = SubResource("AtlasTexture_m5d5k")
+texture_pressed = SubResource("AtlasTexture_b4y3x")
+texture_hover = SubResource("AtlasTexture_3kvyr")
+
 [node name="click" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_2bgud")
 
-[connection signal="pressed" from="buttons/backbutton" to="." method="_on_backbutton_pressed"]
 [connection signal="pressed" from="buttons/hint-button" to="." method="_on_hintbutton_pressed"]
 [connection signal="pressed" from="buttons/solve-button" to="." method="_on_solvebutton_pressed"]
+[connection signal="pressed" from="buttons/menu-panel-button" to="." method="_on_menupanelbutton_pressed"]

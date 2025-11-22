@@ -7,6 +7,9 @@ extends Node2D
 
 # Audio
 @onready var click: AudioStreamPlayer2D = $click
+@onready var menu_panel = preload("res://scenes/menu_popup_panel.tscn")
+
+var panel
 
 # Grid variables
 var grid_offset := Vector2.ZERO
@@ -21,8 +24,9 @@ var temp_bridge_line = null
 # Puzzle state
 var current_puzzle_index := 1
 
-
 func _ready():
+	# Add this line to register this node for group calls
+	add_to_group("puzzle_scene")
 	randomize()
 	_calculate_grid_offset()
 	
@@ -37,7 +41,6 @@ func _ready():
 	var file_path = "res://assets/input/%s/input-%02d.txt" % [puzzle_folder, current_puzzle_index]
 	puzzle_solver.load_custom_puzzle(file_path, self)
 	queue_redraw()
-
 
 func _process(delta):
 	# Update the puzzle solver for hint timer functionality
@@ -167,11 +170,6 @@ func _load_solution_robust():
 
 # ==================== UI CONTROL FUNCTIONS ====================
 
-func _on_backbutton_pressed() -> void:
-	click.play()
-	await get_tree().create_timer(0.1).timeout
-	get_tree().change_scene_to_file("res://scenes/choose_grid_size.tscn")
-
 func _on_hintbutton_pressed() -> void:
 	if puzzle_solver.is_puzzle_solved():
 		print("Puzzle already solved! No hints needed.")
@@ -188,6 +186,90 @@ func _on_solvebutton_pressed() -> void:
 	click.play()
 	puzzle_solver.clear_hint_bridges()
 	_load_solution_robust()
+	
+func show_menu_panel():
+	if not panel:
+		panel = menu_panel.instantiate()
+		add_sibling(panel)
+
+func _on_menupanelbutton_pressed() -> void:
+	show_menu_panel()
+
+# ==================== NEW GAME & RESTART FUNCTIONS ====================
+
+func load_new_puzzle():
+	"""
+	Load a completely new puzzle with different input/output files
+	"""
+	print("🔄 Loading new puzzle...")
+	
+	# Clear current state
+	_clear_current_puzzle()
+	
+	# Generate a new random puzzle index (different from current)
+	var new_puzzle_index = current_puzzle_index
+	while new_puzzle_index == current_puzzle_index:
+		new_puzzle_index = randi() % 5 + 1
+	
+	current_puzzle_index = new_puzzle_index
+	print("🎲 Selected new puzzle index: ", current_puzzle_index)
+	
+	# Reload with new puzzle
+	_reload_puzzle()
+
+func restart_current_puzzle():
+	"""
+	Restart the current puzzle (same input/output files)
+	"""
+	print("🔄 Restarting current puzzle...")
+	
+	# Clear current state
+	_clear_current_puzzle()
+	
+	# Reload with same puzzle index
+	print("🔄 Reloading puzzle index: ", current_puzzle_index)
+	_reload_puzzle()
+
+func _clear_current_puzzle():
+	"""
+	Clear the current puzzle state
+	"""
+	# Clear bridges and reset islands
+	if puzzle_solver:
+		# Clear bridges using the correct function names
+		puzzle_solver.bridges.clear()
+		puzzle_solver.hint_bridges.clear()
+		puzzle_solver.puzzle_solved = false
+		
+		# Reset all islands' connected bridges count
+		for island in puzzle_solver.get_puzzle_data():
+			island.connected_bridges = 0
+	
+	# Clear interaction variables
+	bridge_start_island = null
+	temp_bridge_line = null
+
+func _reload_puzzle():
+	"""
+	Reload the puzzle with current index
+	"""
+	if puzzle_solver:
+		# Set puzzle info
+		puzzle_solver.set_puzzle_info(puzzle_folder, current_puzzle_index)
+		
+		# Load the puzzle file
+		var file_path = "res://assets/input/%s/input-%02d.txt" % [puzzle_folder, current_puzzle_index]
+		puzzle_solver.load_custom_puzzle(file_path, self)
+		
+		# Reset AI solver state if active
+		puzzle_solver.reset_solver()
+		
+		# Stop auto-solve timer if running
+		if has_node("AutoSolveTimer"):
+			$AutoSolveTimer.stop()
+	
+	queue_redraw()
+	print("✅ Puzzle reloaded successfully!")
 
 # ==================== AI SOLVER BUTTONS ====================
 

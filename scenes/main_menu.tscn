@@ -234,7 +234,8 @@ autoplay = "background animation"
 speed_scale = 0.01
 
 [node name="new-title-animation" type="AnimatedSprite2D" parent="."]
-position = Vector2(399, 122)
+position = Vector2(405, 135)
+scale = Vector2(0.9425, 0.92533934)
 sprite_frames = SubResource("SpriteFrames_hl5e0")
 autoplay = "default"
 frame = 6
