@@ -6,8 +6,8 @@ extends Node2D
 @export var puzzle_folder: String = "13x13"
 
 # Background
-@onready var congrats_bg: AnimatedSprite2D = $background/congrats_bg
-@onready var normal_bg: AnimatedSprite2D = $background/normal_bg
+@onready var congrats_bg: AnimatedSprite2D = $congrats_bg
+@onready var normal_bg: AnimatedSprite2D = $normal_bg
 
 # Audio
 @onready var click: AudioStreamPlayer2D = $click
