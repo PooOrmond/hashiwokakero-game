@@ -180,3 +180,71 @@ func _on_solvebutton_pressed() -> void:
 	click.play()
 	puzzle_solver.clear_hint_bridges()
 	_load_solution_robust()
+
+# ==================== AI SOLVER BUTTONS ====================
+
+func _on_ai_solve_button_pressed() -> void:
+	if puzzle_solver.is_puzzle_solved():
+		print("Puzzle already solved!")
+		return
+	
+	click.play()
+	puzzle_solver.clear_hint_bridges()
+	
+	# Use the new backtracking solver instead of file loading
+	if puzzle_solver.solve_with_backtracking():
+		print("✅ AI solved the puzzle with backtracking!")
+		start_auto_solve_mode()
+	else:
+		print("❌ AI failed to solve the puzzle")
+
+func _on_ai_hint_button_pressed() -> void:
+	if puzzle_solver.is_puzzle_solved():
+		print("Puzzle already solved! No hints needed.")
+		return
+	
+	click.play()
+	var hint = puzzle_solver.provide_ai_hint()
+	show_ai_hint_popup(hint)
+
+func _on_next_step_button_pressed() -> void:
+	click.play()
+	if puzzle_solver.auto_complete_step():
+		queue_redraw()
+		print("Step completed: ", puzzle_solver.get_step_progress())
+	else:
+		print("No more steps to complete or puzzle already solved")
+
+# ==================== AI SOLVER SUPPORT FUNCTIONS ====================
+
+func start_auto_solve_mode():
+	print("🚀 Starting auto-solve mode")
+	# Start a timer to auto-complete steps
+	if not has_node("AutoSolveTimer"):
+		var timer = Timer.new()
+		timer.name = "AutoSolveTimer"
+		timer.timeout.connect(_on_auto_solve_timer_timeout)
+		add_child(timer)
+	
+	$AutoSolveTimer.start(0.3)  # One step every 0.3 seconds
+
+func show_ai_hint_popup(hint_text: String):
+	# Show AI-generated hint
+	print("💡 AI HINT: ", hint_text)
+	
+	# If you have a UI label for hints, update it:
+	# $UI/HintLabel.text = hint_text
+	
+	# Optional: Show the hint as a visual bridge
+	puzzle_solver.show_next_hint_as_bridge()
+	queue_redraw()
+
+func _on_auto_solve_timer_timeout():
+	if puzzle_solver.has_next_step():
+		puzzle_solver.auto_complete_step()
+		queue_redraw()
+	else:
+		$AutoSolveTimer.stop()
+		print("✅ Auto-solve completed!")
+		puzzle_solver.clear_hint_bridges()
+		queue_redraw()
