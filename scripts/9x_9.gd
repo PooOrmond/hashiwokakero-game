@@ -299,8 +299,17 @@ func _on_auto_solve_pressed() -> void:
 	click.play()
 	puzzle_solver.clear_hint_bridges()
 	
+	# Try CSP solver first (fastest)
 	print("🔄 Trying CSP solver first...")
 	var success = puzzle_solver.csp_based_solver()
+	
+	if not success:
+		print("🔄 CSP failed, trying backtracking solver...")
+		success = puzzle_solver.backtracking_solver()
+	
+	if not success:
+		print("🔄 Algorithms failed, falling back to output file...")
+		success = puzzle_solver.output_file_solver()
 	
 	if success:
 		print("🎉 Auto-solve completed!")
@@ -309,9 +318,11 @@ func _on_auto_solve_pressed() -> void:
 	
 	queue_redraw()
 
+# Update your existing solve button to use auto-solve
 func _on_solvebutton_pressed() -> void:
 	_on_auto_solve_pressed()
 
+# Update your hint button to be more clear
 func _on_hintbutton_pressed() -> void:
 	if puzzle_solver.is_puzzle_solved():
 		print("Puzzle already solved! No hints needed.")
@@ -319,7 +330,32 @@ func _on_hintbutton_pressed() -> void:
 	
 	click.play()
 	
-	puzzle_solver.csp_based_hint()
+	# Use algorithmic hints first
+	print("🔄 Generating algorithmic hint...")
+	if puzzle_solver.solve_step_by_step():
+		var next_step = puzzle_solver.get_next_step()
+		if next_step:
+			show_ai_hint_popup(next_step.description)
+			
+			# Also show it as a visual hint
+			puzzle_solver.clear_hint_bridges()
+			var start_island = puzzle_solver._find_island_by_pos(next_step.start.pos)
+			var end_island = puzzle_solver._find_island_by_pos(next_step.end.pos)
+			
+			if start_island and end_island:
+				puzzle_solver.hint_bridges.append({
+					"start_island": start_island,
+					"end_island": end_island,
+					"start_pos": start_island.node.position,
+					"end_pos": end_island.node.position,
+					"count": next_step.count
+				})
+		else:
+			print("No more steps available")
+	else:
+		print("❌ Could not generate algorithmic hints, using file-based hints")
+		# Fallback to file-based hints
+		_generate_file_based_hint()
 	
 	queue_redraw()
 	
