@@ -208,8 +208,12 @@ func _input(event):
 
 # ==================== HINT SYSTEM ====================
 
-func _generate_enhanced_hint():
-	puzzle_solver._generate_enhanced_hint()
+func _generate_file_based_hint():
+	puzzle_solver.file_based_hint()
+	queue_redraw()
+
+func _generate_algorithmic_hint():
+	puzzle_solver.algorithmic_hint()
 	queue_redraw()
 
 # ==================== SOLUTION LOADING ====================
@@ -219,11 +223,11 @@ func _load_solution_robust():
 	puzzle_solver._load_solution_robust(output_file)
 	queue_redraw()
 
-# ==================== ALGORITHMIC SOLVER CONTROLS ====================
+# ==================== SOLVER BUTTON FUNCTIONS ====================
 
-func _on_ai_solve_pressed() -> void:
+func _on_csp_solve_pressed() -> void:
 	"""
-	Solve using the algorithmic solver instead of output files
+	Solve using CSP-based algorithmic solver
 	"""
 	if puzzle_solver.is_puzzle_solved():
 		print("Puzzle already solved!")
@@ -232,63 +236,93 @@ func _on_ai_solve_pressed() -> void:
 	click.play()
 	puzzle_solver.clear_hint_bridges()
 	
-	var success = puzzle_solver.solve_with_algorithm()
+	print("🔄 Starting CSP solver...")
+	var success = puzzle_solver.csp_based_solver()
+	
 	if success:
-		print("🎉 Algorithmic solver completed!")
+		print("🎉 CSP solver completed!")
 	else:
-		print("❌ Algorithmic solver failed!")
+		print("❌ CSP solver failed!")
 	
 	queue_redraw()
 
-func _on_ai_hint_pressed() -> void:
+func _on_backtracking_solve_pressed() -> void:
 	"""
-	Get a hint using the algorithmic solver
-	"""
-	if puzzle_solver.is_puzzle_solved():
-		print("Puzzle already solved! No hints needed.")
-		return
-	
-	click.play()
-	
-	# Prepare step-by-step solution
-	if puzzle_solver.solve_step_by_step():
-		var next_step = puzzle_solver.get_next_step()
-		if next_step:
-			show_ai_hint_popup(next_step.description)
-			
-			# Also show it as a visual hint
-			puzzle_solver.clear_hint_bridges()
-			var start_island = puzzle_solver._find_island_by_pos(next_step.start.pos)
-			var end_island = puzzle_solver._find_island_by_pos(next_step.end.pos)
-			
-			if start_island and end_island:
-				puzzle_solver.hint_bridges.append({
-					"start_island": start_island,
-					"end_island": end_island,
-					"start_pos": start_island.node.position,
-					"end_pos": end_island.node.position,
-					"count": next_step.count
-				})
-	
-	queue_redraw()
-
-func _on_next_step_pressed() -> void:
-	"""
-	Apply the next step in the algorithmic solution
+	Solve using backtracking algorithmic solver
 	"""
 	if puzzle_solver.is_puzzle_solved():
 		print("Puzzle already solved!")
 		return
 	
 	click.play()
+	puzzle_solver.clear_hint_bridges()
 	
-	if puzzle_solver.apply_next_step():
-		queue_redraw()
+	print("🔄 Starting backtracking solver...")
+	var success = puzzle_solver.backtracking_solver()
+	
+	if success:
+		print("🎉 Backtracking solver completed!")
 	else:
-		print("No more steps or failed to apply step")
+		print("❌ Backtracking solver failed!")
+	
+	queue_redraw()
 
-# ==================== UI CONTROL FUNCTIONS ====================
+func _on_output_file_solve_pressed() -> void:
+	"""
+	Solve by loading pre-computed solution from output file
+	"""
+	if puzzle_solver.is_puzzle_solved():
+		print("Puzzle already solved!")
+		return
+	
+	click.play()
+	puzzle_solver.clear_hint_bridges()
+	
+	print("🔄 Loading solution from output file...")
+	var success = puzzle_solver.output_file_solver()
+	
+	if success:
+		print("🎉 Output file solver completed!")
+	else:
+		print("❌ Output file solver failed!")
+	
+	queue_redraw()
 
+func _on_auto_solve_pressed() -> void:
+	"""
+	Auto-solve using the most efficient method available
+	"""
+	if puzzle_solver.is_puzzle_solved():
+		print("Puzzle already solved!")
+		return
+	
+	click.play()
+	puzzle_solver.clear_hint_bridges()
+	
+	# Try CSP solver first (fastest)
+	print("🔄 Trying CSP solver first...")
+	var success = puzzle_solver.csp_based_solver()
+	
+	if not success:
+		print("🔄 CSP failed, trying backtracking solver...")
+		success = puzzle_solver.backtracking_solver()
+	
+	if not success:
+		print("🔄 Algorithms failed, falling back to output file...")
+		success = puzzle_solver.output_file_solver()
+	
+	if success:
+		print("🎉 Auto-solve completed!")
+	else:
+		print("❌ All solving methods failed!")
+	
+	queue_redraw()
+
+# Update your existing solve button to use auto-solve
+func _on_solvebutton_pressed() -> void:
+	_on_auto_solve_pressed()
+
+# Update your hint button to be more clear
 func _on_hintbutton_pressed() -> void:
 	if puzzle_solver.is_puzzle_solved():
 		print("Puzzle already solved! No hints needed.")
@@ -296,7 +330,8 @@ func _on_hintbutton_pressed() -> void:
 	
 	click.play()
 	
-	# Use algorithmic hints instead of output file hints
+	# Use algorithmic hints first
+	print("🔄 Generating algorithmic hint...")
 	if puzzle_solver.solve_step_by_step():
 		var next_step = puzzle_solver.get_next_step()
 		if next_step:
@@ -320,32 +355,7 @@ func _on_hintbutton_pressed() -> void:
 	else:
 		print("❌ Could not generate algorithmic hints, using file-based hints")
 		# Fallback to file-based hints
-		_generate_enhanced_hint()
-	
-	queue_redraw()
-
-func _on_solvebutton_pressed() -> void:
-	if puzzle_solver.is_puzzle_solved():
-		print("Puzzle already solved!")
-		return
-	
-	click.play()
-	puzzle_solver.clear_hint_bridges()
-	
-	# Try simple solver first
-	print("🔄 Trying simple backtracking solver...")
-	var success = puzzle_solver.solve_with_simple_backtracking()
-	
-	if not success:
-		print("🔄 Simple solver failed, trying advanced solver...")
-		success = puzzle_solver.solve_with_algorithm()
-	
-	if success:
-		print("🎉 Solver completed!")
-	else:
-		print("❌ All solvers failed! Falling back to output file...")
-		# Fallback to output file if algorithm fails
-		_load_solution_robust()
+		_generate_file_based_hint()
 	
 	queue_redraw()
 	
@@ -476,3 +486,35 @@ func _on_auto_solve_timer_timeout():
 		print("✅ Auto-solve completed!")
 		puzzle_solver.clear_hint_bridges()
 		queue_redraw()
+
+# ==================== ADDITIONAL SOLVER BUTTONS (if you want separate buttons) ====================
+
+func _on_algorithmic_hint_pressed() -> void:
+	"""
+	Get a hint using the algorithmic solver only
+	"""
+	if puzzle_solver.is_puzzle_solved():
+		print("Puzzle already solved! No hints needed.")
+		return
+	
+	click.play()
+	
+	print("🔄 Generating algorithmic hint...")
+	_generate_algorithmic_hint()
+	
+	queue_redraw()
+
+func _on_file_hint_pressed() -> void:
+	"""
+	Get a hint using the output file only
+	"""
+	if puzzle_solver.is_puzzle_solved():
+		print("Puzzle already solved! No hints needed.")
+		return
+	
+	click.play()
+	
+	print("🔄 Generating file-based hint...")
+	_generate_file_based_hint()
+	
+	queue_redraw()
