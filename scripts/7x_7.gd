@@ -59,20 +59,21 @@ func _process(delta):
 	# Update the puzzle solver for hint timer and animation functionality
 	if puzzle_solver:
 		puzzle_solver.update(delta)
+		
+		# Check if animation just completed and puzzle is solved
+		if puzzle_solver.is_animation_completed() and puzzle_solver.is_puzzle_solved() and not was_solved:
+			print("🎉 Animation completed and puzzle solved, updating UI...")
+			was_solved = true
+			_on_puzzle_solved()
+			# Reset the animation completed flag to prevent multiple triggers
+			puzzle_solver.animation_completed = false
+		
 		# Always redraw when animating to ensure smooth updates
 		if puzzle_solver.is_animating():
 			queue_redraw()
-		# Also redraw when hints change or animation completes
+		# Also redraw when hints change
 		elif puzzle_solver.get_hint_bridges().size() > 0:
 			queue_redraw()
-	
-	# Check if puzzle was just solved to update UI
-	if puzzle_solver and puzzle_solver.is_puzzle_solved() and not was_solved:
-		was_solved = true
-		_on_puzzle_solved()
-	elif puzzle_solver and not puzzle_solver.is_puzzle_solved() and was_solved:
-		was_solved = false
-		_on_puzzle_unsolved()
 
 func _on_puzzle_solved():
 	"""Called when puzzle is solved"""
@@ -104,12 +105,20 @@ func _reset_background_to_normal():
 func _update_ui_state():
 	"""Update button visibility based on puzzle state"""
 	var is_solved = puzzle_solver and puzzle_solver.is_puzzle_solved()
+	var is_animating = puzzle_solver and puzzle_solver.is_animating()
 	
-	# Only hide solve and hint buttons when puzzle is solved
+	print("🔄 UI State - Solved: %s, Animating: %s, Was Solved: %s" % [is_solved, is_animating, was_solved])
+	
+	# Hide buttons only when puzzle is solved AND not animating
 	if hint_button:
-		hint_button.visible = not is_solved
+		hint_button.visible = not (is_solved and not is_animating)
 	if solve_button:
-		solve_button.visible = not is_solved
+		solve_button.visible = not (is_solved and not is_animating)
+	
+	# If puzzle is solved and not animating, ensure background is updated
+	if is_solved and not is_animating and not was_solved:
+		was_solved = true
+		_on_puzzle_solved()
 
 func _calculate_grid_offset():
 	var window_size = Vector2(800, 650)
@@ -135,6 +144,7 @@ func _draw_grid():
 				  Color(0.7, 0.7, 0.7, 1.0), 2.0)
 
 func _draw_bridges():
+	# Get only visible bridges from the solver
 	for br in puzzle_solver.get_bridges():
 		_draw_bridge(br)
 
@@ -230,6 +240,7 @@ func _on_csp_solve_pressed() -> void:
 	
 	if success:
 		print("🎉 CSP solver completed!")
+		_on_puzzle_solved()
 	else:
 		print("❌ CSP solver failed!")
 	
@@ -250,16 +261,24 @@ func _on_solvebutton_pressed() -> void:
 	click.play()
 	puzzle_solver.clear_hint_bridges()
 	
+	# Reset animation completion flag and solved state
+	puzzle_solver.animation_completed = false
+	was_solved = false
+	
 	# Use step-by-step solver animation
 	print("🎬 Starting step-by-step solver animation...")
 	var success = puzzle_solver.start_step_by_step_solution()
 	
 	if success:
 		print("✅ Step-by-step animation started!")
+		# Update UI to show animation in progress
+		_update_ui_state()
 	else:
 		print("❌ Failed to start animation, using instant solver...")
 		# Fallback to instant solver
-		puzzle_solver.csp_based_solver()
+		if puzzle_solver.csp_based_solver():
+			# If instant solver worked, update UI
+			_on_puzzle_solved()
 	
 	queue_redraw()
 
@@ -368,7 +387,6 @@ func _reload_puzzle():
 	queue_redraw()
 	print("✅ Puzzle reloaded successfully!")
 
-
 # ==================== AI SOLVER SUPPORT FUNCTIONS ====================
 
 func start_auto_solve_mode():
@@ -402,3 +420,18 @@ func _on_auto_solve_timer_timeout():
 		print("✅ Auto-solve completed!")
 		puzzle_solver.clear_hint_bridges()
 		queue_redraw()
+
+# ==================== SOLVER STATE NOTIFICATION ====================
+
+func _on_solver_state_changed():
+	"""
+	Called when the solver state changes (from group notification)
+	"""
+	print("🔄 Solver state changed received, updating display...")
+	queue_redraw()
+	
+	# Check if we need to update the solved state
+	if puzzle_solver and puzzle_solver.is_puzzle_solved() and not was_solved:
+		print("🎉 Puzzle solved detected in state change!")
+		was_solved = true
+		_on_puzzle_solved()

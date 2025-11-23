@@ -38,8 +38,9 @@ var csp_hint_applied_bridges := {}  # Track which bridges from solution have bee
 var step_by_step_bridges := []  # Bridges to be shown step by step
 var current_animation_step := 0
 var animation_timer := 0.0
-var animation_delay := 0.6  # Time between bridge appearances - increased to 0.6 seconds
+var animation_delay := 0.6  # Time between bridge appearances
 var is_animating_solution := false
+var animation_completed := false
 
 # Initialize method
 func initialize(grid_size_param: Vector2i, cell_size_param: int, grid_offset_param: Vector2) -> void:
@@ -89,7 +90,21 @@ func start_step_by_step_solution() -> bool:
 		current_animation_step = 0
 		animation_timer = animation_delay
 		is_animating_solution = true
+		animation_completed = false
 		puzzle_solved = false
+		
+		# ADD ALL BRIDGES IMMEDIATELY BUT MARK THEM AS HIDDEN
+		for bridge_data in step_by_step_bridges:
+			_add_bridge_internal(bridge_data.start_island, bridge_data.end_island, bridge_data.count)
+			# Mark the bridge as hidden for animation
+			if bridges.size() > 0:
+				bridges[bridges.size() - 1]["visible"] = false
+		
+		# MAKE FIRST BRIDGE VISIBLE
+		if step_by_step_bridges.size() > 0:
+			bridges[0]["visible"] = true
+			print("🔧 Made first bridge visible")
+		
 		return true
 	else:
 		print("❌ Failed to compute solution for animation")
@@ -146,8 +161,6 @@ func _convert_to_step_by_step(temp_bridges: Array):
 	
 	# Sort bridges in a logical order (by position, count, etc.)
 	var sorted_bridges = temp_bridges.duplicate()
-	
-	# Simple sorting: by x position of start island, then y position
 	sorted_bridges.sort_custom(_sort_bridges_for_animation)
 	
 	# Convert to actual island references
@@ -163,10 +176,8 @@ func _convert_to_step_by_step(temp_bridges: Array):
 				"end_pos": actual_end.node.position,
 				"count": temp_br.count
 			})
-		else:
-			print("❌ Could not find corresponding island for bridge in animation")
 	
-	print("📊 Animation prepared with %d bridge steps (from %d temp bridges)" % [step_by_step_bridges.size(), temp_bridges.size()])
+	print("📊 Animation prepared with %d bridge steps" % step_by_step_bridges.size())
 	
 	# Debug: Log all bridges in animation
 	for i in range(step_by_step_bridges.size()):
@@ -191,32 +202,25 @@ func _sort_bridges_for_animation(a, b) -> bool:
 
 func _apply_next_animation_step():
 	"""
-	Apply the next bridge in the animation sequence
+	Apply the next bridge in the animation sequence - SIMPLIFIED
 	"""
-	if current_animation_step < step_by_step_bridges.size():
-		var bridge_data = step_by_step_bridges[current_animation_step]
+	if current_animation_step < step_by_step_bridges.size() - 1:
+		# Make the next bridge visible
+		current_animation_step += 1
+		bridges[current_animation_step]["visible"] = true
 		
-		# Add the bridge to the actual puzzle
-		_add_bridge_internal(bridge_data.start_island, bridge_data.end_island, bridge_data.count)
-		
-		print("🔧 Animation step %d/%d: Added %d bridge(s) between (%d,%d) and (%d,%d)" % [
+		print("🔧 Animation step %d/%d: Made bridge visible between (%d,%d) and (%d,%d)" % [
 			current_animation_step + 1, step_by_step_bridges.size(),
-			bridge_data.count,
-			bridge_data.start_island.pos.x - 1, bridge_data.start_island.pos.y - 1,
-			bridge_data.end_island.pos.x - 1, bridge_data.end_island.pos.y - 1
+			step_by_step_bridges[current_animation_step].start_island.pos.x - 1,
+			step_by_step_bridges[current_animation_step].start_island.pos.y - 1,
+			step_by_step_bridges[current_animation_step].end_island.pos.x - 1,
+			step_by_step_bridges[current_animation_step].end_island.pos.y - 1
 		])
 		
-		current_animation_step += 1
-		
-		# Check if this was the final step
-		if current_animation_step >= step_by_step_bridges.size():
-			print("🎯 Final animation step completed, scheduling completion...")
-			# Schedule completion for next frame to ensure bridge is drawn
-			animation_timer = 0.1  # Very short delay to ensure rendering
-		else:
-			animation_timer = animation_delay
+		animation_timer = animation_delay
 	else:
-		print("⚠️ Animation step out of bounds, forcing completion")
+		# All bridges are now visible
+		print("🎯 All bridges are now visible, animation complete!")
 		_animation_complete()
 
 func _animation_complete():
@@ -225,20 +229,23 @@ func _animation_complete():
 	"""
 	print("🎉 Step-by-step animation complete!")
 	is_animating_solution = false
+	animation_completed = true
 	puzzle_solved = true
 	
-	# Force verification and UI update
-	_verify_solution()
-	_update_puzzle_state()
+	# Notify the main scene to update UI
+	_notify_puzzle_scene()
 	
-	print("✅ All %d bridges have been placed successfully!" % step_by_step_bridges.size())
+	print("📢 Animation completed, puzzle solved!")
 
 func _update_puzzle_state():
 	"""
 	Update the puzzle state and trigger UI refresh
 	"""
 	# Check if puzzle is actually solved
-	if _verify_solution():
+	var is_solved = _verify_solution()
+	puzzle_solved = is_solved
+	
+	if is_solved:
 		print("🎉 Puzzle is correctly solved!")
 	else:
 		print("❌ Puzzle verification failed!")
@@ -250,18 +257,25 @@ func _notify_puzzle_scene():
 	"""
 	Notify the puzzle scene to update its display
 	"""
+	# Use call_deferred to ensure this happens in the next frame
+	call_deferred("_deferred_notify_puzzle_scene")
+
+func _deferred_notify_puzzle_scene():
+	"""
+	Deferred notification to avoid state issues
+	"""
 	# Use groups to find and notify the puzzle scene
 	if Engine.get_main_loop().has_method("call_group"):
-		Engine.get_main_loop().call_group("puzzle_scene", "queue_redraw")
+		Engine.get_main_loop().call_group("puzzle_scene", "_on_solver_state_changed")
 	
-	# Alternative: use signals if available, or direct reference
-	print("📢 Notifying puzzle scene to update display")
+	print("📢 Notified puzzle scene to update display")
 
 func stop_animation():
 	"""
 	Stop the step-by-step animation
 	"""
 	is_animating_solution = false
+	animation_completed = false
 	print("⏹️ Step-by-step animation stopped")
 
 func is_animating() -> bool:
@@ -270,13 +284,19 @@ func is_animating() -> bool:
 	"""
 	return is_animating_solution
 
+func is_animation_completed() -> bool:
+	"""
+	Check if step-by-step animation has completed
+	"""
+	return animation_completed
+
 func get_animation_progress() -> float:
 	"""
 	Get animation progress (0.0 to 1.0)
 	"""
 	if step_by_step_bridges.is_empty():
 		return 0.0
-	return float(current_animation_step) / float(step_by_step_bridges.size())
+	return float(current_animation_step + 1) / float(step_by_step_bridges.size())
 
 # ==================== CSP-BASED HINT SYSTEM ====================
 
@@ -322,7 +342,6 @@ func csp_based_hint() -> void:
 		
 		# Mark this bridge as suggested (but don't apply it yet)
 		var _bridge_key = _get_bridge_key(suggested_bridge.start_island, suggested_bridge.end_island)
-		# csp_hint_applied_bridges[_bridge_key] = suggested_bridge.count
 	else:
 		print("💡 All CSP solution bridges are already placed!")
 
@@ -1065,11 +1084,11 @@ func _is_csp_solution_connected(assignment: Dictionary) -> bool:
 	
 	return visited.size() == solver_islands.size()
 
-func _find_island_by_pos_csp(islands: Array, pos: Vector2):
+func _find_island_by_pos_csp(solver_islands: Array, pos: Vector2):
 	"""
 	Find island by position in CSP solver islands
 	"""
-	for island in islands:
+	for island in solver_islands:
 		if island.pos == pos:
 			return island
 	return null
@@ -1516,6 +1535,7 @@ func reset_solver():
 	stop_animation()
 	step_by_step_bridges.clear()
 	current_animation_step = 0
+	animation_completed = false
 
 # ==================== GETTERS ====================
 
@@ -1523,7 +1543,14 @@ func get_puzzle_data():
 	return puzzle_data
 
 func get_bridges():
-	return bridges
+	"""
+	Get only visible bridges for drawing
+	"""
+	var visible_bridges = []
+	for bridge in bridges:
+		if bridge.get("visible", true):  # Default to true if no visibility property
+			visible_bridges.append(bridge)
+	return visible_bridges
 
 func get_hint_bridges():
 	return hint_bridges
