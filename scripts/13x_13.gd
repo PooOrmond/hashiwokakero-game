@@ -1,7 +1,7 @@
 extends Node2D
 
-# Configuration for 13x13
-@export var grid_size: Vector2i = Vector2i(14, 14) # 13x13 grid with border
+# Configuration for 13x13 - Using the same values as your reference code
+@export var grid_size: Vector2i = Vector2i(14, 14)
 @export var cell_size: int = 32
 @export var puzzle_folder: String = "13x13"
 
@@ -16,6 +16,10 @@ extends Node2D
 # UI Buttons - Only these two will be invisible when solved
 @onready var solve_button: TextureButton = $"buttons/solve-button"
 @onready var hint_button: TextureButton = $"buttons/hint-button"
+
+# Loading screen
+@onready var loading_screen = preload("res://scenes/loading_screen.tscn")
+var loading_instance: Control = null
 
 var panel
 
@@ -59,20 +63,40 @@ func _process(delta):
 	# Update the puzzle solver for hint timer and animation functionality
 	if puzzle_solver:
 		puzzle_solver.update(delta)
+		
+		# Update loading progress for threaded resources
+		if loading_instance and loading_instance.is_loading():
+			_update_loading_progress()
+			
+			# If tracking a resource and it's loaded, hide loading screen
+			if loading_instance.is_resource_loaded():
+				# Small delay to show 100%
+				await get_tree().create_timer(0.3).timeout
+				_hide_loading_screen()
+		
+		# Update loading progress during animation
+		elif puzzle_solver.is_animating() and loading_instance and loading_instance.is_loading():
+			var progress = puzzle_solver.get_animation_progress()
+			_set_loading_progress_manual(0.5 + (progress * 0.5))  # 50% to 100% during animation
+			
+			# If animation completed, hide loading screen
+			if puzzle_solver.is_animation_completed():
+				await get_tree().create_timer(0.3).timeout
+				_hide_loading_screen()
+		
+		# Check if animation just completed and puzzle is solved
+		if puzzle_solver.is_animation_completed() and puzzle_solver.is_puzzle_solved() and not was_solved:
+			print("🎉 Animation completed and puzzle solved, updating UI...")
+			was_solved = true
+			_on_puzzle_solved()
+			puzzle_solver.animation_completed = false
+		
 		# Always redraw when animating to ensure smooth updates
 		if puzzle_solver.is_animating():
 			queue_redraw()
-		# Also redraw when hints change or animation completes
+		# Also redraw when hints change
 		elif puzzle_solver.get_hint_bridges().size() > 0:
 			queue_redraw()
-	
-	# Check if puzzle was just solved to update UI
-	if puzzle_solver and puzzle_solver.is_puzzle_solved() and not was_solved:
-		was_solved = true
-		_on_puzzle_solved()
-	elif puzzle_solver and not puzzle_solver.is_puzzle_solved() and was_solved:
-		was_solved = false
-		_on_puzzle_unsolved()
 
 func _on_puzzle_solved():
 	"""Called when puzzle is solved"""
@@ -104,12 +128,46 @@ func _reset_background_to_normal():
 func _update_ui_state():
 	"""Update button visibility based on puzzle state"""
 	var is_solved = puzzle_solver and puzzle_solver.is_puzzle_solved()
+	var is_animating = puzzle_solver and puzzle_solver.is_animating()
 	
-	# Only hide solve and hint buttons when puzzle is solved
+	print("🔄 UI State - Solved: %s, Animating: %s, Was Solved: %s" % [is_solved, is_animating, was_solved])
+	
+	# Hide buttons only when puzzle is solved AND not animating
 	if hint_button:
-		hint_button.visible = not is_solved
+		hint_button.visible = not (is_solved and not is_animating)
 	if solve_button:
-		solve_button.visible = not is_solved
+		solve_button.visible = not (is_solved and not is_animating)
+	
+	# If puzzle is solved and not animating, ensure background is updated
+	if is_solved and not is_animating and not was_solved:
+		was_solved = true
+		_on_puzzle_solved()
+
+# ==================== LOADING SCREEN FUNCTIONS ====================
+
+func _show_loading_screen(resource_path: String = ""):
+	"""Show loading screen with optional resource tracking"""
+	if not loading_instance:
+		loading_instance = loading_screen.instantiate()
+		add_child(loading_instance)
+	loading_instance.show_loading(resource_path)
+
+func _hide_loading_screen():
+	"""Hide loading screen"""
+	if loading_instance:
+		loading_instance.hide_loading()
+
+func _update_loading_progress():
+	"""Update loading progress using threaded loading"""
+	if loading_instance and loading_instance.is_loading():
+		loading_instance.update_loading_progress()
+
+func _set_loading_progress_manual(value: float):
+	"""Set loading progress manually"""
+	if loading_instance and loading_instance.is_loading():
+		loading_instance.set_progress_manual(value)
+
+# ==================== GRID AND DRAWING FUNCTIONS ====================
 
 func _calculate_grid_offset():
 	var window_size = Vector2(800, 650)
@@ -124,25 +182,18 @@ func _draw():
 		draw_line(temp_bridge_line[0], temp_bridge_line[1], Color(0,0,0), 4)
 
 func _draw_grid():
-	# Draw horizontal lines
 	for y in range(1, grid_size.y):
-		draw_line(
-			grid_offset + Vector2(1, y * cell_size),
-			grid_offset + Vector2(grid_size.x * cell_size, y * cell_size),
-			Color(0.7, 0.7, 0.7, 1.0),
-			2.0
-		)
+		draw_line(grid_offset + Vector2(0, y*cell_size),
+				  grid_offset + Vector2(grid_size.x*cell_size, y*cell_size),
+				  Color(0.7, 0.7, 0.7, 1.0), 2.0)
 	
-	# Draw vertical lines
 	for x in range(1, grid_size.x):
-		draw_line(
-			grid_offset + Vector2(x * cell_size, 0),
-			grid_offset + Vector2(x * cell_size, grid_size.y * cell_size),
-			Color(0.7, 0.7, 0.7, 1.0),
-			2.0
-		)
+		draw_line(grid_offset + Vector2(x*cell_size, 0),
+				  grid_offset + Vector2(x*cell_size, grid_size.y*cell_size),
+				  Color(0.7, 0.7, 0.7, 1.0), 2.0)
 
 func _draw_bridges():
+	# Get only visible bridges from the solver
 	for br in puzzle_solver.get_bridges():
 		_draw_bridge(br)
 
@@ -155,26 +206,7 @@ func _draw_bridge(br):
 		return
 		
 	var color = Color(0,0,0)
-	var width = 3  # Thinner bridges for smaller grid
-	var start_pos = br.start_island.node.position - global_position
-	var end_pos = br.end_island.node.position - global_position
-
-	if br.count == 2:
-		if start_pos.x == end_pos.x: # vertical
-			draw_line(start_pos + Vector2(-2,0), end_pos + Vector2(-2,0), color, width)
-			draw_line(start_pos + Vector2(2,0), end_pos + Vector2(2,0), color, width)
-		else: # horizontal
-			draw_line(start_pos + Vector2(0,-2), end_pos + Vector2(0,-2), color, width)
-			draw_line(start_pos + Vector2(0,2), end_pos + Vector2(0,2), color, width)
-	else:
-		draw_line(start_pos, end_pos, color, width)
-
-func _draw_hint_bridge(br):
-	if not br or not br.start_island or not br.end_island:
-		return
-		
-	var color = Color(1.0, 0.9, 0.1, 0.9)
-	var width = 3  # Thinner hint bridges
+	var width = 4
 	var start_pos = br.start_island.node.position - global_position
 	var end_pos = br.end_island.node.position - global_position
 
@@ -185,6 +217,25 @@ func _draw_hint_bridge(br):
 		else: # horizontal
 			draw_line(start_pos + Vector2(0,-3), end_pos + Vector2(0,-3), color, width)
 			draw_line(start_pos + Vector2(0,3), end_pos + Vector2(0,3), color, width)
+	else:
+		draw_line(start_pos, end_pos, color, width)
+
+func _draw_hint_bridge(br):
+	if not br or not br.start_island or not br.end_island:
+		return
+		
+	var color = Color(1.0, 0.9, 0.1, 0.9)
+	var width = 4
+	var start_pos = br.start_island.node.position - global_position
+	var end_pos = br.end_island.node.position - global_position
+
+	if br.count == 2:
+		if start_pos.x == end_pos.x: # vertical
+			draw_line(start_pos + Vector2(-4,0), end_pos + Vector2(-4,0), color, width)
+			draw_line(start_pos + Vector2(4,0), end_pos + Vector2(4,0), color, width)
+		else: # horizontal
+			draw_line(start_pos + Vector2(0,-4), end_pos + Vector2(0,-4), color, width)
+			draw_line(start_pos + Vector2(0,4), end_pos + Vector2(0,4), color, width)
 	else:
 		draw_line(start_pos, end_pos, color, width)
 
@@ -199,7 +250,6 @@ func _input(event):
 				temp_bridge_line = [clicked.node.position, clicked.node.position]
 				queue_redraw()
 			else:
-				# Click empty space: maybe remove bridge
 				var br = puzzle_solver._get_bridge_at_pos(event.position, global_position)
 				if br:
 					puzzle_solver._remove_bridge(br)
@@ -234,13 +284,28 @@ func _on_csp_solve_pressed() -> void:
 	click.play()
 	puzzle_solver.clear_hint_bridges()
 	
+	# Show loading screen for instant solve
+	_show_loading_screen()
+	_set_loading_progress_manual(0.1)  # 10% - starting
+	
 	print("🔄 Starting CSP solver...")
+	
+	# Small delay to show loading screen
+	await get_tree().create_timer(0.1).timeout
+	
 	var success = puzzle_solver.csp_based_solver()
 	
 	if success:
 		print("🎉 CSP solver completed!")
+		_set_loading_progress_manual(1.0)  # 100% - solved
+		_on_puzzle_solved()
 	else:
 		print("❌ CSP solver failed!")
+		_set_loading_progress_manual(1.0)  # 100% - failed
+	
+	# Hide loading screen after a short delay
+	await get_tree().create_timer(0.5).timeout
+	_hide_loading_screen()
 	
 	queue_redraw()
 
@@ -259,16 +324,38 @@ func _on_solvebutton_pressed() -> void:
 	click.play()
 	puzzle_solver.clear_hint_bridges()
 	
+	# Show loading screen
+	_show_loading_screen()
+	_set_loading_progress_manual(0.1)  # 10% - starting
+	
+	# Reset animation completion flag and solved state
+	puzzle_solver.animation_completed = false
+	was_solved = false
+	
 	# Use step-by-step solver animation
 	print("🎬 Starting step-by-step solver animation...")
+	
+	# Small delay to show loading screen before heavy computation
+	await get_tree().create_timer(0.1).timeout
+	
 	var success = puzzle_solver.start_step_by_step_solution()
 	
 	if success:
 		print("✅ Step-by-step animation started!")
+		_set_loading_progress_manual(0.5)  # 50% - computation done
+		# Update UI to show animation in progress
+		_update_ui_state()
 	else:
 		print("❌ Failed to start animation, using instant solver...")
+		_set_loading_progress_manual(0.8)  # 80% - fallback
 		# Fallback to instant solver
-		puzzle_solver.csp_based_solver()
+		if puzzle_solver.csp_based_solver():
+			# If instant solver worked, update UI
+			_on_puzzle_solved()
+	
+	# Hide loading screen after a short delay to ensure it's visible
+	await get_tree().create_timer(0.5).timeout
+	_hide_loading_screen()
 	
 	queue_redraw()
 
@@ -279,8 +366,21 @@ func _on_hintbutton_pressed() -> void:
 	
 	click.play()
 	
+	# Show loading screen for hint generation
+	_show_loading_screen()
+	_set_loading_progress_manual(0.1)  # 10% - starting
+	
+	# Small delay to show loading screen
+	await get_tree().create_timer(0.1).timeout
+	
 	# Use CSP-based hints
 	puzzle_solver.csp_based_hint()
+	
+	_set_loading_progress_manual(1.0)  # 100% - hint generated
+	
+	# Hide loading screen after a short delay
+	await get_tree().create_timer(0.3).timeout
+	_hide_loading_screen()
 	
 	queue_redraw()
 	
@@ -377,7 +477,6 @@ func _reload_puzzle():
 	queue_redraw()
 	print("✅ Puzzle reloaded successfully!")
 
-
 # ==================== AI SOLVER SUPPORT FUNCTIONS ====================
 
 func start_auto_solve_mode():
@@ -411,4 +510,18 @@ func _on_auto_solve_timer_timeout():
 		print("✅ Auto-solve completed!")
 		puzzle_solver.clear_hint_bridges()
 		queue_redraw()
+
+# ==================== SOLVER STATE NOTIFICATION ====================
+
+func _on_solver_state_changed():
+	"""
+	Called when the solver state changes (from group notification)
+	"""
+	print("🔄 Solver state changed received, updating display...")
+	queue_redraw()
 	
+	# Check if we need to update the solved state
+	if puzzle_solver and puzzle_solver.is_puzzle_solved() and not was_solved:
+		print("🎉 Puzzle solved detected in state change!")
+		was_solved = true
+		_on_puzzle_solved()
