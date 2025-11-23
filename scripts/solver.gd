@@ -32,6 +32,10 @@ var solution_bridges := []
 var solving_steps := []
 var current_step := 0
 
+# CSP variables
+var csp_domains := {}
+var csp_constraints := []
+
 # Initialize method
 func initialize(grid_size_param: Vector2i, cell_size_param: int, grid_offset_param: Vector2) -> void:
 	grid_size = grid_size_param
@@ -51,13 +55,13 @@ func set_puzzle_info(folder: String, index: int):
 	puzzle_folder = folder
 	current_puzzle_index = index
 
-# ==================== SIMPLE BACKTRACKING SOLVER ====================
+# ==================== CSP SOLVER ====================
 
 func solve_with_simple_backtracking() -> bool:
 	"""
-	Simpler backtracking solver that might work better for initial testing
+	CSP-based solver using constraint satisfaction techniques
 	"""
-	print("🧠 Starting simple backtracking solver...")
+	print("🧠 Starting CSP solver...")
 	
 	# Save current state
 	var original_bridges = _duplicate_bridges()
@@ -68,97 +72,374 @@ func solve_with_simple_backtracking() -> bool:
 	for island in puzzle_data:
 		island.connected_bridges = 0
 	
-	var solver_islands = _create_island_copy()
-	var solver_bridges = []
-	
 	var start_time = Time.get_ticks_msec()
-	var success = _simple_backtrack(solver_islands, solver_bridges, 0)
+	var success = _csp_solve()
 	var end_time = Time.get_ticks_msec()
 	
 	if success:
-		print("✅ Simple backtracking found solution in %d ms!" % (end_time - start_time))
-		_apply_solution(solver_bridges)
+		print("✅ CSP solver found solution in %d ms!" % (end_time - start_time))
 		puzzle_solved = true
 		return true
 	else:
-		print("❌ Simple backtracking failed")
+		print("❌ CSP solver failed")
 		_restore_bridges(original_bridges)
 		_restore_island_states(original_island_states)
 		puzzle_solved = false
 		return false
 
-func _simple_backtrack(islands: Array, current_bridges: Array, depth: int) -> bool:
+func _csp_solve() -> bool:
 	"""
-	Simpler backtracking algorithm
+	Main CSP solver using backtracking with constraint propagation
 	"""
-	if _is_solution_complete(islands, current_bridges):
+	# Initialize CSP variables
+	_init_csp_variables()
+	
+	# Use backtracking with constraint propagation
+	var assignment = {}
+	var success = _csp_backtrack(assignment)
+	
+	if success:
+		# Apply the solution
+		_apply_csp_solution(assignment)
 		return true
+	return false
+
+func _init_csp_variables():
+	"""
+	Initialize CSP variables and constraints
+	"""
+	csp_domains.clear()
+	csp_constraints.clear()
 	
-	if depth > 2000:  # Prevent infinite recursion
+	# Create variables for each possible bridge
+	var possible_bridges = _get_all_possible_bridges()
+	
+	for bridge in possible_bridges:
+		var var_name = _get_bridge_variable_name(bridge.start_island, bridge.end_island)
+		# Domain: 0 (no bridge), 1 (single bridge), 2 (double bridge)
+		csp_domains[var_name] = [0, 1, 2]
+	
+	# Add constraints
+	_add_bridge_count_constraints()
+	_add_intersection_constraints()
+	_add_connectivity_constraints()
+
+func _get_all_possible_bridges() -> Array:
+	"""
+	Get all possible bridges between islands
+	"""
+	var possible_bridges = []
+	var solver_islands = _create_island_copy()
+	
+	for i in range(solver_islands.size()):
+		var island_a = solver_islands[i]
+		for j in range(i + 1, solver_islands.size()):
+			var island_b = solver_islands[j]
+			if _can_connect_directly(island_a, island_b, solver_islands):
+				possible_bridges.append({
+					"start_island": island_a,
+					"end_island": island_b,
+					"start_pos": island_a.node.position,
+					"end_pos": island_b.node.position
+				})
+	
+	return possible_bridges
+
+func _get_bridge_variable_name(a, b) -> String:
+	"""
+	Create a unique variable name for a bridge
+	"""
+	var pos1 = a.pos
+	var pos2 = b.pos
+	# Sort positions to ensure consistent naming
+	if pos1.x > pos2.x or (pos1.x == pos2.x and pos1.y > pos2.y):
+		var temp = pos1
+		pos1 = pos2
+		pos2 = temp
+	return "bridge_%d_%d_%d_%d" % [pos1.x, pos1.y, pos2.x, pos2.y]
+
+func _add_bridge_count_constraints():
+	"""
+	Add constraints for island bridge counts
+	"""
+	var solver_islands = _create_island_copy()
+	
+	for island in solver_islands:
+		var connected_bridges = []
+		
+		# Find all possible bridges connected to this island
+		for other in solver_islands:
+			if island != other and _can_connect_directly(island, other, solver_islands):
+				var var_name = _get_bridge_variable_name(island, other)
+				connected_bridges.append(var_name)
+		
+		if not connected_bridges.is_empty():
+			csp_constraints.append({
+				"type": "bridge_count",
+				"island": island,
+				"variables": connected_bridges,
+				"target": island.bridges_target
+			})
+
+func _add_intersection_constraints():
+	"""
+	Add constraints to prevent bridge intersections
+	"""
+	var possible_bridges = _get_all_possible_bridges()
+	
+	for i in range(possible_bridges.size()):
+		var br1 = possible_bridges[i]
+		for j in range(i + 1, possible_bridges.size()):
+			var br2 = possible_bridges[j]
+			
+			if _bridges_cross(br1.start_pos, br1.end_pos, br2.start_pos, br2.end_pos):
+				var var1 = _get_bridge_variable_name(br1.start_island, br1.end_island)
+				var var2 = _get_bridge_variable_name(br2.start_island, br2.end_island)
+				
+				csp_constraints.append({
+					"type": "no_intersection",
+					"variables": [var1, var2],
+					"condition": "not_both_nonzero"
+				})
+
+func _add_connectivity_constraints():
+	"""
+	Add constraints to ensure the graph is connected
+	"""
+	# This is a complex constraint that we'll handle during solution verification
+	pass
+
+func _csp_backtrack(assignment: Dictionary) -> bool:
+	"""
+	Backtracking search for CSP
+	"""
+	if assignment.size() == csp_domains.size():
+		return _is_csp_solution_complete(assignment)
+	
+	var var_name = _select_unassigned_variable(assignment)
+	if var_name == "":
 		return false
 	
-	# Find first unsatisfied island
-	var target_island = null
-	for island in islands:
-		if island.connected_bridges < island.bridges_target:
-			target_island = island
-			break
+	var domain = csp_domains[var_name].duplicate()
+	domain.sort()  # Try values in order
 	
-	if not target_island:
-		return false
-	
-	# Try all possible connections
-	for neighbor in _get_available_neighbors(target_island, islands):
-		for count in [1, 2]:
-			# Check if this move is valid
-			if (target_island.connected_bridges + count <= target_island.bridges_target and
-				neighbor.connected_bridges + count <= neighbor.bridges_target):
-				
-				# Check if bridge already exists
-				var existing_bridge = _find_existing_bridge(target_island, neighbor, current_bridges)
-				if existing_bridge and existing_bridge.count + count > 2:
-					continue
-				
-				# Check intersections
-				if _would_cause_intersection(target_island, neighbor, current_bridges):
-					continue
-				
-				# Apply the move
-				var bridge_added = false
-				if existing_bridge:
-					existing_bridge.count += count
-					target_island.connected_bridges += count
-					neighbor.connected_bridges += count
-				else:
-					var new_bridge = {
-						"start_island": target_island,
-						"end_island": neighbor,
-						"start_pos": target_island.node.position,
-						"end_pos": neighbor.node.position,
-						"count": count
-					}
-					current_bridges.append(new_bridge)
-					target_island.connected_bridges += count
-					neighbor.connected_bridges += count
-					bridge_added = true
-				
-				# Recursively solve
-				if _simple_backtrack(islands, current_bridges, depth + 1):
+	for value in domain:
+		if _is_value_consistent(var_name, value, assignment):
+			assignment[var_name] = value
+			
+			# Forward checking
+			var inferences = {}
+			if _forward_check(var_name, value, assignment, inferences):
+				var result = _csp_backtrack(assignment)
+				if result:
 					return true
-				
-				# Backtrack
-				if existing_bridge:
-					existing_bridge.count -= count
-					target_island.connected_bridges -= count
-					neighbor.connected_bridges -= count
-				elif bridge_added:
-					current_bridges.pop_back()
-					target_island.connected_bridges -= count
-					neighbor.connected_bridges -= count
+			
+			# Backtrack
+			assignment.erase(var_name)
+			_remove_inferences(inferences, assignment)
 	
 	return false
 
-# ==================== ADVANCED BACKTRACKING SOLVER ====================
+func _select_unassigned_variable(assignment: Dictionary) -> String:
+	"""
+	Select unassigned variable using MRV (Minimum Remaining Values) heuristic
+	"""
+	var best_var = ""
+	var best_size = INF
+	
+	for var_name in csp_domains:
+		if not assignment.has(var_name):
+			var domain_size = csp_domains[var_name].size()
+			if domain_size < best_size:
+				best_size = domain_size
+				best_var = var_name
+	
+	return best_var
+
+func _is_value_consistent(var_name: String, value: int, assignment: Dictionary) -> bool:
+	"""
+	Check if a value is consistent with current assignment
+	"""
+	for constraint in csp_constraints:
+		if not _satisfies_constraint(constraint, var_name, value, assignment):
+			return false
+	return true
+
+func _satisfies_constraint(constraint: Dictionary, changed_var: String, value: int, assignment: Dictionary) -> bool:
+	match constraint.type:
+		"bridge_count":
+			# Check if this constraint involves the changed variable
+			if constraint.variables.has(changed_var):
+				var total = value
+				for var_name in constraint.variables:
+					if var_name != changed_var:
+						if assignment.has(var_name):
+							total += assignment[var_name]
+				
+				# If all variables are assigned, check exact match
+				var all_assigned = true
+				for var_name in constraint.variables:
+					if not assignment.has(var_name) and var_name != changed_var:
+						all_assigned = false
+						break
+				
+				if all_assigned:
+					return total == constraint.target
+				else:
+					return total <= constraint.target
+			return true
+		
+		"no_intersection":
+			if constraint.variables.has(changed_var):
+				var other_var = constraint.variables[0] if constraint.variables[1] == changed_var else constraint.variables[1]
+				if assignment.has(other_var):
+					return not (value > 0 and assignment[other_var] > 0)
+			return true
+	
+	return true
+
+func _forward_check(var_name: String, value: int, assignment: Dictionary, inferences: Dictionary) -> bool:
+	"""
+	Perform forward checking and maintain arc consistency
+	"""
+	for constraint in csp_constraints:
+		if constraint.variables.has(var_name):
+			for other_var in constraint.variables:
+				if other_var != var_name and not assignment.has(other_var):
+					var original_domain = csp_domains[other_var].duplicate()
+					var new_domain = []
+					
+					for other_value in csp_domains[other_var]:
+						# Temporarily assign to check consistency
+						assignment[other_var] = other_value
+						if _is_value_consistent(other_var, other_value, assignment):
+							new_domain.append(other_value)
+						assignment.erase(other_var)
+					
+					if new_domain.is_empty():
+						return false
+					
+					if new_domain.size() < original_domain.size():
+						if not inferences.has(other_var):
+							inferences[other_var] = original_domain
+						csp_domains[other_var] = new_domain
+	
+	return true
+
+func _remove_inferences(inferences: Dictionary, assignment: Dictionary):
+	"""
+	Remove inferences made during forward checking
+	"""
+	for var_name in inferences:
+		csp_domains[var_name] = inferences[var_name]
+
+func _is_csp_solution_complete(assignment: Dictionary) -> bool:
+	"""
+	Check if CSP assignment represents a complete valid solution
+	"""
+	# Check all bridge count constraints
+	for constraint in csp_constraints:
+		if constraint.type == "bridge_count":
+			var total = 0
+			for var_name in constraint.variables:
+				total += assignment[var_name]
+			if total != constraint.target:
+				return false
+	
+	# Check intersection constraints
+	for constraint in csp_constraints:
+		if constraint.type == "no_intersection":
+			var var1 = constraint.variables[0]
+			var var2 = constraint.variables[1]
+			if assignment[var1] > 0 and assignment[var2] > 0:
+				return false
+	
+	# Check connectivity (simplified - we'll build the graph and check)
+	return _is_csp_solution_connected(assignment)
+
+func _is_csp_solution_connected(assignment: Dictionary) -> bool:
+	"""
+	Check if the solution forms a connected graph
+	"""
+	var solver_islands = _create_island_copy()
+	var graph = {}
+	
+	# Build graph from assignment
+	for island in solver_islands:
+		graph[island] = []
+	
+	for var_name in assignment:
+		if assignment[var_name] > 0:
+			var parts = var_name.split("_")
+			var pos1 = Vector2(int(parts[1]), int(parts[2]))
+			var pos2 = Vector2(int(parts[3]), int(parts[4]))
+			
+			var island1 = _find_island_by_pos_csp(solver_islands, pos1)
+			var island2 = _find_island_by_pos_csp(solver_islands, pos2)
+			
+			if island1 and island2:
+				graph[island1].append(island2)
+				graph[island2].append(island1)
+	
+	# Check connectivity using BFS
+	if solver_islands.is_empty():
+		return true
+	
+	var visited = {}
+	var queue = [solver_islands[0]]
+	
+	while not queue.is_empty():
+		var current = queue.pop_front()
+		visited[current] = true
+		
+		for neighbor in graph[current]:
+			if not visited.has(neighbor):
+				queue.append(neighbor)
+	
+	return visited.size() == solver_islands.size()
+
+func _find_island_by_pos_csp(islands: Array, pos: Vector2):
+	"""
+	Find island by position in CSP solver islands
+	"""
+	for island in islands:
+		if island.pos == pos:
+			return island
+	return null
+
+func _apply_csp_solution(assignment: Dictionary):
+	"""
+	Apply the CSP solution to the actual puzzle state
+	"""
+	bridges.clear()
+	
+	# Reset connected bridges
+	for island in puzzle_data:
+		island.connected_bridges = 0
+	
+	# Apply bridges from CSP assignment
+	for var_name in assignment:
+		var value = assignment[var_name]
+		if value > 0:
+			var parts = var_name.split("_")
+			var pos1 = Vector2(int(parts[1]), int(parts[2]))
+			var pos2 = Vector2(int(parts[3]), int(parts[4]))
+			
+			var island1 = _find_island_by_pos(pos1)
+			var island2 = _find_island_by_pos(pos2)
+			
+			if island1 and island2:
+				bridges.append({
+					"start_island": island1,
+					"end_island": island2,
+					"start_pos": island1.node.position,
+					"end_pos": island2.node.position,
+					"count": value
+				})
+				island1.connected_bridges += value
+				island2.connected_bridges += value
+
+# ==================== ADVANCED BACKTRACKING SOLVER (KEEPING FOR COMPATIBILITY) ====================
 
 func solve_with_algorithm() -> bool:
 	"""
