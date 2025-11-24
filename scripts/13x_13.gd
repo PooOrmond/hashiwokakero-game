@@ -177,7 +177,10 @@ func _calculate_grid_offset():
 func _draw():
 	_draw_grid()
 	_draw_bridges()
-	_draw_hint_bridges()
+	
+	if puzzle_solver and puzzle_solver.hint_visible:
+		_draw_hint_bridges()
+		
 	if temp_bridge_line:
 		draw_line(temp_bridge_line[0], temp_bridge_line[1], Color(0,0,0), 4)
 
