@@ -23,23 +23,28 @@ jobs:
         sudo mv godot/Godot.app /Applications/Godot.app
         sudo ln -s /Applications/Godot.app/Contents/MacOS/Godot /usr/local/bin/godot
 
-    - name: Download Godot 4.5.1 Export Templates
+    - name: Download and setup Godot 4.5.1 Export Templates
       run: |
-        mkdir -p ~/.local/share/godot/export_templates
-        cd ~/.local/share/godot/export_templates
+        # Create the exact directory structure Godot expects
+        mkdir -p "$HOME/Library/Application Support/Godot/export_templates/4.5.1.stable"
+        cd "$HOME/Library/Application Support/Godot/export_templates/4.5.1.stable"
+        
+        # Download export templates
         wget https://github.com/godotengine/godot/releases/download/4.5.1-stable/Godot_v4.5.1-stable_export_templates.tpz
+        
+        # Extract and rename the iOS template
         unzip Godot_v4.5.1-stable_export_templates.tpz
-        mv templates/* .
-        rm -rf templates
+        mv templates/ios.zip .
+        
+        # Verify the file exists
+        ls -la ios.zip
 
     - name: Create build directory
       run: mkdir -p build
 
     - name: Export iOS project
       run: godot --headless --export-release "iOS" build/your_project_name.xcodeproj
-      env:
-        DISPLAY: :99.0
-        
+
     - name: Set iOS Deployment Target
       run: sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = [0-9.]\+;/IPHONEOS_DEPLOYMENT_TARGET = 12.0;/' build/your_project_name.xcodeproj/project.pbxproj
 
