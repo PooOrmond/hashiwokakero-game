@@ -42,6 +42,18 @@ var animation_delay := 0.6  # Time between bridge appearances
 var is_animating_solution := false
 var animation_completed := false
 
+# Island colors for different bridge counts
+var island_colors := {
+	1: Color(0.8, 0.9, 1.0),    # Light blue
+	2: Color(0.9, 0.8, 1.0),    # Light purple
+	3: Color(1.0, 0.9, 0.8),    # Light orange
+	4: Color(0.9, 1.0, 0.8),    # Light green
+	5: Color(1.0, 0.8, 0.9),    # Light pink
+	6: Color(0.8, 1.0, 0.9),    # Light mint
+	7: Color(1.0, 1.0, 0.8),    # Light yellow
+	8: Color(0.9, 0.9, 0.9)     # Light gray
+}
+
 # Initialize method
 func initialize(grid_size_param: Vector2i, cell_size_param: int, grid_offset_param: Vector2) -> void:
 	grid_size = grid_size_param
@@ -66,6 +78,148 @@ func update(delta: float) -> void:
 func set_puzzle_info(folder: String, index: int):
 	puzzle_folder = folder
 	current_puzzle_index = index
+
+# ==================== PROCEDURAL ISLAND CREATION ====================
+
+func _create_procedural_island(bridges_target: int, position: Vector2) -> Node2D:
+	var island = Node2D.new()
+	island.position = position
+	
+	var island_size = _get_island_size()
+	
+	# Create circle using TextureRect with pre-generated circle texture
+	var circle_texture = _create_circle_texture(int(island_size), island_colors.get(bridges_target, Color(0.8, 0.8, 0.8)))
+	var texture_rect = TextureRect.new()
+	texture_rect.texture = circle_texture
+	texture_rect.size = Vector2(island_size, island_size)
+	texture_rect.position = -texture_rect.size / 2
+	texture_rect.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+	
+	island.add_child(texture_rect)
+	
+	# Add bridge count label - properly centered
+	var label = Label.new()
+	label.text = str(bridges_target)
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	
+	# Set label size to match the island
+	label.size = Vector2(island_size, island_size)
+	
+	# Position label at the center of the island
+	label.position = -label.size / 2
+	
+	# Set label theme with PixelOperator8 font
+	var font_color = Color(0.1, 0.1, 0.1)  # Dark color for contrast
+	label.add_theme_color_override("font_color", font_color)
+	
+	# Load and apply the PixelOperator8 font
+	var custom_font = load("res://assets/fonts/PixelOperator8.ttf")
+	if custom_font:
+		label.add_theme_font_override("font", custom_font)
+	
+	# Adjust font size based on island size
+	if grid_size.x <= 8:  # 7x7
+		label.add_theme_font_size_override("font_size", 16)
+	elif grid_size.x <= 10:  # 9x9
+		label.add_theme_font_size_override("font_size", 14)
+	else:  # 13x13 and larger
+		label.add_theme_font_size_override("font_size", 12)
+	
+	island.add_child(label)
+	
+	return island
+
+func _get_island_size() -> float:
+	# Adjust island size based on grid size
+	if grid_size.x <= 8:  # 7x7
+		return 30.0
+	elif grid_size.x <= 10:  # 9x9
+		return 28.0
+	else:  # 13x13 and larger
+		return 26.0
+
+func _create_circle_texture(size: int, color: Color) -> Texture2D:
+	var image = Image.create(size, size, false, Image.FORMAT_RGBA8)
+	image.fill(Color(0, 0, 0, 0))
+	
+	var center = Vector2(size / 2.0, size / 2.0)
+	var radius = size / 2.0 - 2.0
+	var outline_radius = radius + 2.0
+	
+	# Draw black outline
+	for x in range(size):
+		for y in range(size):
+			var dist = Vector2(x, y).distance_to(center)
+			if dist <= outline_radius and dist > radius:
+				image.set_pixel(x, y, Color(0, 0, 0, 1))
+	
+	# Draw colored circle
+	for x in range(size):
+		for y in range(size):
+			var dist = Vector2(x, y).distance_to(center)
+			if dist <= radius:
+				image.set_pixel(x, y, color)
+	
+	var texture = ImageTexture.create_from_image(image)
+	return texture
+
+# ==================== PUZZLE LOADING ====================
+
+func load_custom_puzzle(file_path: String, parent_node: Node) -> void:
+	"""
+	Load a puzzle from a custom file with procedural islands
+	"""
+	# Clear current puzzle
+	for isl in puzzle_data:
+		if "node" in isl and isl.node:
+			isl.node.queue_free()
+	puzzle_data.clear()
+	bridges.clear()
+	hint_bridges.clear()
+	puzzle_solved = false
+	hint_visible = false
+	# Reset CSP hint solution when loading new puzzle
+	reset_csp_hint_solution()
+
+	# Extract puzzle index from file path
+	var file_name = file_path.get_file()
+	if file_name.begins_with("input-") and file_name.ends_with(".txt"):
+		var index_str = file_name.trim_prefix("input-").trim_suffix(".txt")
+		current_puzzle_index = int(index_str)
+		print("🎯 Detected puzzle index: ", current_puzzle_index, " from file: ", file_name)
+
+	var file = FileAccess.open(file_path, FileAccess.READ)
+	if file == null:
+		print("Failed to open file: ", file_path)
+		return
+
+	var lines = []
+	while not file.eof_reached():
+		lines.append(file.get_line())
+	file.close()
+
+	for y in range(len(lines)):
+		var row = lines[y].split(",", false)
+		for x in range(row.size()):
+			var val = int(row[x])
+			if val == 0:
+				continue
+			var pos = Vector2(x+1, y+1)
+			var bridges_target = val
+			var island_node = _create_procedural_island(bridges_target, grid_offset + pos * cell_size)
+			parent_node.add_child(island_node)
+
+			puzzle_data.append({
+				"pos": pos,
+				"node": island_node,
+				"bridges_target": bridges_target,
+				"connected_bridges": 0,
+				"neighbors": []
+			})
+
+	_calculate_neighbors()
+	print("✅ Custom puzzle loaded from ", file_path, " with ", puzzle_data.size(), " procedural islands")
 
 # ==================== STEP-BY-STEP SOLVER ANIMATION ====================
 
@@ -332,7 +486,7 @@ func csp_based_hint() -> void:
 		})
 		
 		hint_visible = true
-		hint_timer = 1.5
+		hint_timer = 1.0  # CHANGED: Show for 1 second instead of 3 seconds
 		
 		print("💡 CSP HINT: Add %d bridge(s) between island at (%d,%d) and (%d,%d)" % [
 			suggested_bridge.count,
@@ -1429,77 +1583,6 @@ func _try_place_bridge(a, b):
 	_check_puzzle_completion()
 	return true
 
-# ==================== PUZZLE LOADING ====================
-
-func load_custom_puzzle(file_path: String, parent_node: Node) -> void:
-	"""
-	Load a puzzle from a custom file
-	"""
-	# Clear current puzzle
-	for isl in puzzle_data:
-		if "node" in isl and isl.node:
-			isl.node.queue_free()
-	puzzle_data.clear()
-	bridges.clear()
-	hint_bridges.clear()
-	puzzle_solved = false
-	hint_visible = false
-	# Reset CSP hint solution when loading new puzzle
-	reset_csp_hint_solution()
-
-	# Extract puzzle index from file path
-	var file_name = file_path.get_file()
-	if file_name.begins_with("input-") and file_name.ends_with(".txt"):
-		var index_str = file_name.trim_prefix("input-").trim_suffix(".txt")
-		current_puzzle_index = int(index_str)
-		print("🎯 Detected puzzle index: ", current_puzzle_index, " from file: ", file_name)
-
-	var file = FileAccess.open(file_path, FileAccess.READ)
-	if file == null:
-		print("Failed to open file: ", file_path)
-		return
-
-	var lines = []
-	while not file.eof_reached():
-		lines.append(file.get_line())
-	file.close()
-
-	for y in range(len(lines)):
-		var row = lines[y].split(",", false)
-		for x in range(row.size()):
-			var val = int(row[x])
-			if val == 0:
-				continue
-			var pos = Vector2(x+1, y+1)
-			var bridges_target = val
-			var sprite = Sprite2D.new()
-			sprite.position = grid_offset + pos * cell_size
-			sprite.centered = true
-			
-			# Scale islands based on grid size
-			if grid_size.x <= 8:  # 7x7
-				sprite.scale = Vector2(0.6, 0.6)
-			elif grid_size.x <= 10:  # 9x9
-				sprite.scale = Vector2(0.5, 0.5)
-			else:  # 13x13 and larger
-				sprite.scale = Vector2(0.4, 0.4)
-			
-			var texture_path = "res://assets/islands/%d.png" % bridges_target
-			if ResourceLoader.exists(texture_path):
-				sprite.texture = load(texture_path)
-			parent_node.add_child(sprite)
-
-			puzzle_data.append({
-				"pos": pos,
-				"node": sprite,
-				"bridges_target": bridges_target,
-				"connected_bridges": 0,
-				"neighbors": []
-			})
-
-	_calculate_neighbors()
-	print("✅ Custom puzzle loaded from ", file_path)
-
 func _calculate_neighbors():
 	"""
 	Calculate which islands can connect to each other
@@ -1561,7 +1644,6 @@ func is_puzzle_solved():
 func clear_hint_bridges():
 	hint_bridges.clear()
 	hint_visible = false
-	_notify_puzzle_scene()
 
 func is_csp_hint_ready() -> bool:
 	"""
