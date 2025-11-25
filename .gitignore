@@ -1,4 +1,0 @@
-# Android build files
-android/build/
-android/.gradle/
-*.aar
