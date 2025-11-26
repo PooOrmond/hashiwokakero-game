@@ -1,4 +1,8 @@
 res://scripts/7x_7.gd
+<<<<<<< HEAD
 res://scripts/solver.gd
+=======
+>>>>>>> parent of 3b691ff (Revert "init")
 res://scripts/9x_9.gd
 res://scripts/13x_13.gd
+res://scripts/solver.gd
