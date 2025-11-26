@@ -1,6 +1,5 @@
-Label
-AnimatedSprite2D
 Node
+AnimatedSprite2D
 VBoxContainer
 MarginContainer
 TextureButton
@@ -12,3 +11,4 @@ OptionButton
 AnimationPlayer
 Sprite2D
 ColorRect
+CanvasLayer

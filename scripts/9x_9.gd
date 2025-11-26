@@ -1,8 +1,8 @@
 extends Node2D
 
-# Configuration for 9x9 - Using the same values as your reference code
-@export var grid_size: Vector2i = Vector2i(10, 10)
-@export var cell_size: int = 42
+# Configuration for 9x9 - Updated values for 9x9 grid
+@export var grid_size: Vector2i = Vector2i(10, 10) # 9x9 grid with border
+@export var cell_size: int = 42  # Reduced from 48 to make grid smaller
 @export var puzzle_folder: String = "9x9"
 
 # Background
@@ -16,10 +16,6 @@ extends Node2D
 # UI Buttons - Only these two will be invisible when solved
 @onready var solve_button: TextureButton = $"buttons/solve-button"
 @onready var hint_button: TextureButton = $"buttons/hint-button"
-
-# Loading screen
-@onready var loading_screen = preload("res://scenes/loading_screen.tscn")
-var loading_instance: Control = null
 
 var panel
 
@@ -64,31 +60,12 @@ func _process(delta):
 	if puzzle_solver:
 		puzzle_solver.update(delta)
 		
-		# Update loading progress for threaded resources
-		if loading_instance and loading_instance.is_loading():
-			_update_loading_progress()
-			
-			# If tracking a resource and it's loaded, hide loading screen
-			if loading_instance.is_resource_loaded():
-				# Small delay to show 100%
-				await get_tree().create_timer(0.3).timeout
-				_hide_loading_screen()
-		
-		# Update loading progress during animation
-		elif puzzle_solver.is_animating() and loading_instance and loading_instance.is_loading():
-			var progress = puzzle_solver.get_animation_progress()
-			_set_loading_progress_manual(0.5 + (progress * 0.5))  # 50% to 100% during animation
-			
-			# If animation completed, hide loading screen
-			if puzzle_solver.is_animation_completed():
-				await get_tree().create_timer(0.3).timeout
-				_hide_loading_screen()
-		
 		# Check if animation just completed and puzzle is solved
 		if puzzle_solver.is_animation_completed() and puzzle_solver.is_puzzle_solved() and not was_solved:
 			print("🎉 Animation completed and puzzle solved, updating UI...")
 			was_solved = true
 			_on_puzzle_solved()
+			# Reset the animation completed flag to prevent multiple triggers
 			puzzle_solver.animation_completed = false
 		
 		# Always redraw when animating to ensure smooth updates
@@ -143,32 +120,6 @@ func _update_ui_state():
 		was_solved = true
 		_on_puzzle_solved()
 
-# ==================== LOADING SCREEN FUNCTIONS ====================
-
-func _show_loading_screen(resource_path: String = ""):
-	"""Show loading screen with optional resource tracking"""
-	if not loading_instance:
-		loading_instance = loading_screen.instantiate()
-		add_child(loading_instance)
-	loading_instance.show_loading(resource_path)
-
-func _hide_loading_screen():
-	"""Hide loading screen"""
-	if loading_instance:
-		loading_instance.hide_loading()
-
-func _update_loading_progress():
-	"""Update loading progress using threaded loading"""
-	if loading_instance and loading_instance.is_loading():
-		loading_instance.update_loading_progress()
-
-func _set_loading_progress_manual(value: float):
-	"""Set loading progress manually"""
-	if loading_instance and loading_instance.is_loading():
-		loading_instance.set_progress_manual(value)
-
-# ==================== GRID AND DRAWING FUNCTIONS ====================
-
 func _calculate_grid_offset():
 	var window_size = Vector2(800, 650)
 	var grid_pixel_size = Vector2(grid_size.x * cell_size, grid_size.y * cell_size)
@@ -206,7 +157,26 @@ func _draw_bridge(br):
 		return
 		
 	var color = Color(0,0,0)
-	var width = 4
+	var width = 3  # Slightly thinner for smaller grid
+	var start_pos = br.start_island.node.position - global_position
+	var end_pos = br.end_island.node.position - global_position
+
+	if br.count == 2:
+		if start_pos.x == end_pos.x: # vertical
+			draw_line(start_pos + Vector2(-2,0), end_pos + Vector2(-2,0), color, width)
+			draw_line(start_pos + Vector2(2,0), end_pos + Vector2(2,0), color, width)
+		else: # horizontal
+			draw_line(start_pos + Vector2(0,-2), end_pos + Vector2(0,-2), color, width)
+			draw_line(start_pos + Vector2(0,2), end_pos + Vector2(0,2), color, width)
+	else:
+		draw_line(start_pos, end_pos, color, width)
+
+func _draw_hint_bridge(br):
+	if not br or not br.start_island or not br.end_island:
+		return
+		
+	var color = Color(1.0, 0.9, 0.1, 0.9)
+	var width = 3  # Slightly thinner for smaller grid
 	var start_pos = br.start_island.node.position - global_position
 	var end_pos = br.end_island.node.position - global_position
 
@@ -217,25 +187,6 @@ func _draw_bridge(br):
 		else: # horizontal
 			draw_line(start_pos + Vector2(0,-3), end_pos + Vector2(0,-3), color, width)
 			draw_line(start_pos + Vector2(0,3), end_pos + Vector2(0,3), color, width)
-	else:
-		draw_line(start_pos, end_pos, color, width)
-
-func _draw_hint_bridge(br):
-	if not br or not br.start_island or not br.end_island:
-		return
-		
-	var color = Color(1.0, 0.9, 0.1, 0.9)
-	var width = 4
-	var start_pos = br.start_island.node.position - global_position
-	var end_pos = br.end_island.node.position - global_position
-
-	if br.count == 2:
-		if start_pos.x == end_pos.x: # vertical
-			draw_line(start_pos + Vector2(-4,0), end_pos + Vector2(-4,0), color, width)
-			draw_line(start_pos + Vector2(4,0), end_pos + Vector2(4,0), color, width)
-		else: # horizontal
-			draw_line(start_pos + Vector2(0,-4), end_pos + Vector2(0,-4), color, width)
-			draw_line(start_pos + Vector2(0,4), end_pos + Vector2(0,4), color, width)
 	else:
 		draw_line(start_pos, end_pos, color, width)
 
@@ -284,28 +235,14 @@ func _on_csp_solve_pressed() -> void:
 	click.play()
 	puzzle_solver.clear_hint_bridges()
 	
-	# Show loading screen for instant solve
-	_show_loading_screen()
-	_set_loading_progress_manual(0.1)  # 10% - starting
-	
 	print("🔄 Starting CSP solver...")
-	
-	# Small delay to show loading screen
-	await get_tree().create_timer(0.1).timeout
-	
 	var success = puzzle_solver.csp_based_solver()
 	
 	if success:
 		print("🎉 CSP solver completed!")
-		_set_loading_progress_manual(1.0)  # 100% - solved
 		_on_puzzle_solved()
 	else:
 		print("❌ CSP solver failed!")
-		_set_loading_progress_manual(1.0)  # 100% - failed
-	
-	# Hide loading screen after a short delay
-	await get_tree().create_timer(0.5).timeout
-	_hide_loading_screen()
 	
 	queue_redraw()
 
@@ -324,38 +261,24 @@ func _on_solvebutton_pressed() -> void:
 	click.play()
 	puzzle_solver.clear_hint_bridges()
 	
-	# Show loading screen
-	_show_loading_screen()
-	_set_loading_progress_manual(0.1)  # 10% - starting
-	
 	# Reset animation completion flag and solved state
 	puzzle_solver.animation_completed = false
 	was_solved = false
 	
 	# Use step-by-step solver animation
 	print("🎬 Starting step-by-step solver animation...")
-	
-	# Small delay to show loading screen before heavy computation
-	await get_tree().create_timer(0.1).timeout
-	
 	var success = puzzle_solver.start_step_by_step_solution()
 	
 	if success:
 		print("✅ Step-by-step animation started!")
-		_set_loading_progress_manual(0.5)  # 50% - computation done
 		# Update UI to show animation in progress
 		_update_ui_state()
 	else:
 		print("❌ Failed to start animation, using instant solver...")
-		_set_loading_progress_manual(0.8)  # 80% - fallback
 		# Fallback to instant solver
 		if puzzle_solver.csp_based_solver():
 			# If instant solver worked, update UI
 			_on_puzzle_solved()
-	
-	# Hide loading screen after a short delay to ensure it's visible
-	await get_tree().create_timer(0.5).timeout
-	_hide_loading_screen()
 	
 	queue_redraw()
 
@@ -366,21 +289,8 @@ func _on_hintbutton_pressed() -> void:
 	
 	click.play()
 	
-	# Show loading screen for hint generation
-	_show_loading_screen()
-	_set_loading_progress_manual(0.1)  # 10% - starting
-	
-	# Small delay to show loading screen
-	await get_tree().create_timer(0.1).timeout
-	
 	# Use CSP-based hints
 	puzzle_solver.csp_based_hint()
-	
-	_set_loading_progress_manual(1.0)  # 100% - hint generated
-	
-	# Hide loading screen after a short delay
-	await get_tree().create_timer(0.3).timeout
-	_hide_loading_screen()
 	
 	queue_redraw()
 	
@@ -476,6 +386,7 @@ func _reload_puzzle():
 	_update_ui_state()
 	queue_redraw()
 	print("✅ Puzzle reloaded successfully!")
+
 
 # ==================== AI SOLVER SUPPORT FUNCTIONS ====================
 
