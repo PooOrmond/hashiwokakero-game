@@ -38,32 +38,9 @@ var csp_hint_applied_bridges := {}  # Track which bridges from solution have bee
 var step_by_step_bridges := []  # Bridges to be shown step by step
 var current_animation_step := 0
 var animation_timer := 0.0
-var animation_delay := 0.6  # Time between bridge appearances - increased to 0.6 seconds
+var animation_delay := 0.6  # Time between bridge appearances
 var is_animating_solution := false
-
-# Island colors for different bridge counts
-var island_colors := {
-	1: Color(0.8, 0.9, 1.0),    # Light blue
-	2: Color(0.9, 0.8, 1.0),    # Light purple
-	3: Color(1.0, 0.9, 0.8),    # Light orange
-	4: Color(0.9, 1.0, 0.8),    # Light green
-	5: Color(1.0, 0.8, 0.9),    # Light pink
-	6: Color(0.8, 1.0, 0.9),    # Light mint
-	7: Color(1.0, 1.0, 0.8),    # Light yellow
-	8: Color(0.9, 0.9, 0.9)     # Light gray
-}
-
-# Island colors for different bridge counts
-var island_colors := {
-	1: Color(0.8, 0.9, 1.0),    # Light blue
-	2: Color(0.9, 0.8, 1.0),    # Light purple
-	3: Color(1.0, 0.9, 0.8),    # Light orange
-	4: Color(0.9, 1.0, 0.8),    # Light green
-	5: Color(1.0, 0.8, 0.9),    # Light pink
-	6: Color(0.8, 1.0, 0.9),    # Light mint
-	7: Color(1.0, 1.0, 0.8),    # Light yellow
-	8: Color(0.9, 0.9, 0.9)     # Light gray
-}
+var animation_completed := false
 
 # Initialize method
 func initialize(grid_size_param: Vector2i, cell_size_param: int, grid_offset_param: Vector2) -> void:
@@ -90,148 +67,6 @@ func set_puzzle_info(folder: String, index: int):
 	puzzle_folder = folder
 	current_puzzle_index = index
 
-# ==================== PROCEDURAL ISLAND CREATION ====================
-
-func _create_procedural_island(bridges_target: int, position: Vector2) -> Node2D:
-	var island = Node2D.new()
-	island.position = position
-	
-	var island_size = _get_island_size()
-	
-	# Create circle using TextureRect with pre-generated circle texture
-	var circle_texture = _create_circle_texture(int(island_size), island_colors.get(bridges_target, Color(0.8, 0.8, 0.8)))
-	var texture_rect = TextureRect.new()
-	texture_rect.texture = circle_texture
-	texture_rect.size = Vector2(island_size, island_size)
-	texture_rect.position = -texture_rect.size / 2
-	texture_rect.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
-	
-	island.add_child(texture_rect)
-	
-	# Add bridge count label - properly centered
-	var label = Label.new()
-	label.text = str(bridges_target)
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	
-	# Set label size to match the island
-	label.size = Vector2(island_size, island_size)
-	
-	# Position label at the center of the island
-	label.position = -label.size / 2
-	
-	# Set label theme with PixelOperator8 font
-	var font_color = Color(0.1, 0.1, 0.1)  # Dark color for contrast
-	label.add_theme_color_override("font_color", font_color)
-	
-	# Load and apply the PixelOperator8 font
-	var custom_font = load("res://assets/fonts/PixelOperator8.ttf")
-	if custom_font:
-		label.add_theme_font_override("font", custom_font)
-	
-	# Adjust font size based on island size
-	if grid_size.x <= 8:  # 7x7
-		label.add_theme_font_size_override("font_size", 16)
-	elif grid_size.x <= 10:  # 9x9
-		label.add_theme_font_size_override("font_size", 14)
-	else:  # 13x13 and larger
-		label.add_theme_font_size_override("font_size", 12)
-	
-	island.add_child(label)
-	
-	return island
-
-func _get_island_size() -> float:
-	# Adjust island size based on grid size
-	if grid_size.x <= 8:  # 7x7
-		return 30.0
-	elif grid_size.x <= 10:  # 9x9
-		return 28.0
-	else:  # 13x13 and larger
-		return 26.0
-
-func _create_circle_texture(size: int, color: Color) -> Texture2D:
-	var image = Image.create(size, size, false, Image.FORMAT_RGBA8)
-	image.fill(Color(0, 0, 0, 0))
-	
-	var center = Vector2(size / 2.0, size / 2.0)
-	var radius = size / 2.0 - 2.0
-	var outline_radius = radius + 2.0
-	
-	# Draw black outline
-	for x in range(size):
-		for y in range(size):
-			var dist = Vector2(x, y).distance_to(center)
-			if dist <= outline_radius and dist > radius:
-				image.set_pixel(x, y, Color(0, 0, 0, 1))
-	
-	# Draw colored circle
-	for x in range(size):
-		for y in range(size):
-			var dist = Vector2(x, y).distance_to(center)
-			if dist <= radius:
-				image.set_pixel(x, y, color)
-	
-	var texture = ImageTexture.create_from_image(image)
-	return texture
-
-# ==================== PUZZLE LOADING ====================
-
-func load_custom_puzzle(file_path: String, parent_node: Node) -> void:
-	"""
-	Load a puzzle from a custom file with procedural islands
-	"""
-	# Clear current puzzle
-	for isl in puzzle_data:
-		if "node" in isl and isl.node:
-			isl.node.queue_free()
-	puzzle_data.clear()
-	bridges.clear()
-	hint_bridges.clear()
-	puzzle_solved = false
-	hint_visible = false
-	# Reset CSP hint solution when loading new puzzle
-	reset_csp_hint_solution()
-
-	# Extract puzzle index from file path
-	var file_name = file_path.get_file()
-	if file_name.begins_with("input-") and file_name.ends_with(".txt"):
-		var index_str = file_name.trim_prefix("input-").trim_suffix(".txt")
-		current_puzzle_index = int(index_str)
-		print("🎯 Detected puzzle index: ", current_puzzle_index, " from file: ", file_name)
-
-	var file = FileAccess.open(file_path, FileAccess.READ)
-	if file == null:
-		print("Failed to open file: ", file_path)
-		return
-
-	var lines = []
-	while not file.eof_reached():
-		lines.append(file.get_line())
-	file.close()
-
-	for y in range(len(lines)):
-		var row = lines[y].split(",", false)
-		for x in range(row.size()):
-			var val = int(row[x])
-			if val == 0:
-				continue
-			var pos = Vector2(x+1, y+1)
-			var bridges_target = val
-			var island_node = _create_procedural_island(bridges_target, grid_offset + pos * cell_size)
-			parent_node.add_child(island_node)
-
-			puzzle_data.append({
-				"pos": pos,
-				"node": island_node,
-				"bridges_target": bridges_target,
-				"connected_bridges": 0,
-				"neighbors": []
-			})
-
-	_calculate_neighbors()
-	print("✅ Custom puzzle loaded from ", file_path, " with ", puzzle_data.size(), " procedural islands")
-
 # ==================== STEP-BY-STEP SOLVER ANIMATION ====================
 
 func start_step_by_step_solution() -> bool:
@@ -255,7 +90,21 @@ func start_step_by_step_solution() -> bool:
 		current_animation_step = 0
 		animation_timer = animation_delay
 		is_animating_solution = true
+		animation_completed = false
 		puzzle_solved = false
+		
+		# ADD ALL BRIDGES IMMEDIATELY BUT MARK THEM AS HIDDEN
+		for bridge_data in step_by_step_bridges:
+			_add_bridge_internal(bridge_data.start_island, bridge_data.end_island, bridge_data.count)
+			# Mark the bridge as hidden for animation
+			if bridges.size() > 0:
+				bridges[bridges.size() - 1]["visible"] = false
+		
+		# MAKE FIRST BRIDGE VISIBLE
+		if step_by_step_bridges.size() > 0:
+			bridges[0]["visible"] = true
+			print("🔧 Made first bridge visible")
+		
 		return true
 	else:
 		print("❌ Failed to compute solution for animation")
@@ -312,8 +161,6 @@ func _convert_to_step_by_step(temp_bridges: Array):
 	
 	# Sort bridges in a logical order (by position, count, etc.)
 	var sorted_bridges = temp_bridges.duplicate()
-	
-	# Simple sorting: by x position of start island, then y position
 	sorted_bridges.sort_custom(_sort_bridges_for_animation)
 	
 	# Convert to actual island references
@@ -329,10 +176,8 @@ func _convert_to_step_by_step(temp_bridges: Array):
 				"end_pos": actual_end.node.position,
 				"count": temp_br.count
 			})
-		else:
-			print("❌ Could not find corresponding island for bridge in animation")
 	
-	print("📊 Animation prepared with %d bridge steps (from %d temp bridges)" % [step_by_step_bridges.size(), temp_bridges.size()])
+	print("📊 Animation prepared with %d bridge steps" % step_by_step_bridges.size())
 	
 	# Debug: Log all bridges in animation
 	for i in range(step_by_step_bridges.size()):
@@ -357,32 +202,25 @@ func _sort_bridges_for_animation(a, b) -> bool:
 
 func _apply_next_animation_step():
 	"""
-	Apply the next bridge in the animation sequence
+	Apply the next bridge in the animation sequence - SIMPLIFIED
 	"""
-	if current_animation_step < step_by_step_bridges.size():
-		var bridge_data = step_by_step_bridges[current_animation_step]
+	if current_animation_step < step_by_step_bridges.size() - 1:
+		# Make the next bridge visible
+		current_animation_step += 1
+		bridges[current_animation_step]["visible"] = true
 		
-		# Add the bridge to the actual puzzle
-		_add_bridge_internal(bridge_data.start_island, bridge_data.end_island, bridge_data.count)
-		
-		print("🔧 Animation step %d/%d: Added %d bridge(s) between (%d,%d) and (%d,%d)" % [
+		print("🔧 Animation step %d/%d: Made bridge visible between (%d,%d) and (%d,%d)" % [
 			current_animation_step + 1, step_by_step_bridges.size(),
-			bridge_data.count,
-			bridge_data.start_island.pos.x - 1, bridge_data.start_island.pos.y - 1,
-			bridge_data.end_island.pos.x - 1, bridge_data.end_island.pos.y - 1
+			step_by_step_bridges[current_animation_step].start_island.pos.x - 1,
+			step_by_step_bridges[current_animation_step].start_island.pos.y - 1,
+			step_by_step_bridges[current_animation_step].end_island.pos.x - 1,
+			step_by_step_bridges[current_animation_step].end_island.pos.y - 1
 		])
 		
-		current_animation_step += 1
-		
-		# Check if this was the final step
-		if current_animation_step >= step_by_step_bridges.size():
-			print("🎯 Final animation step completed, scheduling completion...")
-			# Schedule completion for next frame to ensure bridge is drawn
-			animation_timer = 0.1  # Very short delay to ensure rendering
-		else:
-			animation_timer = animation_delay
+		animation_timer = animation_delay
 	else:
-		print("⚠️ Animation step out of bounds, forcing completion")
+		# All bridges are now visible
+		print("🎯 All bridges are now visible, animation complete!")
 		_animation_complete()
 
 func _animation_complete():
@@ -391,20 +229,23 @@ func _animation_complete():
 	"""
 	print("🎉 Step-by-step animation complete!")
 	is_animating_solution = false
+	animation_completed = true
 	puzzle_solved = true
 	
-	# Force verification and UI update
-	_verify_solution()
-	_update_puzzle_state()
+	# Notify the main scene to update UI
+	_notify_puzzle_scene()
 	
-	print("✅ All %d bridges have been placed successfully!" % step_by_step_bridges.size())
+	print("📢 Animation completed, puzzle solved!")
 
 func _update_puzzle_state():
 	"""
 	Update the puzzle state and trigger UI refresh
 	"""
 	# Check if puzzle is actually solved
-	if _verify_solution():
+	var is_solved = _verify_solution()
+	puzzle_solved = is_solved
+	
+	if is_solved:
 		print("🎉 Puzzle is correctly solved!")
 	else:
 		print("❌ Puzzle verification failed!")
@@ -416,18 +257,25 @@ func _notify_puzzle_scene():
 	"""
 	Notify the puzzle scene to update its display
 	"""
+	# Use call_deferred to ensure this happens in the next frame
+	call_deferred("_deferred_notify_puzzle_scene")
+
+func _deferred_notify_puzzle_scene():
+	"""
+	Deferred notification to avoid state issues
+	"""
 	# Use groups to find and notify the puzzle scene
 	if Engine.get_main_loop().has_method("call_group"):
-		Engine.get_main_loop().call_group("puzzle_scene", "queue_redraw")
+		Engine.get_main_loop().call_group("puzzle_scene", "_on_solver_state_changed")
 	
-	# Alternative: use signals if available, or direct reference
-	print("📢 Notifying puzzle scene to update display")
+	print("📢 Notified puzzle scene to update display")
 
 func stop_animation():
 	"""
 	Stop the step-by-step animation
 	"""
 	is_animating_solution = false
+	animation_completed = false
 	print("⏹️ Step-by-step animation stopped")
 
 func is_animating() -> bool:
@@ -436,13 +284,19 @@ func is_animating() -> bool:
 	"""
 	return is_animating_solution
 
+func is_animation_completed() -> bool:
+	"""
+	Check if step-by-step animation has completed
+	"""
+	return animation_completed
+
 func get_animation_progress() -> float:
 	"""
 	Get animation progress (0.0 to 1.0)
 	"""
 	if step_by_step_bridges.is_empty():
 		return 0.0
-	return float(current_animation_step) / float(step_by_step_bridges.size())
+	return float(current_animation_step + 1) / float(step_by_step_bridges.size())
 
 # ==================== CSP-BASED HINT SYSTEM ====================
 
@@ -478,15 +332,7 @@ func csp_based_hint() -> void:
 		})
 		
 		hint_visible = true
-<<<<<<< HEAD
-<<<<<<< HEAD
 		hint_timer = 3.0  # Show for 3 seconds
-=======
-		hint_timer = 1.0  # CHANGED: Show for 1 second instead of 3 seconds
->>>>>>> parent of 3b691ff (Revert "init")
-=======
-		hint_timer = 1.0  # CHANGED: Show for 1 second instead of 3 seconds
->>>>>>> parent of 3b691ff (Revert "init")
 		
 		print("💡 CSP HINT: Add %d bridge(s) between island at (%d,%d) and (%d,%d)" % [
 			suggested_bridge.count,
@@ -496,7 +342,6 @@ func csp_based_hint() -> void:
 		
 		# Mark this bridge as suggested (but don't apply it yet)
 		var _bridge_key = _get_bridge_key(suggested_bridge.start_island, suggested_bridge.end_island)
-		# csp_hint_applied_bridges[_bridge_key] = suggested_bridge.count
 	else:
 		print("💡 All CSP solution bridges are already placed!")
 
@@ -1239,11 +1084,11 @@ func _is_csp_solution_connected(assignment: Dictionary) -> bool:
 	
 	return visited.size() == solver_islands.size()
 
-func _find_island_by_pos_csp(islands: Array, pos: Vector2):
+func _find_island_by_pos_csp(solver_islands: Array, pos: Vector2):
 	"""
 	Find island by position in CSP solver islands
 	"""
-	for island in islands:
+	for island in solver_islands:
 		if island.pos == pos:
 			return island
 	return null
@@ -1584,6 +1429,77 @@ func _try_place_bridge(a, b):
 	_check_puzzle_completion()
 	return true
 
+# ==================== PUZZLE LOADING ====================
+
+func load_custom_puzzle(file_path: String, parent_node: Node) -> void:
+	"""
+	Load a puzzle from a custom file
+	"""
+	# Clear current puzzle
+	for isl in puzzle_data:
+		if "node" in isl and isl.node:
+			isl.node.queue_free()
+	puzzle_data.clear()
+	bridges.clear()
+	hint_bridges.clear()
+	puzzle_solved = false
+	hint_visible = false
+	# Reset CSP hint solution when loading new puzzle
+	reset_csp_hint_solution()
+
+	# Extract puzzle index from file path
+	var file_name = file_path.get_file()
+	if file_name.begins_with("input-") and file_name.ends_with(".txt"):
+		var index_str = file_name.trim_prefix("input-").trim_suffix(".txt")
+		current_puzzle_index = int(index_str)
+		print("🎯 Detected puzzle index: ", current_puzzle_index, " from file: ", file_name)
+
+	var file = FileAccess.open(file_path, FileAccess.READ)
+	if file == null:
+		print("Failed to open file: ", file_path)
+		return
+
+	var lines = []
+	while not file.eof_reached():
+		lines.append(file.get_line())
+	file.close()
+
+	for y in range(len(lines)):
+		var row = lines[y].split(",", false)
+		for x in range(row.size()):
+			var val = int(row[x])
+			if val == 0:
+				continue
+			var pos = Vector2(x+1, y+1)
+			var bridges_target = val
+			var sprite = Sprite2D.new()
+			sprite.position = grid_offset + pos * cell_size
+			sprite.centered = true
+			
+			# Scale islands based on grid size
+			if grid_size.x <= 8:  # 7x7
+				sprite.scale = Vector2(0.6, 0.6)
+			elif grid_size.x <= 10:  # 9x9
+				sprite.scale = Vector2(0.5, 0.5)
+			else:  # 13x13 and larger
+				sprite.scale = Vector2(0.4, 0.4)
+			
+			var texture_path = "res://assets/islands/%d.png" % bridges_target
+			if ResourceLoader.exists(texture_path):
+				sprite.texture = load(texture_path)
+			parent_node.add_child(sprite)
+
+			puzzle_data.append({
+				"pos": pos,
+				"node": sprite,
+				"bridges_target": bridges_target,
+				"connected_bridges": 0,
+				"neighbors": []
+			})
+
+	_calculate_neighbors()
+	print("✅ Custom puzzle loaded from ", file_path)
+
 func _calculate_neighbors():
 	"""
 	Calculate which islands can connect to each other
@@ -1619,6 +1535,7 @@ func reset_solver():
 	stop_animation()
 	step_by_step_bridges.clear()
 	current_animation_step = 0
+	animation_completed = false
 
 # ==================== GETTERS ====================
 
@@ -1626,7 +1543,14 @@ func get_puzzle_data():
 	return puzzle_data
 
 func get_bridges():
-	return bridges
+	"""
+	Get only visible bridges for drawing
+	"""
+	var visible_bridges = []
+	for bridge in bridges:
+		if bridge.get("visible", true):  # Default to true if no visibility property
+			visible_bridges.append(bridge)
+	return visible_bridges
 
 func get_hint_bridges():
 	return hint_bridges

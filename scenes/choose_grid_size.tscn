@@ -23,6 +23,21 @@
 [ext_resource type="Texture2D" uid="uid://cbpbwqy6631k4" path="res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 13.png" id="16_8pjmr"]
 [ext_resource type="Texture2D" uid="uid://cgkjlntjb145h" path="res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 14.png" id="17_w07y4"]
 
+[sub_resource type="Animation" id="Animation_j76yf"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("cloud:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(531, 475)]
+}
+
 [sub_resource type="Animation" id="Animation_pmwux"]
 resource_name = "cloud"
 length = 20.0
@@ -38,21 +53,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(531, 475), Vector2(447.00003, 475.00003)]
-}
-
-[sub_resource type="Animation" id="Animation_j76yf"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("cloud:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(531, 475)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_nkinv"]
@@ -243,5 +243,5 @@ stream = ExtResource("4_wea5t")
 
 [connection signal="pressed" from="buttons/backbutton" to="." method="_on_backbutton_pressed"]
 [connection signal="pressed" from="buttons/7x7-button" to="." method="_on_x_7_button_pressed"]
-[connection signal="pressed" from="buttons/9x9-button" to="." method="_on_x_10_button_pressed"]
-[connection signal="pressed" from="buttons/13x13-button" to="." method="_on_x_15_button_pressed"]
+[connection signal="pressed" from="buttons/9x9-button" to="." method="_on_x_9_button_pressed"]
+[connection signal="pressed" from="buttons/13x13-button" to="." method="_on_x_13_button_pressed"]

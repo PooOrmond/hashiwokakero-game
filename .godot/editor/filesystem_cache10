@@ -1,24 +1,138 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-63f7b34db8d8cdea90c76aacccf841ec
-::res://::1763865725
-::res://assets/::1763750868
-::res://assets/animation/::1763736342
-::res://assets/animation/background/::1763799829
-=======
-=======
->>>>>>> parent of 3b691ff (Revert "init")
 72322a848ab928aa5c89f0cb78209805
-::res://::1764078400
-export_presets.cfg::TextFile::-1::1764078400::0::1::::<><><>0<>0<><>::
-::res://android/::1764078390
-::res://assets/::1764078390
+::res://::1764160741
+export_presets.cfg::TextFile::-1::1764160630::0::1::::<><><>0<>0<><>::
+::res://android/::1764160628
+::res://android/build/::1764082743
+::res://android/build/build/::1764082743
+::res://android/build/build/generated/::1764082743
+::res://android/build/build/generated/ap_generated_sources/::1764077495
+::res://android/build/build/generated/ap_generated_sources/standardDebug/::1764077495
+::res://android/build/build/generated/ap_generated_sources/standardDebug/out/::1764077495
+::res://android/build/build/generated/res/::1764077487
+::res://android/build/build/generated/res/pngs/::1764077487
+::res://android/build/build/generated/res/pngs/standard/::1764077487
+::res://android/build/build/generated/res/pngs/standard/debug/::1764077487
+::res://android/build/build/generated/res/resValues/::1764077487
+::res://android/build/build/generated/res/resValues/standard/::1764077487
+::res://android/build/build/generated/res/resValues/standard/debug/::1764077487
+::res://android/build/build/intermediates/::1764082743
+::res://android/build/build/intermediates/aar_metadata_check/::1764077487
+::res://android/build/build/intermediates/aar_metadata_check/standardDebug/::1764077487
+::res://android/build/build/intermediates/aar_metadata_check/standardDebug/checkStandardDebugAarMetadata/::1764077487
+::res://android/build/build/intermediates/data_binding_layout_info_type_merge/::1764077487
+::res://android/build/build/intermediates/data_binding_layout_info_type_merge/standardDebug/::1764077487
+::res://android/build/build/intermediates/data_binding_layout_info_type_merge/standardDebug/mergeStandardDebugResources/::1764077487
+::res://android/build/build/intermediates/data_binding_layout_info_type_merge/standardDebug/mergeStandardDebugResources/out/::1764077487
+::res://android/build/build/intermediates/data_binding_layout_info_type_package/::1764077488
+::res://android/build/build/intermediates/data_binding_layout_info_type_package/standardDebug/::1764077488
+::res://android/build/build/intermediates/data_binding_layout_info_type_package/standardDebug/packageStandardDebugResources/::1764077488
+::res://android/build/build/intermediates/data_binding_layout_info_type_package/standardDebug/packageStandardDebugResources/out/::1764077488
+::res://android/build/build/intermediates/desugar_graph/::1764077498
+::res://android/build/build/intermediates/desugar_graph/standardDebug/::1764077498
+::res://android/build/build/intermediates/desugar_graph/standardDebug/dexBuilderStandardDebug/::1764077498
+::res://android/build/build/intermediates/desugar_graph/standardDebug/dexBuilderStandardDebug/out/::1764082743
+::res://android/build/build/intermediates/desugar_graph/standardDebug/dexBuilderStandardDebug/out/externalLibs/::1764077498
+::res://android/build/build/intermediates/desugar_graph/standardDebug/dexBuilderStandardDebug/out/mixedScopes/::1764077498
+::res://android/build/build/intermediates/desugar_graph/standardDebug/dexBuilderStandardDebug/out/otherProjects/::1764077498
+::res://android/build/build/intermediates/dex/::1764077492
+::res://android/build/build/intermediates/dex/standardDebug/::1764082743
+::res://android/build/build/intermediates/dex/standardDebug/mergeLibDexStandardDebug/::1764077492
+::res://android/build/build/intermediates/dex/standardDebug/mergeLibDexStandardDebug/0/::1764077492
+::res://android/build/build/intermediates/dex/standardDebug/mergeLibDexStandardDebug/1/::1764077492
+::res://android/build/build/intermediates/dex/standardDebug/mergeLibDexStandardDebug/2/::1764077492
+::res://android/build/build/intermediates/dex/standardDebug/mergeLibDexStandardDebug/3/::1764077492
+::res://android/build/build/intermediates/dex/standardDebug/mergeLibDexStandardDebug/4/::1764077492
+::res://android/build/build/intermediates/dex/standardDebug/mergeLibDexStandardDebug/5/::1764077492
+::res://android/build/build/intermediates/dex/standardDebug/mergeLibDexStandardDebug/6/::1764077492
+::res://android/build/build/intermediates/dex/standardDebug/mergeLibDexStandardDebug/7/::1764077492
+::res://android/build/build/intermediates/dex/standardDebug/mergeLibDexStandardDebug/8/::1764077492
+::res://android/build/build/intermediates/dex/standardDebug/mergeLibDexStandardDebug/9/::1764077492
+::res://android/build/build/intermediates/dex/standardDebug/mergeLibDexStandardDebug/10/::1764077492
+::res://android/build/build/intermediates/dex/standardDebug/mergeLibDexStandardDebug/11/::1764077492
+::res://android/build/build/intermediates/dex/standardDebug/mergeLibDexStandardDebug/12/::1764077492
+::res://android/build/build/intermediates/dex/standardDebug/mergeLibDexStandardDebug/13/::1764077492
+::res://android/build/build/intermediates/dex/standardDebug/mergeLibDexStandardDebug/14/::1764077492
+::res://android/build/build/intermediates/dex/standardDebug/mergeLibDexStandardDebug/15/::1764077492
+::res://android/build/build/intermediates/dex/standardDebug/mergeProjectDexStandardDebug/::1764082743
+::res://android/build/build/intermediates/dex/standardDebug/mergeProjectDexStandardDebug/1/::1764077499
+::res://android/build/build/intermediates/dex/standardDebug/mergeProjectDexStandardDebug/2/::1764077499
+::res://android/build/build/intermediates/dex/standardDebug/mergeProjectDexStandardDebug/3/::1764077499
+::res://android/build/build/intermediates/dex/standardDebug/mergeProjectDexStandardDebug/4/::1764077499
+::res://android/build/build/intermediates/dex/standardDebug/mergeProjectDexStandardDebug/5/::1764077499
+::res://android/build/build/intermediates/dex/standardDebug/mergeProjectDexStandardDebug/7/::1764077499
+::res://android/build/build/intermediates/dex/standardDebug/mergeProjectDexStandardDebug/8/::1764077499
+::res://android/build/build/intermediates/dex/standardDebug/mergeProjectDexStandardDebug/9/::1764077499
+::res://android/build/build/intermediates/dex/standardDebug/mergeProjectDexStandardDebug/10/::1764077499
+::res://android/build/build/intermediates/dex/standardDebug/mergeProjectDexStandardDebug/11/::1764077499
+::res://android/build/build/intermediates/dex/standardDebug/mergeProjectDexStandardDebug/12/::1764077499
+::res://android/build/build/intermediates/dex/standardDebug/mergeProjectDexStandardDebug/13/::1764077499
+::res://android/build/build/intermediates/dex/standardDebug/mergeProjectDexStandardDebug/14/::1764077499
+::res://android/build/build/intermediates/dex/standardDebug/mergeProjectDexStandardDebug/15/::1764077499
+::res://android/build/build/intermediates/duplicate_classes_check/::1764077491
+::res://android/build/build/intermediates/duplicate_classes_check/standardDebug/::1764077491
+::res://android/build/build/intermediates/duplicate_classes_check/standardDebug/checkStandardDebugDuplicateClasses/::1764077491
+::res://android/build/build/intermediates/external_libs_dex_archive/::1764077498
+::res://android/build/build/intermediates/external_libs_dex_archive/standardDebug/::1764077498
+::res://android/build/build/intermediates/external_libs_dex_archive/standardDebug/dexBuilderStandardDebug/::1764077498
+::res://android/build/build/intermediates/external_libs_dex_archive/standardDebug/dexBuilderStandardDebug/out/::1764077498
+::res://android/build/build/intermediates/external_libs_dex_archive_with_artifact_transforms/::1764077498
+::res://android/build/build/intermediates/external_libs_dex_archive_with_artifact_transforms/standardDebug/::1764077498
+::res://android/build/build/intermediates/external_libs_dex_archive_with_artifact_transforms/standardDebug/dexBuilderStandardDebug/::1764077498
+::res://android/build/build/intermediates/external_libs_dex_archive_with_artifact_transforms/standardDebug/dexBuilderStandardDebug/out/::1764077498
+::res://android/build/build/intermediates/global_synthetics_dex/::1764077503
+::res://android/build/build/intermediates/global_synthetics_dex/standardDebug/::1764077503
+::res://android/build/build/intermediates/global_synthetics_dex/standardDebug/mergeStandardDebugGlobalSynthetics/::1764077503
+::res://android/build/build/intermediates/global_synthetics_external_lib/::1764077498
+::res://android/build/build/intermediates/global_synthetics_external_lib/standardDebug/::1764077498
+::res://android/build/build/intermediates/global_synthetics_external_lib/standardDebug/dexBuilderStandardDebug/::1764077498
+::res://android/build/build/intermediates/global_synthetics_external_lib/standardDebug/dexBuilderStandardDebug/out/::1764077498
+::res://android/build/build/intermediates/global_synthetics_external_libs_artifact_transform/::1764077498
+::res://android/build/build/intermediates/global_synthetics_external_libs_artifact_transform/standardDebug/::1764077498
+::res://android/build/build/intermediates/global_synthetics_external_libs_artifact_transform/standardDebug/dexBuilderStandardDebug/::1764077498
+::res://android/build/build/intermediates/global_synthetics_external_libs_artifact_transform/standardDebug/dexBuilderStandardDebug/out/::1764077498
+::res://android/build/build/intermediates/global_synthetics_file_lib/::1764077491
+::res://android/build/build/intermediates/global_synthetics_file_lib/standardDebug/::1764077491
+::res://android/build/build/intermediates/global_synthetics_file_lib/standardDebug/desugarStandardDebugFileDependencies/::1764077491
+::res://android/build/build/intermediates/global_synthetics_mixed_scope/::1764077498
+::res://android/build/build/intermediates/global_synthetics_mixed_scope/standardDebug/::1764077498
+::res://android/build/build/intermediates/global_synthetics_mixed_scope/standardDebug/dexBuilderStandardDebug/::1764077498
+::res://android/build/build/intermediates/global_synthetics_mixed_scope/standardDebug/dexBuilderStandardDebug/out/::1764077498
+::res://android/build/build/intermediates/global_synthetics_project/::1764077498
+::res://android/build/build/intermediates/global_synthetics_project/standardDebug/::1764077498
+::res://android/build/build/intermediates/global_synthetics_project/standardDebug/dexBuilderStandardDebug/::1764077498
+::res://android/build/build/intermediates/global_synthetics_project/standardDebug/dexBuilderStandardDebug/out/::1764077498
+::res://android/build/build/intermediates/global_synthetics_subproject/::1764077498
+::res://android/build/build/intermediates/global_synthetics_subproject/standardDebug/::1764077498
+::res://android/build/build/intermediates/global_synthetics_subproject/standardDebug/dexBuilderStandardDebug/::1764077498
+::res://android/build/build/intermediates/global_synthetics_subproject/standardDebug/dexBuilderStandardDebug/out/::1764077498
+::res://android/build/build/intermediates/incremental/::1764082743
+::res://android/build/build/intermediates/incremental/standardDebug/::1764077488
+::res://android/build/build/intermediates/incremental/standardDebug/mergeStandardDebugResources/::1764082743
+::res://android/build/build/intermediates/incremental/standardDebug/mergeStandardDebugResources/stripped.dir/::1764077488
+::res://android/build/build/intermediates/incremental/standardDebug/packageStandardDebugResources/::1764082743
+::res://android/build/build/intermediates/incremental/standardDebug/packageStandardDebugResources/stripped.dir/::1764077488
+::res://android/build/build/intermediates/merged_shaders/::1764077490
+::res://android/build/build/intermediates/merged_shaders/standardDebug/::1764077490
+::res://android/build/build/intermediates/merged_shaders/standardDebug/mergeStandardDebugShaders/::1764077490
+::res://android/build/build/intermediates/merged_shaders/standardDebug/mergeStandardDebugShaders/out/::1764077490
+::res://android/build/build/intermediates/merged_test_only_native_libs/::1764077492
+::res://android/build/build/intermediates/merged_test_only_native_libs/standardDebug/::1764077492
+::res://android/build/build/intermediates/merged_test_only_native_libs/standardDebug/mergeStandardDebugNativeLibs/::1764077492
+::res://android/build/build/intermediates/merged_test_only_native_libs/standardDebug/mergeStandardDebugNativeLibs/out/::1764077492
+::res://android/build/build/intermediates/mixed_scope_dex_archive/::1764077498
+::res://android/build/build/intermediates/mixed_scope_dex_archive/standardDebug/::1764077498
+::res://android/build/build/intermediates/mixed_scope_dex_archive/standardDebug/dexBuilderStandardDebug/::1764077498
+::res://android/build/build/intermediates/mixed_scope_dex_archive/standardDebug/dexBuilderStandardDebug/out/::1764077498
+::res://android/build/build/intermediates/sub_project_dex_archive/::1764077498
+::res://android/build/build/intermediates/sub_project_dex_archive/standardDebug/::1764077498
+::res://android/build/build/intermediates/sub_project_dex_archive/standardDebug/dexBuilderStandardDebug/::1764077498
+::res://android/build/build/intermediates/sub_project_dex_archive/standardDebug/dexBuilderStandardDebug/out/::1764077498
+::res://android/build/build/intermediates/validate_signing_config/::1764077492
+::res://android/build/build/intermediates/validate_signing_config/standardDebug/::1764077492
+::res://android/build/build/intermediates/validate_signing_config/standardDebug/validateSigningStandardDebug/::1764077492
+::res://assets/::1764160658
 ::res://assets/animation/::1763736342
-::res://assets/animation/background/::1763918061
-<<<<<<< HEAD
->>>>>>> parent of 3b691ff (Revert "init")
-=======
->>>>>>> parent of 3b691ff (Revert "init")
+::res://assets/animation/background/::1764160668
 ::res://assets/animation/background/congrats/::1763799838
 congrats-bg - 1.png::CompressedTexture2D::1220298618839052014::1763799832::1763799838::1::::<><><>0<>0<>7eb197dc585528ce82a4a27471ad8db8<>res://.godot/imported/congrats-bg - 1.png-9132fbbe441420b525cab1b8fc3548a6.ctex::
 congrats-bg - 2.png::CompressedTexture2D::3865281669085390114::1763799832::1763799838::1::::<><><>0<>0<>7cbf00ed874d884b16fdc72cb30a4258<>res://.godot/imported/congrats-bg - 2.png-07a63465ed5c29a3a5c72a4b5dc3b29d.ctex::
@@ -34,30 +148,21 @@ congrats-bg - 11.png::CompressedTexture2D::597335948565963746::1763799832::17637
 congrats-bg - 12.png::CompressedTexture2D::500964666818614705::1763799832::1763799838::1::::<><><>0<>0<>bdf126c980bd5e8552f1bb7866de3613<>res://.godot/imported/congrats-bg - 12.png-0277be35ffc4228761f4511074efe83b.ctex::
 congrats-bg - 13.png::CompressedTexture2D::140896189135851962::1763799832::1763799838::1::::<><><>0<>0<>521a337a256de8d99b3b48158fa7d202<>res://.godot/imported/congrats-bg - 13.png-0a83809433ac71c0f5c2a80fe7ea3149.ctex::
 congrats-bg - 14.png::CompressedTexture2D::1067393214525197909::1763799832::1763799838::1::::<><><>0<>0<>4b24494f84d9e8404d6dbc22ae58faa7<>res://.godot/imported/congrats-bg - 14.png-ca0b15525e6651e3bf5fcf5c371a5f05.ctex::
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> parent of 3b691ff (Revert "init")
-::res://assets/animation/background/loading-bg/::1763919842
-Loading-bg - 1.png::CompressedTexture2D::436500639431105691::1763919836::1763919841::1::::<><><>0<>0<>ce26aacfc30a524bf60e69f4c6218a31<>res://.godot/imported/Loading-bg - 1.png-f05b6315ffc71d7f7671f5bf2655596f.ctex::
-Loading-bg - 2.png::CompressedTexture2D::9106856981517228356::1763919836::1763919841::1::::<><><>0<>0<>b21b4f409b9be3f84e65d717419d4684<>res://.godot/imported/Loading-bg - 2.png-3dc851b9ce4a3ada055b164b3d229a81.ctex::
-Loading-bg - 3.png::CompressedTexture2D::1553754214207798770::1763919836::1763919841::1::::<><><>0<>0<>5424c201f6f591d5225a8ff7b815ac5b<>res://.godot/imported/Loading-bg - 3.png-3bc47708ab4155d170773c64800cf197.ctex::
-Loading-bg - 4.png::CompressedTexture2D::6681502294207971124::1763919836::1763919841::1::::<><><>0<>0<>1c72da41e8101627099e908838373374<>res://.godot/imported/Loading-bg - 4.png-2bf776c8e581218e000b1d9b2e6702c5.ctex::
-Loading-bg - 5.png::CompressedTexture2D::2502640219281714742::1763919836::1763919841::1::::<><><>0<>0<>02ad9642f0dee14175e2a08c4583f147<>res://.godot/imported/Loading-bg - 5.png-50fe1ce9b35f3dd331b8a9229d44a7d3.ctex::
-Loading-bg - 6.png::CompressedTexture2D::7299784779398517668::1763919836::1763919841::1::::<><><>0<>0<>a4f8d2e114b33f4be0fcd13a0d96c163<>res://.godot/imported/Loading-bg - 6.png-14ad60e0c4a491b968ae94cfa2f3f5a3.ctex::
-Loading-bg - 7.png::CompressedTexture2D::6336661040437871323::1763919836::1763919842::1::::<><><>0<>0<>fff313aaf30fcba55a7833f1d4d5a8ce<>res://.godot/imported/Loading-bg - 7.png-029b96002f4327e86a69ce08fecb991c.ctex::
-Loading-bg - 8.png::CompressedTexture2D::2954319732140766137::1763919836::1763919842::1::::<><><>0<>0<>84edac8c424261422f78c3f76089b7ff<>res://.godot/imported/Loading-bg - 8.png-7550031f52c3d30edf25d5912b45bfa9.ctex::
-Loading-bg - 9.png::CompressedTexture2D::8106289080980646457::1763919836::1763919842::1::::<><><>0<>0<>a602051210690b0fceb03c695cf9b33d<>res://.godot/imported/Loading-bg - 9.png-9279aa9b15386e213ee1b09bbd7718b6.ctex::
-Loading-bg - 10.png::CompressedTexture2D::2829887107665067617::1763919836::1763919842::1::::<><><>0<>0<>7ba28669a7b4a2cef1bd77702ada17f6<>res://.godot/imported/Loading-bg - 10.png-800de6ef41132e05a63549a16c1e5d8f.ctex::
-Loading-bg - 11.png::CompressedTexture2D::8098596854295283766::1763919836::1763919842::1::::<><><>0<>0<>46bdf73779d992a5755f7d0049c4d19d<>res://.godot/imported/Loading-bg - 11.png-a107e68ceafd71ba08e828dc109336d1.ctex::
-Loading-bg - 12.png::CompressedTexture2D::9058069746034240890::1763919836::1763919842::1::::<><><>0<>0<>f505fa94de58c9f61984be764bdc34e7<>res://.godot/imported/Loading-bg - 12.png-e625dd0be2e81f6d0d661e30bb283617.ctex::
-Loading-bg - 13.png::CompressedTexture2D::5811681220763129133::1763919836::1763919842::1::::<><><>0<>0<>c9d7c09a69e67c2dc1889fe2d48382d5<>res://.godot/imported/Loading-bg - 13.png-2eb2e28cc0cc72197dd2a8e36cf0b1b4.ctex::
-Loading-bg - 14.png::CompressedTexture2D::8979817383657711768::1763919836::1763919842::1::::<><><>0<>0<>18b2a8187210626e2fe7929acd89b386<>res://.godot/imported/Loading-bg - 14.png-c590eb09f5742aaa33727868c904b2a9.ctex::
-<<<<<<< HEAD
->>>>>>> parent of 3b691ff (Revert "init")
-=======
->>>>>>> parent of 3b691ff (Revert "init")
+::res://assets/animation/background/loading-bg/::1764160708
+Loading-bg - 1.png::CompressedTexture2D::436500639431105691::1764160517::1764160708::1::::<><><>0<>0<>ce26aacfc30a524bf60e69f4c6218a31<>res://.godot/imported/Loading-bg - 1.png-f05b6315ffc71d7f7671f5bf2655596f.ctex::
+Loading-bg - 2.png::CompressedTexture2D::9106856981517228356::1764160517::1764160708::1::::<><><>0<>0<>b21b4f409b9be3f84e65d717419d4684<>res://.godot/imported/Loading-bg - 2.png-3dc851b9ce4a3ada055b164b3d229a81.ctex::
+Loading-bg - 3.png::CompressedTexture2D::1553754214207798770::1764160517::1764160708::1::::<><><>0<>0<>5424c201f6f591d5225a8ff7b815ac5b<>res://.godot/imported/Loading-bg - 3.png-3bc47708ab4155d170773c64800cf197.ctex::
+Loading-bg - 4.png::CompressedTexture2D::6681502294207971124::1764160517::1764160708::1::::<><><>0<>0<>1c72da41e8101627099e908838373374<>res://.godot/imported/Loading-bg - 4.png-2bf776c8e581218e000b1d9b2e6702c5.ctex::
+Loading-bg - 5.png::CompressedTexture2D::2502640219281714742::1764160517::1764160708::1::::<><><>0<>0<>02ad9642f0dee14175e2a08c4583f147<>res://.godot/imported/Loading-bg - 5.png-50fe1ce9b35f3dd331b8a9229d44a7d3.ctex::
+Loading-bg - 6.png::CompressedTexture2D::7299784779398517668::1764160517::1764160708::1::::<><><>0<>0<>a4f8d2e114b33f4be0fcd13a0d96c163<>res://.godot/imported/Loading-bg - 6.png-14ad60e0c4a491b968ae94cfa2f3f5a3.ctex::
+Loading-bg - 7.png::CompressedTexture2D::6336661040437871323::1764160517::1764160708::1::::<><><>0<>0<>fff313aaf30fcba55a7833f1d4d5a8ce<>res://.godot/imported/Loading-bg - 7.png-029b96002f4327e86a69ce08fecb991c.ctex::
+Loading-bg - 8.png::CompressedTexture2D::2954319732140766137::1764160517::1764160708::1::::<><><>0<>0<>84edac8c424261422f78c3f76089b7ff<>res://.godot/imported/Loading-bg - 8.png-7550031f52c3d30edf25d5912b45bfa9.ctex::
+Loading-bg - 9.png::CompressedTexture2D::8106289080980646457::1764160517::1764160708::1::::<><><>0<>0<>a602051210690b0fceb03c695cf9b33d<>res://.godot/imported/Loading-bg - 9.png-9279aa9b15386e213ee1b09bbd7718b6.ctex::
+Loading-bg - 10.png::CompressedTexture2D::2829887107665067617::1764160517::1764160708::1::::<><><>0<>0<>7ba28669a7b4a2cef1bd77702ada17f6<>res://.godot/imported/Loading-bg - 10.png-800de6ef41132e05a63549a16c1e5d8f.ctex::
+Loading-bg - 11.png::CompressedTexture2D::8098596854295283766::1764160517::1764160708::1::::<><><>0<>0<>46bdf73779d992a5755f7d0049c4d19d<>res://.godot/imported/Loading-bg - 11.png-a107e68ceafd71ba08e828dc109336d1.ctex::
+Loading-bg - 12.png::CompressedTexture2D::9058069746034240890::1764160517::1764160708::1::::<><><>0<>0<>f505fa94de58c9f61984be764bdc34e7<>res://.godot/imported/Loading-bg - 12.png-e625dd0be2e81f6d0d661e30bb283617.ctex::
+Loading-bg - 13.png::CompressedTexture2D::5811681220763129133::1764160517::1764160708::1::::<><><>0<>0<>c9d7c09a69e67c2dc1889fe2d48382d5<>res://.godot/imported/Loading-bg - 13.png-2eb2e28cc0cc72197dd2a8e36cf0b1b4.ctex::
+Loading-bg - 14.png::CompressedTexture2D::8979817383657711768::1764160517::1764160708::1::::<><><>0<>0<>18b2a8187210626e2fe7929acd89b386<>res://.godot/imported/Loading-bg - 14.png-c590eb09f5742aaa33727868c904b2a9.ctex::
 ::res://assets/animation/background/nature_4/::1763613225
 1.png::CompressedTexture2D::6983597445455469063::1763613219::1763613225::1::::<><><>0<>0<>b47df98e7cd516df59a26d1cea23e8f7<>res://.godot/imported/1.png-fb2f82ea966ec1ea3bbf5b659ce025fa.ctex::
 2.png::CompressedTexture2D::3379503661038306358::1763613219::1763613225::1::::<><><>0<>0<>3503c9c038f8527b20cc2d30fe4f44b3<>res://.godot/imported/2.png-3dcde1128a436c4f5e43f61d1e39b5d9.ctex::
@@ -122,18 +227,9 @@ Quit.png::CompressedTexture2D::1587984528684310864::1763750942::1763750945::1:::
 Restart.png::CompressedTexture2D::8479215647067629118::1763750933::1763750945::1::::<><><>0<>0<>1799f8ee96ef092ac829885901bda2f6<>res://.godot/imported/Restart.png-ffa25af061fc4aaff06f4d4ba082f861.ctex::
 setting.png::CompressedTexture2D::1074436754436294743::1763750901::1763750945::1::::<><><>0<>0<>0bc9a426944758e00626be6537d3aa7d<>res://.godot/imported/setting.png-6b7d10aed3131d63637bfaebd5ac7971.ctex::
 solve.png::CompressedTexture2D::2412120842067937799::1763746839::1763746842::1::::<><><>0<>0<>82a4f3ec69ba41b2981e43646992abcc<>res://.godot/imported/solve.png-60e2008032367d0f4b53e315decf2588.ctex::
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-::res://assets/fonts/::1763919110
-PixelOperator8-Bold.ttf::FontFile::4031732083684403038::1763919007::1763919110::1::::<><><>0<>0<>b0bdeb255adbd8e06ee1a37402a6d061<>res://.godot/imported/PixelOperator8-Bold.ttf-74faf550739674ad3170f08e646e0614.fontdata::
-PixelOperator8.ttf::FontFile::4399045943727813401::1763919007::1763919110::1::::<><><>0<>0<>77762ad19ca8148dc62fad60b8ef75a1<>res://.godot/imported/PixelOperator8.ttf-6f9f01766aff16f52046b880ffb8d367.fontdata::
->>>>>>> parent of 3b691ff (Revert "init")
-=======
-::res://assets/fonts/::1763919110
-PixelOperator8-Bold.ttf::FontFile::4031732083684403038::1763919007::1763919110::1::::<><><>0<>0<>b0bdeb255adbd8e06ee1a37402a6d061<>res://.godot/imported/PixelOperator8-Bold.ttf-74faf550739674ad3170f08e646e0614.fontdata::
-PixelOperator8.ttf::FontFile::4399045943727813401::1763919007::1763919110::1::::<><><>0<>0<>77762ad19ca8148dc62fad60b8ef75a1<>res://.godot/imported/PixelOperator8.ttf-6f9f01766aff16f52046b880ffb8d367.fontdata::
->>>>>>> parent of 3b691ff (Revert "init")
+::res://assets/fonts/::1764160708
+PixelOperator8-Bold.ttf::FontFile::8622734613741144468::1762924734::1764160707::1::::<><><>0<>0<>14acc1c11176f8babb8a0b37559e687f<>res://.godot/imported/PixelOperator8-Bold.ttf-74faf550739674ad3170f08e646e0614.fontdata::
+PixelOperator8.ttf::FontFile::5056907943688014021::1762924734::1764160708::1::::<><><>0<>0<>0d563ab71b68e8aa7cdcea738c83a11e<>res://.godot/imported/PixelOperator8.ttf-6f9f01766aff16f52046b880ffb8d367.fontdata::
 ::res://assets/input/::1763531170
 ::res://assets/input/7x7/::1763539950
 input-01.txt::TextFile::-1::1763628799::0::1::::<><><>0<>0<><>::
@@ -153,21 +249,15 @@ input-02.txt::TextFile::-1::1763531170::0::1::::<><><>0<>0<><>::
 input-03.txt::TextFile::-1::1763531170::0::1::::<><><>0<>0<><>::
 input-04.txt::TextFile::-1::1763531170::0::1::::<><><>0<>0<><>::
 input-05.txt::TextFile::-1::1763531170::0::1::::<><><>0<>0<><>::
-<<<<<<< HEAD
-<<<<<<< HEAD
-::res://assets/islands/::1763557967
-1.png::CompressedTexture2D::6827192854573194134::1762924734::1763557960::1::::<><><>0<>0<>9765c84f1fd1bf027bea1c58b437d74f<>res://.godot/imported/1.png-11efeb9a54e599e33e1a55d2276d3b1c.ctex::
-2.png::CompressedTexture2D::6264457649201427813::1762924734::1763557960::1::::<><><>0<>0<>cb1a85d03dc0e1ff70ddd3aa1553cfaa<>res://.godot/imported/2.png-3f0e4cbb6e359068d4ceb789c9dc5cc9.ctex::
-3.png::CompressedTexture2D::8897411796916699000::1762924734::1763557960::1::::<><><>0<>0<>779cd7c80715b8a2794815537ad54d4d<>res://.godot/imported/3.png-b3c051d3d0c64b49760e38f38f0b504f.ctex::
-4.png::CompressedTexture2D::2699832794486109087::1762924734::1763557960::1::::<><><>0<>0<>be3060f8e7bf84286675189a0a5c43a7<>res://.godot/imported/4.png-bf421ed5991be0201d4cd800f15ca6af.ctex::
-5.png::CompressedTexture2D::4801786791545558800::1762924734::1763557960::1::::<><><>0<>0<>486fded5a71e0ab40bfbe819db3c0131<>res://.godot/imported/5.png-0f9c2b614b2f5c889a6217fb13646750.ctex::
-6.png::CompressedTexture2D::4290522181051880799::1762924734::1763557960::1::::<><><>0<>0<>52f4b9d7918bf3a053b965190ff2ca3c<>res://.godot/imported/6.png-f1b12472f13a7e3fa78232a2c8d58784.ctex::
-7.png::CompressedTexture2D::681820861133454849::1762924734::1763557960::1::::<><><>0<>0<>91d605283343c76a585e386a90091fd4<>res://.godot/imported/7.png-dece9aa6621f944dbb1524b396eb0bd0.ctex::
-8.png::CompressedTexture2D::4938054504276297183::1762924734::1763557960::1::::<><><>0<>0<>2748762aef278436d533b93394cd1063<>res://.godot/imported/8.png-262723b5baab49ceaba42d6006ab6e97.ctex::
-=======
->>>>>>> parent of 3b691ff (Revert "init")
-=======
->>>>>>> parent of 3b691ff (Revert "init")
+::res://assets/islands/::1764160708
+1.png::CompressedTexture2D::6827192854573194134::1764160517::1764160708::1::::<><><>0<>0<>9765c84f1fd1bf027bea1c58b437d74f<>res://.godot/imported/1.png-11efeb9a54e599e33e1a55d2276d3b1c.ctex::
+2.png::CompressedTexture2D::6264457649201427813::1764160517::1764160708::1::::<><><>0<>0<>cb1a85d03dc0e1ff70ddd3aa1553cfaa<>res://.godot/imported/2.png-3f0e4cbb6e359068d4ceb789c9dc5cc9.ctex::
+3.png::CompressedTexture2D::8897411796916699000::1764160517::1764160708::1::::<><><>0<>0<>779cd7c80715b8a2794815537ad54d4d<>res://.godot/imported/3.png-b3c051d3d0c64b49760e38f38f0b504f.ctex::
+4.png::CompressedTexture2D::2699832794486109087::1764160517::1764160708::1::::<><><>0<>0<>be3060f8e7bf84286675189a0a5c43a7<>res://.godot/imported/4.png-bf421ed5991be0201d4cd800f15ca6af.ctex::
+5.png::CompressedTexture2D::4801786791545558800::1764160517::1764160708::1::::<><><>0<>0<>486fded5a71e0ab40bfbe819db3c0131<>res://.godot/imported/5.png-0f9c2b614b2f5c889a6217fb13646750.ctex::
+6.png::CompressedTexture2D::4290522181051880799::1764160517::1764160708::1::::<><><>0<>0<>52f4b9d7918bf3a053b965190ff2ca3c<>res://.godot/imported/6.png-f1b12472f13a7e3fa78232a2c8d58784.ctex::
+7.png::CompressedTexture2D::681820861133454849::1764160517::1764160708::1::::<><><>0<>0<>91d605283343c76a585e386a90091fd4<>res://.godot/imported/7.png-dece9aa6621f944dbb1524b396eb0bd0.ctex::
+8.png::CompressedTexture2D::4938054504276297183::1764160517::1764160708::1::::<><><>0<>0<>2748762aef278436d533b93394cd1063<>res://.godot/imported/8.png-262723b5baab49ceaba42d6006ab6e97.ctex::
 ::res://assets/output/::1763531170
 ::res://assets/output/7x7/::1763538395
 output-01.txt::TextFile::-1::1763695147::0::1::::<><><>0<>0<><>::
@@ -190,83 +280,38 @@ output-05.txt::TextFile::-1::1763531170::0::1::::<><><>0<>0<><>::
 ::res://assets/window/::1763787357
 drop-panel.png::CompressedTexture2D::2033610446284540225::1763787354::1763787357::1::::<><><>0<>0<>cb61291c52f722b4bbf4d273ce741310<>res://.godot/imported/drop-panel.png-0e717dc61c32e80fa4895bb9e479d393.ctex::
 menu-window.png::CompressedTexture2D::8527880815423838219::1763750875::1763750945::1::::<><><>0<>0<>da1de5a1dcb36fbbe77ff73397c35790<>res://.godot/imported/menu-window.png-1646b2c2a63dbba7ca396b102b9248fd.ctex::
-<<<<<<< HEAD
-<<<<<<< HEAD
+::res://export/::1764160629
+::res://export/apk/::1764160629
+::res://export/exe/::1764160629
+::res://export/web/::1764160708
+Graph_Bridges.apple-touch-icon.png::CompressedTexture2D::3457255995371241242::1764160629::1764160708::1::::<><><>0<>0<>46049ff519d6f6d5e3d62a436a197ddd<>res://.godot/imported/Graph_Bridges.apple-touch-icon.png-a55d8479349696eff98b59f4f7b7d329.ctex::
+Graph_Bridges.icon.png::CompressedTexture2D::8196898713256973933::1764160629::1764160708::1::::<><><>0<>0<>629a0c48bec8d08db5bbc13eb1bd3d3b<>res://.godot/imported/Graph_Bridges.icon.png-2a5ac18f7b2e6314ee2b8960b130f296.ctex::
+Graph_Bridges.png::CompressedTexture2D::8588038429796886435::1764160629::1764160708::1::::<><><>0<>0<>33dc986c530cb9a607dc93d2d7c7fbc1<>res://.godot/imported/Graph_Bridges.png-cd37f522bd457410e2b94d11ae903ac8.ctex::
 ::res://fonts/::1763118649
 PixelOperator8-Bold.ttf::FontFile::8622734613741144468::1762924734::1763118649::1::::<><><>0<>0<>62fb4dad57d6c970ae136ff17b8f0660<>res://.godot/imported/PixelOperator8-Bold.ttf-9816dd625e887c8fd6e5634edb7d64db.fontdata::
 PixelOperator8.ttf::FontFile::5056907943688014021::1762924734::1763118649::1::::<><><>0<>0<>66bca7943261b6af09cb30d57e684900<>res://.godot/imported/PixelOperator8.ttf-47b55c2c6c56107c69fa972cdf12fcff.fontdata::
+::res://icon/::1764160708
+try.png::CompressedTexture2D::4311481541911319187::1764160630::1764160708::1::::<><><>0<>0<>a8c2d87f2aa77907e36de15cfd7e7f1c<>res://.godot/imported/try.png-bb2cfc8a67940b024d71625b20b8501f.ctex::
 ::res://music/::1763118649
 button-sound.mp3::AudioStreamMP3::6055601982908950384::1762924734::1763118649::1::::<><><>0<>0<>1cb9e6c8f921d103a5173bd0bba405d3<>res://.godot/imported/button-sound.mp3-c44906b2ad6cc0b1cba2eea9c9debf5c.mp3str::
 time_for_adventure.mp3::AudioStreamMP3::2383746643613050573::1762924734::1763118649::1::::<><><>0<>0<>a3763e39f8bcc6f4fd926f385b0f2bda<>res://.godot/imported/time_for_adventure.mp3-2780301e92dd6fe7ff9355bb3f98cf7c.mp3str::
-::res://scenes/::1763796452
+::res://scenes/::1764160633
+7x_7.tscn::PackedScene::3178995424436522110::1764160633::0::1::::<><><>0<>0<><>::uid://ckkwx1ern17kb::::res://scripts/7x_7.gd<>uid://du7xbqtjabqcd::::res://assets/animation/background/puzzle-background/Puzzle-bg - 1.png<>uid://nnrrsk8an14x::::res://assets/animation/background/puzzle-background/Puzzle-bg - 2.png<>uid://vf6b1fa5xgr8::::res://assets/animation/background/puzzle-background/Puzzle-bg - 3.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://nha5vkl3mqx5::::res://assets/buttons/hint.png<>uid://bampjpg003esd::::res://assets/buttons/solve.png<>uid://gnwd841on3am::::res://assets/animation/background/puzzle-background/Puzzle-bg - 4.png<>uid://b5bq1a4md3jqr::::res://assets/animation/background/puzzle-background/Puzzle-bg - 5.png<>uid://c7yi4yu11k2n7::::res://assets/animation/background/puzzle-background/Puzzle-bg - 6.png<>uid://cbropxq5yc00n::::res://assets/animation/background/puzzle-background/Puzzle-bg - 7.png<>uid://3r3arps5fcqy::::res://assets/animation/background/puzzle-background/Puzzle-bg - 8.png<>uid://rnee02fq0vwg::::res://assets/animation/background/congrats/congrats-bg - 1.png<>uid://bvcmvh1bt26li::::res://assets/animation/background/congrats/congrats-bg - 2.png<>uid://hfukqmc8arax::::res://assets/animation/background/congrats/congrats-bg - 3.png<>uid://cl6p7tn4og0s7::::res://assets/animation/background/congrats/congrats-bg - 4.png<>uid://d1e8onskqoo1v::::res://assets/animation/background/congrats/congrats-bg - 5.png<>uid://pkp20ysqadal::::res://assets/buttons/setting.png<>uid://c0lgjyd6hpx13::::res://assets/animation/background/congrats/congrats-bg - 6.png<>uid://dm0ha63iba0an::::res://assets/animation/background/congrats/congrats-bg - 7.png<>uid://cald1hkeqqlqq::::res://assets/animation/background/congrats/congrats-bg - 8.png<>uid://cpf1dvam78aee::::res://assets/animation/background/congrats/congrats-bg - 9.png<>uid://53nimkai24w1::::res://assets/animation/background/congrats/congrats-bg - 10.png<>uid://irmbhnef658a::::res://assets/animation/background/congrats/congrats-bg - 11.png<>uid://hew2x8w8oxgj::::res://assets/animation/background/congrats/congrats-bg - 12.png<>uid://caisl3ns7rfm::::res://assets/animation/background/congrats/congrats-bg - 13.png<>uid://phb2sx3s1t70::::res://assets/animation/background/congrats/congrats-bg - 14.png
 choose_grid_size.tscn::PackedScene::6161481332770674822::1763737871::0::1::::<><><>0<>0<><>::uid://5472v0lm1nfk::::res://scripts/choose_grid_size.gd<>uid://c6q53hbadsdhn::::res://assets/animation/background/nature_4/1.png<>uid://douajqs02guic::::res://assets/buttons/back.png<>uid://bofb6w4p78k0u::::res://assets/animation/background/nature_4/2.png<>uid://dn8to0lwc6jmg::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 1.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://r5ed0c7adayk::::res://assets/buttons/7x7.png<>uid://d156snrou3m1a::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 2.png<>uid://2xahvbhkydg3::::res://assets/buttons/9x9.png<>uid://bwcdddpqp8h3u::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 3.png<>uid://4birnkvc50xn::::res://assets/buttons/13x13.png<>uid://d4k6w8rylkvjr::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 4.png<>uid://cq6alqiqu0oxq::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 5.png<>uid://cr2lqdgupdt1e::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 6.png<>uid://d2iumses7do8p::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 7.png<>uid://dhdresqvv08ln::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 8.png<>uid://ceekywfdd1rpq::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 9.png<>uid://8asebldklucx::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 10.png<>uid://pn2xu6f7soio::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 11.png<>uid://mtsxkqqsbklj::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 12.png<>uid://cbpbwqy6631k4::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 13.png<>uid://cgkjlntjb145h::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 14.png
-=======
-=======
->>>>>>> parent of 3b691ff (Revert "init")
-::res://export/::1764078400
-::res://export/apk/::1764078399
-::res://export/exe/::1764078400
-::res://export/web/::1764078400
-Graph_Bridges.apple-touch-icon.png::CompressedTexture2D::3457255995371241242::1764078400::1764078410::1::::<><><>0<>0<>46049ff519d6f6d5e3d62a436a197ddd<>res://.godot/imported/Graph_Bridges.apple-touch-icon.png-a55d8479349696eff98b59f4f7b7d329.ctex::
-Graph_Bridges.icon.png::CompressedTexture2D::8196898713256973933::1764078400::1764078410::1::::<><><>0<>0<>629a0c48bec8d08db5bbc13eb1bd3d3b<>res://.godot/imported/Graph_Bridges.icon.png-2a5ac18f7b2e6314ee2b8960b130f296.ctex::
-Graph_Bridges.png::CompressedTexture2D::8588038429796886435::1764078400::1764078410::1::::<><><>0<>0<>33dc986c530cb9a607dc93d2d7c7fbc1<>res://.godot/imported/Graph_Bridges.png-cd37f522bd457410e2b94d11ae903ac8.ctex::
-::res://fonts/::1763118649
-PixelOperator8-Bold.ttf::FontFile::8622734613741144468::1762924734::1763118649::1::::<><><>0<>0<>62fb4dad57d6c970ae136ff17b8f0660<>res://.godot/imported/PixelOperator8-Bold.ttf-9816dd625e887c8fd6e5634edb7d64db.fontdata::
-PixelOperator8.ttf::FontFile::5056907943688014021::1762924734::1763118649::1::::<><><>0<>0<>66bca7943261b6af09cb30d57e684900<>res://.godot/imported/PixelOperator8.ttf-47b55c2c6c56107c69fa972cdf12fcff.fontdata::
-::res://icon/::1764078400
-try.png::CompressedTexture2D::4311481541911319187::1764078400::1764078410::1::::<><><>0<>0<>a8c2d87f2aa77907e36de15cfd7e7f1c<>res://.godot/imported/try.png-bb2cfc8a67940b024d71625b20b8501f.ctex::
-::res://music/::1763118649
-button-sound.mp3::AudioStreamMP3::6055601982908950384::1762924734::1763118649::1::::<><><>0<>0<>1cb9e6c8f921d103a5173bd0bba405d3<>res://.godot/imported/button-sound.mp3-c44906b2ad6cc0b1cba2eea9c9debf5c.mp3str::
-time_for_adventure.mp3::AudioStreamMP3::2383746643613050573::1762924734::1763118649::1::::<><><>0<>0<>a3763e39f8bcc6f4fd926f385b0f2bda<>res://.godot/imported/time_for_adventure.mp3-2780301e92dd6fe7ff9355bb3f98cf7c.mp3str::
-::res://scenes/::1764078400
-7x_7.tscn::PackedScene::3178995424436522110::1764078400::0::1::::<><><>0<>0<><>::uid://ckkwx1ern17kb::::res://scripts/7x_7.gd<>uid://du7xbqtjabqcd::::res://assets/animation/background/puzzle-background/Puzzle-bg - 1.png<>uid://nnrrsk8an14x::::res://assets/animation/background/puzzle-background/Puzzle-bg - 2.png<>uid://vf6b1fa5xgr8::::res://assets/animation/background/puzzle-background/Puzzle-bg - 3.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://nha5vkl3mqx5::::res://assets/buttons/hint.png<>uid://bampjpg003esd::::res://assets/buttons/solve.png<>uid://gnwd841on3am::::res://assets/animation/background/puzzle-background/Puzzle-bg - 4.png<>uid://b5bq1a4md3jqr::::res://assets/animation/background/puzzle-background/Puzzle-bg - 5.png<>uid://c7yi4yu11k2n7::::res://assets/animation/background/puzzle-background/Puzzle-bg - 6.png<>uid://cbropxq5yc00n::::res://assets/animation/background/puzzle-background/Puzzle-bg - 7.png<>uid://3r3arps5fcqy::::res://assets/animation/background/puzzle-background/Puzzle-bg - 8.png<>uid://rnee02fq0vwg::::res://assets/animation/background/congrats/congrats-bg - 1.png<>uid://bvcmvh1bt26li::::res://assets/animation/background/congrats/congrats-bg - 2.png<>uid://hfukqmc8arax::::res://assets/animation/background/congrats/congrats-bg - 3.png<>uid://cl6p7tn4og0s7::::res://assets/animation/background/congrats/congrats-bg - 4.png<>uid://d1e8onskqoo1v::::res://assets/animation/background/congrats/congrats-bg - 5.png<>uid://pkp20ysqadal::::res://assets/buttons/setting.png<>uid://c0lgjyd6hpx13::::res://assets/animation/background/congrats/congrats-bg - 6.png<>uid://dm0ha63iba0an::::res://assets/animation/background/congrats/congrats-bg - 7.png<>uid://cald1hkeqqlqq::::res://assets/animation/background/congrats/congrats-bg - 8.png<>uid://cpf1dvam78aee::::res://assets/animation/background/congrats/congrats-bg - 9.png<>uid://53nimkai24w1::::res://assets/animation/background/congrats/congrats-bg - 10.png<>uid://irmbhnef658a::::res://assets/animation/background/congrats/congrats-bg - 11.png<>uid://hew2x8w8oxgj::::res://assets/animation/background/congrats/congrats-bg - 12.png<>uid://caisl3ns7rfm::::res://assets/animation/background/congrats/congrats-bg - 13.png<>uid://phb2sx3s1t70::::res://assets/animation/background/congrats/congrats-bg - 14.png
-choose_grid_size.tscn::PackedScene::6161481332770674822::1763737871::0::1::::<><><>0<>0<><>::uid://5472v0lm1nfk::::res://scripts/choose_grid_size.gd<>uid://c6q53hbadsdhn::::res://assets/animation/background/nature_4/1.png<>uid://douajqs02guic::::res://assets/buttons/back.png<>uid://bofb6w4p78k0u::::res://assets/animation/background/nature_4/2.png<>uid://dn8to0lwc6jmg::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 1.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://r5ed0c7adayk::::res://assets/buttons/7x7.png<>uid://d156snrou3m1a::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 2.png<>uid://2xahvbhkydg3::::res://assets/buttons/9x9.png<>uid://bwcdddpqp8h3u::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 3.png<>uid://4birnkvc50xn::::res://assets/buttons/13x13.png<>uid://d4k6w8rylkvjr::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 4.png<>uid://cq6alqiqu0oxq::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 5.png<>uid://cr2lqdgupdt1e::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 6.png<>uid://d2iumses7do8p::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 7.png<>uid://dhdresqvv08ln::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 8.png<>uid://ceekywfdd1rpq::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 9.png<>uid://8asebldklucx::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 10.png<>uid://pn2xu6f7soio::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 11.png<>uid://mtsxkqqsbklj::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 12.png<>uid://cbpbwqy6631k4::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 13.png<>uid://cgkjlntjb145h::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 14.png
-loading_screen.tscn::PackedScene::25207818048382087::1763922284::0::1::::<><><>0<>0<><>::uid://dlhtb05o0asg0::::res://scripts/loading_screen.gd<>uid://ghpdpvqy26pj::::res://assets/animation/background/loading-bg/Loading-bg - 1.png<>uid://d20ousf6wm4sm::::res://assets/animation/background/loading-bg/Loading-bg - 2.png<>uid://wewdtjb45ija::::res://assets/animation/background/loading-bg/Loading-bg - 3.png<>uid://c2gtmp2cwwhai::::res://assets/animation/background/loading-bg/Loading-bg - 4.png<>uid://bbwkebkgkptic::::res://assets/animation/background/loading-bg/Loading-bg - 5.png<>uid://dcacnhpt3qolw::::res://assets/animation/background/loading-bg/Loading-bg - 6.png<>uid://cwjr48b8kbn6b::::res://assets/animation/background/loading-bg/Loading-bg - 7.png<>uid://biddhj2c1cyqj::::res://assets/animation/background/loading-bg/Loading-bg - 8.png<>uid://dnq0nqyu8ii7j::::res://assets/animation/background/loading-bg/Loading-bg - 9.png<>uid://bgk23eiyudkr6::::res://assets/animation/background/loading-bg/Loading-bg - 10.png<>uid://dnnaybi1bp3hq::::res://assets/animation/background/loading-bg/Loading-bg - 11.png<>uid://d2b2c5vjxlnio::::res://assets/animation/background/loading-bg/Loading-bg - 12.png<>uid://co2hsm7c5hxsv::::res://assets/animation/background/loading-bg/Loading-bg - 13.png<>uid://d065jscr55v0c::::res://assets/animation/background/loading-bg/Loading-bg - 14.png<>uid://bxpabkmjxyc5k::::res://assets/fonts/PixelOperator8-Bold.ttf<>uid://b3w6v5pfyxddp::::res://assets/fonts/PixelOperator8.ttf
-<<<<<<< HEAD
->>>>>>> parent of 3b691ff (Revert "init")
-=======
->>>>>>> parent of 3b691ff (Revert "init")
 main_menu.tscn::PackedScene::3365797704796750848::1763784872::0::1::::<><><>0<>0<><>::uid://ctonvtmcl34jn::::res://scripts/main_menu.gd<>uid://c6q53hbadsdhn::::res://assets/animation/background/nature_4/1.png<>uid://dyimwhkjfv70o::::res://assets/animation/background/nature_4/4.png<>uid://cfjg6er43b6qt::::res://assets/animation/background/nature_4/3.png<>uid://bofb6w4p78k0u::::res://assets/animation/background/nature_4/2.png<>uid://h8yp0qsv1gln::::res://assets/animation/title/new-title-animation/title-animation - 1.png<>uid://dxxod8xp2avt2::::res://assets/animation/title/new-title-animation/title-animation - 2.png<>uid://dv1i5liwysj0f::::res://assets/animation/title/new-title-animation/title-animation - 3.png<>uid://dmoa1l5wesx5k::::res://assets/buttons/exit.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://sb4jnkjs5pk::::res://assets/animation/title/new-title-animation/title-animation - 4.png<>uid://b1epb05o8yj3q::::res://assets/animation/title/new-title-animation/title-animation - 5.png<>uid://bolll0swjco7l::::res://assets/animation/title/new-title-animation/title-animation - 6.png<>uid://2nueym37vwrx::::res://assets/animation/title/new-title-animation/title-animation - 7.png<>uid://bro6rwtdba3eb::::res://assets/animation/title/new-title-animation/title-animation - 8.png<>uid://ddje8ndismyjx::::res://assets/buttons/Go-button.png<>uid://dudhcdh2o5kj5::::res://assets/animation/title/new-title-animation/title-animation - 9.png
-menu_popup_panel.tscn::PackedScene::5432332173227736817::1763796452::0::1::::<><><>0<>0<><>::uid://go4unjo12d6o::::res://scripts/menu-panel.gd<>uid://dtq77lpxhe54j::::res://assets/window/menu-window.png<>uid://ds2npb75hcd4y::::res://assets/buttons/Restart.png<>uid://c71mg5m6q3xfj::::res://assets/buttons/New-game.png<>uid://wvh4xnp37qfg::::res://assets/buttons/Quit.png<>uid://5bu8vxys2apf::::res://assets/buttons/Cancel.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3
-music.tscn::PackedScene::266733096418495037::1762924734::0::1::::<><><>0<>0<><>::uid://87x7usufpsyn::::res://music/time_for_adventure.mp3
+menu_popup_panel.tscn::PackedScene::5432332173227736817::1764082671::0::1::::<><><>0<>0<><>::uid://go4unjo12d6o::::res://scripts/menu-panel.gd<>uid://dtq77lpxhe54j::::res://assets/window/menu-window.png<>uid://ds2npb75hcd4y::::res://assets/buttons/Restart.png<>uid://c71mg5m6q3xfj::::res://assets/buttons/New-game.png<>uid://wvh4xnp37qfg::::res://assets/buttons/Quit.png<>uid://5bu8vxys2apf::::res://assets/buttons/Cancel.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3
+music.tscn::PackedScene::266733096418495037::1764082671::0::1::::<><><>0<>0<><>::uid://87x7usufpsyn::::res://music/time_for_adventure.mp3
 scene_transition.tscn::PackedScene::3618192991747779307::1763628432::0::1::::<><><>0<>0<><>::uid://c3hdheknt8qwl::::res://scripts/scene_transition.gd
-<<<<<<< HEAD
-<<<<<<< HEAD
-::res://scenes/custom-ai/::1762924734
-custom_or_ai-2.tscn::PackedScene::7159178969709484640::1762924734::0::1::::<><><>0<>0<><>::uid://bq5hcyjhpjo5q::::res://scripts/custom_or_ai_2.gd<>uid://du36gdi4bwn5e::::res://fonts/PixelOperator8-Bold.ttf<>uid://douajqs02guic::::res://assets/buttons/back.png<>uid://c5cnsgf4r7q88::::res://assets/buttons/custom-made.png<>uid://beeg7quk56ine::::res://assets/buttons/made-ai.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3
-custom_or_ai-3.tscn::PackedScene::4175004567913602326::1762924734::0::1::::<><><>0<>0<><>::uid://0a84s86fhk54::::res://scripts/custom-ai/custom_or_ai_3.gd<>uid://du36gdi4bwn5e::::res://fonts/PixelOperator8-Bold.ttf<>uid://douajqs02guic::::res://assets/buttons/back.png<>uid://c5cnsgf4r7q88::::res://assets/buttons/custom-made.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://beeg7quk56ine::::res://assets/buttons/made-ai.png
-custom_or_ai.tscn::PackedScene::1994153426195296044::1762924734::0::1::::<><><>0<>0<><>::uid://c03f7k46a6lfi::::res://scripts/custom_or_ai.gd<>uid://du36gdi4bwn5e::::res://fonts/PixelOperator8-Bold.ttf<>uid://douajqs02guic::::res://assets/buttons/back.png<>uid://c5cnsgf4r7q88::::res://assets/buttons/custom-made.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://beeg7quk56ine::::res://assets/buttons/made-ai.png
-::res://scenes/grids/::1763836582
-7x_7.tscn::PackedScene::6586831752022420016::1763800982::0::1::::<><><>0<>0<><>::uid://ckkwx1ern17kb::::res://scripts/7x_7.gd<>uid://du7xbqtjabqcd::::res://assets/animation/background/puzzle-background/Puzzle-bg - 1.png<>uid://nnrrsk8an14x::::res://assets/animation/background/puzzle-background/Puzzle-bg - 2.png<>uid://vf6b1fa5xgr8::::res://assets/animation/background/puzzle-background/Puzzle-bg - 3.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://nha5vkl3mqx5::::res://assets/buttons/hint.png<>uid://bampjpg003esd::::res://assets/buttons/solve.png<>uid://gnwd841on3am::::res://assets/animation/background/puzzle-background/Puzzle-bg - 4.png<>uid://b5bq1a4md3jqr::::res://assets/animation/background/puzzle-background/Puzzle-bg - 5.png<>uid://c7yi4yu11k2n7::::res://assets/animation/background/puzzle-background/Puzzle-bg - 6.png<>uid://cbropxq5yc00n::::res://assets/animation/background/puzzle-background/Puzzle-bg - 7.png<>uid://3r3arps5fcqy::::res://assets/animation/background/puzzle-background/Puzzle-bg - 8.png<>uid://rnee02fq0vwg::::res://assets/animation/background/congrats/congrats-bg - 1.png<>uid://bvcmvh1bt26li::::res://assets/animation/background/congrats/congrats-bg - 2.png<>uid://hfukqmc8arax::::res://assets/animation/background/congrats/congrats-bg - 3.png<>uid://cl6p7tn4og0s7::::res://assets/animation/background/congrats/congrats-bg - 4.png<>uid://d1e8onskqoo1v::::res://assets/animation/background/congrats/congrats-bg - 5.png<>uid://pkp20ysqadal::::res://assets/buttons/setting.png<>uid://c0lgjyd6hpx13::::res://assets/animation/background/congrats/congrats-bg - 6.png<>uid://dm0ha63iba0an::::res://assets/animation/background/congrats/congrats-bg - 7.png<>uid://cald1hkeqqlqq::::res://assets/animation/background/congrats/congrats-bg - 8.png<>uid://cpf1dvam78aee::::res://assets/animation/background/congrats/congrats-bg - 9.png<>uid://53nimkai24w1::::res://assets/animation/background/congrats/congrats-bg - 10.png<>uid://irmbhnef658a::::res://assets/animation/background/congrats/congrats-bg - 11.png<>uid://hew2x8w8oxgj::::res://assets/animation/background/congrats/congrats-bg - 12.png<>uid://caisl3ns7rfm::::res://assets/animation/background/congrats/congrats-bg - 13.png<>uid://phb2sx3s1t70::::res://assets/animation/background/congrats/congrats-bg - 14.png
-9x_9.tscn::PackedScene::4320806878053602412::1763836582::0::1::::<><><>0<>0<><>::uid://lyklbctpoyoc::::res://scripts/9x_9.gd<>uid://du7xbqtjabqcd::::res://assets/animation/background/puzzle-background/Puzzle-bg - 1.png<>uid://nnrrsk8an14x::::res://assets/animation/background/puzzle-background/Puzzle-bg - 2.png<>uid://nha5vkl3mqx5::::res://assets/buttons/hint.png<>uid://bampjpg003esd::::res://assets/buttons/solve.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://vf6b1fa5xgr8::::res://assets/animation/background/puzzle-background/Puzzle-bg - 3.png<>uid://gnwd841on3am::::res://assets/animation/background/puzzle-background/Puzzle-bg - 4.png<>uid://b5bq1a4md3jqr::::res://assets/animation/background/puzzle-background/Puzzle-bg - 5.png<>uid://c7yi4yu11k2n7::::res://assets/animation/background/puzzle-background/Puzzle-bg - 6.png<>uid://cbropxq5yc00n::::res://assets/animation/background/puzzle-background/Puzzle-bg - 7.png<>uid://3r3arps5fcqy::::res://assets/animation/background/puzzle-background/Puzzle-bg - 8.png<>uid://rnee02fq0vwg::::res://assets/animation/background/congrats/congrats-bg - 1.png<>uid://bvcmvh1bt26li::::res://assets/animation/background/congrats/congrats-bg - 2.png<>uid://pkp20ysqadal::::res://assets/buttons/setting.png<>uid://hfukqmc8arax::::res://assets/animation/background/congrats/congrats-bg - 3.png<>uid://cl6p7tn4og0s7::::res://assets/animation/background/congrats/congrats-bg - 4.png<>uid://d1e8onskqoo1v::::res://assets/animation/background/congrats/congrats-bg - 5.png<>uid://c0lgjyd6hpx13::::res://assets/animation/background/congrats/congrats-bg - 6.png<>uid://dm0ha63iba0an::::res://assets/animation/background/congrats/congrats-bg - 7.png<>uid://cald1hkeqqlqq::::res://assets/animation/background/congrats/congrats-bg - 8.png<>uid://cpf1dvam78aee::::res://assets/animation/background/congrats/congrats-bg - 9.png<>uid://53nimkai24w1::::res://assets/animation/background/congrats/congrats-bg - 10.png<>uid://irmbhnef658a::::res://assets/animation/background/congrats/congrats-bg - 11.png<>uid://hew2x8w8oxgj::::res://assets/animation/background/congrats/congrats-bg - 12.png<>uid://caisl3ns7rfm::::res://assets/animation/background/congrats/congrats-bg - 13.png<>uid://phb2sx3s1t70::::res://assets/animation/background/congrats/congrats-bg - 14.png
-13x_13.tscn::PackedScene::5999809187634255826::1763815979::0::1::::<><><>0<>0<><>::uid://n85qf43fsn06::::res://scripts/13x_13.gd<>uid://du7xbqtjabqcd::::res://assets/animation/background/puzzle-background/Puzzle-bg - 1.png<>uid://nha5vkl3mqx5::::res://assets/buttons/hint.png<>uid://nnrrsk8an14x::::res://assets/animation/background/puzzle-background/Puzzle-bg - 2.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://vf6b1fa5xgr8::::res://assets/animation/background/puzzle-background/Puzzle-bg - 3.png<>uid://bampjpg003esd::::res://assets/buttons/solve.png<>uid://gnwd841on3am::::res://assets/animation/background/puzzle-background/Puzzle-bg - 4.png<>uid://b5bq1a4md3jqr::::res://assets/animation/background/puzzle-background/Puzzle-bg - 5.png<>uid://c7yi4yu11k2n7::::res://assets/animation/background/puzzle-background/Puzzle-bg - 6.png<>uid://cbropxq5yc00n::::res://assets/animation/background/puzzle-background/Puzzle-bg - 7.png<>uid://3r3arps5fcqy::::res://assets/animation/background/puzzle-background/Puzzle-bg - 8.png<>uid://rnee02fq0vwg::::res://assets/animation/background/congrats/congrats-bg - 1.png<>uid://bvcmvh1bt26li::::res://assets/animation/background/congrats/congrats-bg - 2.png<>uid://hfukqmc8arax::::res://assets/animation/background/congrats/congrats-bg - 3.png<>uid://pkp20ysqadal::::res://assets/buttons/setting.png<>uid://cl6p7tn4og0s7::::res://assets/animation/background/congrats/congrats-bg - 4.png<>uid://d1e8onskqoo1v::::res://assets/animation/background/congrats/congrats-bg - 5.png<>uid://c0lgjyd6hpx13::::res://assets/animation/background/congrats/congrats-bg - 6.png<>uid://dm0ha63iba0an::::res://assets/animation/background/congrats/congrats-bg - 7.png<>uid://cald1hkeqqlqq::::res://assets/animation/background/congrats/congrats-bg - 8.png<>uid://cpf1dvam78aee::::res://assets/animation/background/congrats/congrats-bg - 9.png<>uid://53nimkai24w1::::res://assets/animation/background/congrats/congrats-bg - 10.png<>uid://irmbhnef658a::::res://assets/animation/background/congrats/congrats-bg - 11.png<>uid://hew2x8w8oxgj::::res://assets/animation/background/congrats/congrats-bg - 12.png<>uid://caisl3ns7rfm::::res://assets/animation/background/congrats/congrats-bg - 13.png<>uid://phb2sx3s1t70::::res://assets/animation/background/congrats/congrats-bg - 14.png
-::res://scripts/::1763836588
-7x_7.gd::GDScript::5496751800984953749::1763836582::0::1::::<>Node2D<><>0<>0<><>::
-9x_9.gd::GDScript::822249216273264894::1763836588::0::1::::<>Node2D<><>0<>0<><>::
-13x_13.gd::GDScript::982429824359541573::1763832809::0::1::::<>Node2D<><>0<>0<><>::
-choose_grid_size.gd::GDScript::2167524566339990296::1763628522::0::1::::<>Control<><>0<>0<><>::
-main_menu.gd::GDScript::6136158524231631747::1763628459::0::1::::<>Control<><>0<>0<><>::
-menu-panel.gd::GDScript::451831556432054576::1763801264::0::1::::<>Control<><>0<>0<><>::
-scene_transition.gd::GDScript::6752774511223972879::1763621504::0::1::::<>CanvasLayer<><>0<>0<><>::
-solver.gd::GDScript::1535203291376671992::1763836582::0::1::::PuzzleSolver<>RefCounted<><>0<>0<><>::
-=======
-=======
->>>>>>> parent of 3b691ff (Revert "init")
-::res://scenes/grids/::1763963519
-7x_7.tscn::PackedScene::6586831752022420016::1763963519::0::1::::<><><>0<>0<><>::uid://ckkwx1ern17kb::::res://scripts/7x_7.gd<>uid://du7xbqtjabqcd::::res://assets/animation/background/puzzle-background/Puzzle-bg - 1.png<>uid://nnrrsk8an14x::::res://assets/animation/background/puzzle-background/Puzzle-bg - 2.png<>uid://vf6b1fa5xgr8::::res://assets/animation/background/puzzle-background/Puzzle-bg - 3.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://nha5vkl3mqx5::::res://assets/buttons/hint.png<>uid://bampjpg003esd::::res://assets/buttons/solve.png<>uid://gnwd841on3am::::res://assets/animation/background/puzzle-background/Puzzle-bg - 4.png<>uid://b5bq1a4md3jqr::::res://assets/animation/background/puzzle-background/Puzzle-bg - 5.png<>uid://c7yi4yu11k2n7::::res://assets/animation/background/puzzle-background/Puzzle-bg - 6.png<>uid://cbropxq5yc00n::::res://assets/animation/background/puzzle-background/Puzzle-bg - 7.png<>uid://3r3arps5fcqy::::res://assets/animation/background/puzzle-background/Puzzle-bg - 8.png<>uid://rnee02fq0vwg::::res://assets/animation/background/congrats/congrats-bg - 1.png<>uid://bvcmvh1bt26li::::res://assets/animation/background/congrats/congrats-bg - 2.png<>uid://hfukqmc8arax::::res://assets/animation/background/congrats/congrats-bg - 3.png<>uid://cl6p7tn4og0s7::::res://assets/animation/background/congrats/congrats-bg - 4.png<>uid://d1e8onskqoo1v::::res://assets/animation/background/congrats/congrats-bg - 5.png<>uid://pkp20ysqadal::::res://assets/buttons/setting.png<>uid://c0lgjyd6hpx13::::res://assets/animation/background/congrats/congrats-bg - 6.png<>uid://dm0ha63iba0an::::res://assets/animation/background/congrats/congrats-bg - 7.png<>uid://cald1hkeqqlqq::::res://assets/animation/background/congrats/congrats-bg - 8.png<>uid://cpf1dvam78aee::::res://assets/animation/background/congrats/congrats-bg - 9.png<>uid://53nimkai24w1::::res://assets/animation/background/congrats/congrats-bg - 10.png<>uid://irmbhnef658a::::res://assets/animation/background/congrats/congrats-bg - 11.png<>uid://hew2x8w8oxgj::::res://assets/animation/background/congrats/congrats-bg - 12.png<>uid://caisl3ns7rfm::::res://assets/animation/background/congrats/congrats-bg - 13.png<>uid://phb2sx3s1t70::::res://assets/animation/background/congrats/congrats-bg - 14.png
+::res://scenes/grids/::1764160516
+7x_7.tscn::PackedScene::6586831752022420016::1764160516::0::1::::<><><>0<>0<><>::uid://ckkwx1ern17kb::::res://scripts/7x_7.gd<>uid://du7xbqtjabqcd::::res://assets/animation/background/puzzle-background/Puzzle-bg - 1.png<>uid://nnrrsk8an14x::::res://assets/animation/background/puzzle-background/Puzzle-bg - 2.png<>uid://vf6b1fa5xgr8::::res://assets/animation/background/puzzle-background/Puzzle-bg - 3.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://nha5vkl3mqx5::::res://assets/buttons/hint.png<>uid://bampjpg003esd::::res://assets/buttons/solve.png<>uid://gnwd841on3am::::res://assets/animation/background/puzzle-background/Puzzle-bg - 4.png<>uid://b5bq1a4md3jqr::::res://assets/animation/background/puzzle-background/Puzzle-bg - 5.png<>uid://c7yi4yu11k2n7::::res://assets/animation/background/puzzle-background/Puzzle-bg - 6.png<>uid://cbropxq5yc00n::::res://assets/animation/background/puzzle-background/Puzzle-bg - 7.png<>uid://3r3arps5fcqy::::res://assets/animation/background/puzzle-background/Puzzle-bg - 8.png<>uid://rnee02fq0vwg::::res://assets/animation/background/congrats/congrats-bg - 1.png<>uid://bvcmvh1bt26li::::res://assets/animation/background/congrats/congrats-bg - 2.png<>uid://hfukqmc8arax::::res://assets/animation/background/congrats/congrats-bg - 3.png<>uid://cl6p7tn4og0s7::::res://assets/animation/background/congrats/congrats-bg - 4.png<>uid://d1e8onskqoo1v::::res://assets/animation/background/congrats/congrats-bg - 5.png<>uid://pkp20ysqadal::::res://assets/buttons/setting.png<>uid://c0lgjyd6hpx13::::res://assets/animation/background/congrats/congrats-bg - 6.png<>uid://dm0ha63iba0an::::res://assets/animation/background/congrats/congrats-bg - 7.png<>uid://cald1hkeqqlqq::::res://assets/animation/background/congrats/congrats-bg - 8.png<>uid://cpf1dvam78aee::::res://assets/animation/background/congrats/congrats-bg - 9.png<>uid://53nimkai24w1::::res://assets/animation/background/congrats/congrats-bg - 10.png<>uid://irmbhnef658a::::res://assets/animation/background/congrats/congrats-bg - 11.png<>uid://hew2x8w8oxgj::::res://assets/animation/background/congrats/congrats-bg - 12.png<>uid://caisl3ns7rfm::::res://assets/animation/background/congrats/congrats-bg - 13.png<>uid://phb2sx3s1t70::::res://assets/animation/background/congrats/congrats-bg - 14.png
 9x_9.tscn::PackedScene::4320806878053602412::1763916593::0::1::::<><><>0<>0<><>::uid://lyklbctpoyoc::::res://scripts/9x_9.gd<>uid://du7xbqtjabqcd::::res://assets/animation/background/puzzle-background/Puzzle-bg - 1.png<>uid://nnrrsk8an14x::::res://assets/animation/background/puzzle-background/Puzzle-bg - 2.png<>uid://nha5vkl3mqx5::::res://assets/buttons/hint.png<>uid://bampjpg003esd::::res://assets/buttons/solve.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://vf6b1fa5xgr8::::res://assets/animation/background/puzzle-background/Puzzle-bg - 3.png<>uid://gnwd841on3am::::res://assets/animation/background/puzzle-background/Puzzle-bg - 4.png<>uid://b5bq1a4md3jqr::::res://assets/animation/background/puzzle-background/Puzzle-bg - 5.png<>uid://c7yi4yu11k2n7::::res://assets/animation/background/puzzle-background/Puzzle-bg - 6.png<>uid://cbropxq5yc00n::::res://assets/animation/background/puzzle-background/Puzzle-bg - 7.png<>uid://3r3arps5fcqy::::res://assets/animation/background/puzzle-background/Puzzle-bg - 8.png<>uid://rnee02fq0vwg::::res://assets/animation/background/congrats/congrats-bg - 1.png<>uid://bvcmvh1bt26li::::res://assets/animation/background/congrats/congrats-bg - 2.png<>uid://pkp20ysqadal::::res://assets/buttons/setting.png<>uid://hfukqmc8arax::::res://assets/animation/background/congrats/congrats-bg - 3.png<>uid://cl6p7tn4og0s7::::res://assets/animation/background/congrats/congrats-bg - 4.png<>uid://d1e8onskqoo1v::::res://assets/animation/background/congrats/congrats-bg - 5.png<>uid://c0lgjyd6hpx13::::res://assets/animation/background/congrats/congrats-bg - 6.png<>uid://dm0ha63iba0an::::res://assets/animation/background/congrats/congrats-bg - 7.png<>uid://cald1hkeqqlqq::::res://assets/animation/background/congrats/congrats-bg - 8.png<>uid://cpf1dvam78aee::::res://assets/animation/background/congrats/congrats-bg - 9.png<>uid://53nimkai24w1::::res://assets/animation/background/congrats/congrats-bg - 10.png<>uid://irmbhnef658a::::res://assets/animation/background/congrats/congrats-bg - 11.png<>uid://hew2x8w8oxgj::::res://assets/animation/background/congrats/congrats-bg - 12.png<>uid://caisl3ns7rfm::::res://assets/animation/background/congrats/congrats-bg - 13.png<>uid://phb2sx3s1t70::::res://assets/animation/background/congrats/congrats-bg - 14.png
 13x_13.tscn::PackedScene::5999809187634255826::1763921919::0::1::::<><><>0<>0<><>::uid://n85qf43fsn06::::res://scripts/13x_13.gd<>uid://du7xbqtjabqcd::::res://assets/animation/background/puzzle-background/Puzzle-bg - 1.png<>uid://nha5vkl3mqx5::::res://assets/buttons/hint.png<>uid://nnrrsk8an14x::::res://assets/animation/background/puzzle-background/Puzzle-bg - 2.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://vf6b1fa5xgr8::::res://assets/animation/background/puzzle-background/Puzzle-bg - 3.png<>uid://bampjpg003esd::::res://assets/buttons/solve.png<>uid://gnwd841on3am::::res://assets/animation/background/puzzle-background/Puzzle-bg - 4.png<>uid://b5bq1a4md3jqr::::res://assets/animation/background/puzzle-background/Puzzle-bg - 5.png<>uid://c7yi4yu11k2n7::::res://assets/animation/background/puzzle-background/Puzzle-bg - 6.png<>uid://cbropxq5yc00n::::res://assets/animation/background/puzzle-background/Puzzle-bg - 7.png<>uid://3r3arps5fcqy::::res://assets/animation/background/puzzle-background/Puzzle-bg - 8.png<>uid://rnee02fq0vwg::::res://assets/animation/background/congrats/congrats-bg - 1.png<>uid://bvcmvh1bt26li::::res://assets/animation/background/congrats/congrats-bg - 2.png<>uid://hfukqmc8arax::::res://assets/animation/background/congrats/congrats-bg - 3.png<>uid://pkp20ysqadal::::res://assets/buttons/setting.png<>uid://cl6p7tn4og0s7::::res://assets/animation/background/congrats/congrats-bg - 4.png<>uid://d1e8onskqoo1v::::res://assets/animation/background/congrats/congrats-bg - 5.png<>uid://c0lgjyd6hpx13::::res://assets/animation/background/congrats/congrats-bg - 6.png<>uid://dm0ha63iba0an::::res://assets/animation/background/congrats/congrats-bg - 7.png<>uid://cald1hkeqqlqq::::res://assets/animation/background/congrats/congrats-bg - 8.png<>uid://cpf1dvam78aee::::res://assets/animation/background/congrats/congrats-bg - 9.png<>uid://53nimkai24w1::::res://assets/animation/background/congrats/congrats-bg - 10.png<>uid://irmbhnef658a::::res://assets/animation/background/congrats/congrats-bg - 11.png<>uid://hew2x8w8oxgj::::res://assets/animation/background/congrats/congrats-bg - 12.png<>uid://caisl3ns7rfm::::res://assets/animation/background/congrats/congrats-bg - 13.png<>uid://phb2sx3s1t70::::res://assets/animation/background/congrats/congrats-bg - 14.png
-::res://scripts/::1764078400
-7x_7.gd::GDScript::5496751800984953749::1764078384::0::1::::<>Node2D<><>0<>0<><>::
-9x_9.gd::GDScript::822249216273264894::1764078384::0::1::::<>Node2D<><>0<>0<><>::
-13x_13.gd::GDScript::982429824359541573::1764078384::0::1::::<>Node2D<><>0<>0<><>::
+::res://scripts/::1764160630
+7x_7.gd::GDScript::5496751800984953749::1764160630::0::1::::<>Node2D<><>0<>0<><>::
+9x_9.gd::GDScript::822249216273264894::1764160630::0::1::::<>Node2D<><>0<>0<><>::
+13x_13.gd::GDScript::982429824359541573::1764160630::0::1::::<>Node2D<><>0<>0<><>::
 choose_grid_size.gd::GDScript::2167524566339990296::1763628522::0::1::::<>Control<><>0<>0<><>::
-loading_screen.gd::GDScript::7946946744129956989::1763920739::0::1::::<>Control<><>0<>0<><>::
 main_menu.gd::GDScript::6136158524231631747::1763628459::0::1::::<>Control<><>0<>0<><>::
 menu-panel.gd::GDScript::451831556432054576::1763801264::0::1::::<>Control<><>0<>0<><>::
 scene_transition.gd::GDScript::6752774511223972879::1763621504::0::1::::<>CanvasLayer<><>0<>0<><>::
-solver.gd::GDScript::1535203291376671992::1764078400::0::1::::PuzzleSolver<>RefCounted<><>0<>0<><>::
-<<<<<<< HEAD
->>>>>>> parent of 3b691ff (Revert "init")
-=======
->>>>>>> parent of 3b691ff (Revert "init")
+solver.gd::GDScript::1535203291376671992::1764160630::0::1::::PuzzleSolver<>RefCounted<><>0<>0<><>::

@@ -289,7 +289,7 @@ func show_menu_panel():
 		panel = menu_panel.instantiate()
 		add_sibling(panel)
 
-func _on_menupanel_pressed() -> void:
+func _on_menupanelbutton_pressed() -> void:
 	show_menu_panel()
 
 # ==================== NEW GAME & RESTART FUNCTIONS ====================
