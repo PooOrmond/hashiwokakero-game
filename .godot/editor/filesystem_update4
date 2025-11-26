@@ -4,3 +4,6 @@ res://scenes/grids/9x_9.tscn
 res://scripts/13x_13.gd
 res://scripts/choose_grid_size.gd
 res://scenes/choose_grid_size.tscn
+res://scenes/loading_screen.tscn
+res://scripts/7x_7.gd
+res://scripts/loading_screen.gd
