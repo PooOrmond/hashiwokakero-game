@@ -1,10 +1,13 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 63f7b34db8d8cdea90c76aacccf841ec
 ::res://::1763865725
 ::res://assets/::1763750868
 ::res://assets/animation/::1763736342
 ::res://assets/animation/background/::1763799829
 =======
+=======
+>>>>>>> parent of 3b691ff (Revert "init")
 72322a848ab928aa5c89f0cb78209805
 ::res://::1764078400
 export_presets.cfg::TextFile::-1::1764078400::0::1::::<><><>0<>0<><>::
@@ -12,6 +15,9 @@ export_presets.cfg::TextFile::-1::1764078400::0::1::::<><><>0<>0<><>::
 ::res://assets/::1764078390
 ::res://assets/animation/::1763736342
 ::res://assets/animation/background/::1763918061
+<<<<<<< HEAD
+>>>>>>> parent of 3b691ff (Revert "init")
+=======
 >>>>>>> parent of 3b691ff (Revert "init")
 ::res://assets/animation/background/congrats/::1763799838
 congrats-bg - 1.png::CompressedTexture2D::1220298618839052014::1763799832::1763799838::1::::<><><>0<>0<>7eb197dc585528ce82a4a27471ad8db8<>res://.godot/imported/congrats-bg - 1.png-9132fbbe441420b525cab1b8fc3548a6.ctex::
@@ -29,7 +35,10 @@ congrats-bg - 12.png::CompressedTexture2D::500964666818614705::1763799832::17637
 congrats-bg - 13.png::CompressedTexture2D::140896189135851962::1763799832::1763799838::1::::<><><>0<>0<>521a337a256de8d99b3b48158fa7d202<>res://.godot/imported/congrats-bg - 13.png-0a83809433ac71c0f5c2a80fe7ea3149.ctex::
 congrats-bg - 14.png::CompressedTexture2D::1067393214525197909::1763799832::1763799838::1::::<><><>0<>0<>4b24494f84d9e8404d6dbc22ae58faa7<>res://.godot/imported/congrats-bg - 14.png-ca0b15525e6651e3bf5fcf5c371a5f05.ctex::
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of 3b691ff (Revert "init")
 ::res://assets/animation/background/loading-bg/::1763919842
 Loading-bg - 1.png::CompressedTexture2D::436500639431105691::1763919836::1763919841::1::::<><><>0<>0<>ce26aacfc30a524bf60e69f4c6218a31<>res://.godot/imported/Loading-bg - 1.png-f05b6315ffc71d7f7671f5bf2655596f.ctex::
 Loading-bg - 2.png::CompressedTexture2D::9106856981517228356::1763919836::1763919841::1::::<><><>0<>0<>b21b4f409b9be3f84e65d717419d4684<>res://.godot/imported/Loading-bg - 2.png-3dc851b9ce4a3ada055b164b3d229a81.ctex::
@@ -45,6 +54,9 @@ Loading-bg - 11.png::CompressedTexture2D::8098596854295283766::1763919836::17639
 Loading-bg - 12.png::CompressedTexture2D::9058069746034240890::1763919836::1763919842::1::::<><><>0<>0<>f505fa94de58c9f61984be764bdc34e7<>res://.godot/imported/Loading-bg - 12.png-e625dd0be2e81f6d0d661e30bb283617.ctex::
 Loading-bg - 13.png::CompressedTexture2D::5811681220763129133::1763919836::1763919842::1::::<><><>0<>0<>c9d7c09a69e67c2dc1889fe2d48382d5<>res://.godot/imported/Loading-bg - 13.png-2eb2e28cc0cc72197dd2a8e36cf0b1b4.ctex::
 Loading-bg - 14.png::CompressedTexture2D::8979817383657711768::1763919836::1763919842::1::::<><><>0<>0<>18b2a8187210626e2fe7929acd89b386<>res://.godot/imported/Loading-bg - 14.png-c590eb09f5742aaa33727868c904b2a9.ctex::
+<<<<<<< HEAD
+>>>>>>> parent of 3b691ff (Revert "init")
+=======
 >>>>>>> parent of 3b691ff (Revert "init")
 ::res://assets/animation/background/nature_4/::1763613225
 1.png::CompressedTexture2D::6983597445455469063::1763613219::1763613225::1::::<><><>0<>0<>b47df98e7cd516df59a26d1cea23e8f7<>res://.godot/imported/1.png-fb2f82ea966ec1ea3bbf5b659ce025fa.ctex::
@@ -111,6 +123,12 @@ Restart.png::CompressedTexture2D::8479215647067629118::1763750933::1763750945::1
 setting.png::CompressedTexture2D::1074436754436294743::1763750901::1763750945::1::::<><><>0<>0<>0bc9a426944758e00626be6537d3aa7d<>res://.godot/imported/setting.png-6b7d10aed3131d63637bfaebd5ac7971.ctex::
 solve.png::CompressedTexture2D::2412120842067937799::1763746839::1763746842::1::::<><><>0<>0<>82a4f3ec69ba41b2981e43646992abcc<>res://.godot/imported/solve.png-60e2008032367d0f4b53e315decf2588.ctex::
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+::res://assets/fonts/::1763919110
+PixelOperator8-Bold.ttf::FontFile::4031732083684403038::1763919007::1763919110::1::::<><><>0<>0<>b0bdeb255adbd8e06ee1a37402a6d061<>res://.godot/imported/PixelOperator8-Bold.ttf-74faf550739674ad3170f08e646e0614.fontdata::
+PixelOperator8.ttf::FontFile::4399045943727813401::1763919007::1763919110::1::::<><><>0<>0<>77762ad19ca8148dc62fad60b8ef75a1<>res://.godot/imported/PixelOperator8.ttf-6f9f01766aff16f52046b880ffb8d367.fontdata::
+>>>>>>> parent of 3b691ff (Revert "init")
 =======
 ::res://assets/fonts/::1763919110
 PixelOperator8-Bold.ttf::FontFile::4031732083684403038::1763919007::1763919110::1::::<><><>0<>0<>b0bdeb255adbd8e06ee1a37402a6d061<>res://.godot/imported/PixelOperator8-Bold.ttf-74faf550739674ad3170f08e646e0614.fontdata::
@@ -136,6 +154,7 @@ input-03.txt::TextFile::-1::1763531170::0::1::::<><><>0<>0<><>::
 input-04.txt::TextFile::-1::1763531170::0::1::::<><><>0<>0<><>::
 input-05.txt::TextFile::-1::1763531170::0::1::::<><><>0<>0<><>::
 <<<<<<< HEAD
+<<<<<<< HEAD
 ::res://assets/islands/::1763557967
 1.png::CompressedTexture2D::6827192854573194134::1762924734::1763557960::1::::<><><>0<>0<>9765c84f1fd1bf027bea1c58b437d74f<>res://.godot/imported/1.png-11efeb9a54e599e33e1a55d2276d3b1c.ctex::
 2.png::CompressedTexture2D::6264457649201427813::1762924734::1763557960::1::::<><><>0<>0<>cb1a85d03dc0e1ff70ddd3aa1553cfaa<>res://.godot/imported/2.png-3f0e4cbb6e359068d4ceb789c9dc5cc9.ctex::
@@ -145,6 +164,8 @@ input-05.txt::TextFile::-1::1763531170::0::1::::<><><>0<>0<><>::
 6.png::CompressedTexture2D::4290522181051880799::1762924734::1763557960::1::::<><><>0<>0<>52f4b9d7918bf3a053b965190ff2ca3c<>res://.godot/imported/6.png-f1b12472f13a7e3fa78232a2c8d58784.ctex::
 7.png::CompressedTexture2D::681820861133454849::1762924734::1763557960::1::::<><><>0<>0<>91d605283343c76a585e386a90091fd4<>res://.godot/imported/7.png-dece9aa6621f944dbb1524b396eb0bd0.ctex::
 8.png::CompressedTexture2D::4938054504276297183::1762924734::1763557960::1::::<><><>0<>0<>2748762aef278436d533b93394cd1063<>res://.godot/imported/8.png-262723b5baab49ceaba42d6006ab6e97.ctex::
+=======
+>>>>>>> parent of 3b691ff (Revert "init")
 =======
 >>>>>>> parent of 3b691ff (Revert "init")
 ::res://assets/output/::1763531170
@@ -170,6 +191,7 @@ output-05.txt::TextFile::-1::1763531170::0::1::::<><><>0<>0<><>::
 drop-panel.png::CompressedTexture2D::2033610446284540225::1763787354::1763787357::1::::<><><>0<>0<>cb61291c52f722b4bbf4d273ce741310<>res://.godot/imported/drop-panel.png-0e717dc61c32e80fa4895bb9e479d393.ctex::
 menu-window.png::CompressedTexture2D::8527880815423838219::1763750875::1763750945::1::::<><><>0<>0<>da1de5a1dcb36fbbe77ff73397c35790<>res://.godot/imported/menu-window.png-1646b2c2a63dbba7ca396b102b9248fd.ctex::
 <<<<<<< HEAD
+<<<<<<< HEAD
 ::res://fonts/::1763118649
 PixelOperator8-Bold.ttf::FontFile::8622734613741144468::1762924734::1763118649::1::::<><><>0<>0<>62fb4dad57d6c970ae136ff17b8f0660<>res://.godot/imported/PixelOperator8-Bold.ttf-9816dd625e887c8fd6e5634edb7d64db.fontdata::
 PixelOperator8.ttf::FontFile::5056907943688014021::1762924734::1763118649::1::::<><><>0<>0<>66bca7943261b6af09cb30d57e684900<>res://.godot/imported/PixelOperator8.ttf-47b55c2c6c56107c69fa972cdf12fcff.fontdata::
@@ -179,6 +201,8 @@ time_for_adventure.mp3::AudioStreamMP3::2383746643613050573::1762924734::1763118
 ::res://scenes/::1763796452
 choose_grid_size.tscn::PackedScene::6161481332770674822::1763737871::0::1::::<><><>0<>0<><>::uid://5472v0lm1nfk::::res://scripts/choose_grid_size.gd<>uid://c6q53hbadsdhn::::res://assets/animation/background/nature_4/1.png<>uid://douajqs02guic::::res://assets/buttons/back.png<>uid://bofb6w4p78k0u::::res://assets/animation/background/nature_4/2.png<>uid://dn8to0lwc6jmg::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 1.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://r5ed0c7adayk::::res://assets/buttons/7x7.png<>uid://d156snrou3m1a::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 2.png<>uid://2xahvbhkydg3::::res://assets/buttons/9x9.png<>uid://bwcdddpqp8h3u::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 3.png<>uid://4birnkvc50xn::::res://assets/buttons/13x13.png<>uid://d4k6w8rylkvjr::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 4.png<>uid://cq6alqiqu0oxq::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 5.png<>uid://cr2lqdgupdt1e::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 6.png<>uid://d2iumses7do8p::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 7.png<>uid://dhdresqvv08ln::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 8.png<>uid://ceekywfdd1rpq::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 9.png<>uid://8asebldklucx::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 10.png<>uid://pn2xu6f7soio::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 11.png<>uid://mtsxkqqsbklj::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 12.png<>uid://cbpbwqy6631k4::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 13.png<>uid://cgkjlntjb145h::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 14.png
 =======
+=======
+>>>>>>> parent of 3b691ff (Revert "init")
 ::res://export/::1764078400
 ::res://export/apk/::1764078399
 ::res://export/exe/::1764078400
@@ -198,11 +222,15 @@ time_for_adventure.mp3::AudioStreamMP3::2383746643613050573::1762924734::1763118
 7x_7.tscn::PackedScene::3178995424436522110::1764078400::0::1::::<><><>0<>0<><>::uid://ckkwx1ern17kb::::res://scripts/7x_7.gd<>uid://du7xbqtjabqcd::::res://assets/animation/background/puzzle-background/Puzzle-bg - 1.png<>uid://nnrrsk8an14x::::res://assets/animation/background/puzzle-background/Puzzle-bg - 2.png<>uid://vf6b1fa5xgr8::::res://assets/animation/background/puzzle-background/Puzzle-bg - 3.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://nha5vkl3mqx5::::res://assets/buttons/hint.png<>uid://bampjpg003esd::::res://assets/buttons/solve.png<>uid://gnwd841on3am::::res://assets/animation/background/puzzle-background/Puzzle-bg - 4.png<>uid://b5bq1a4md3jqr::::res://assets/animation/background/puzzle-background/Puzzle-bg - 5.png<>uid://c7yi4yu11k2n7::::res://assets/animation/background/puzzle-background/Puzzle-bg - 6.png<>uid://cbropxq5yc00n::::res://assets/animation/background/puzzle-background/Puzzle-bg - 7.png<>uid://3r3arps5fcqy::::res://assets/animation/background/puzzle-background/Puzzle-bg - 8.png<>uid://rnee02fq0vwg::::res://assets/animation/background/congrats/congrats-bg - 1.png<>uid://bvcmvh1bt26li::::res://assets/animation/background/congrats/congrats-bg - 2.png<>uid://hfukqmc8arax::::res://assets/animation/background/congrats/congrats-bg - 3.png<>uid://cl6p7tn4og0s7::::res://assets/animation/background/congrats/congrats-bg - 4.png<>uid://d1e8onskqoo1v::::res://assets/animation/background/congrats/congrats-bg - 5.png<>uid://pkp20ysqadal::::res://assets/buttons/setting.png<>uid://c0lgjyd6hpx13::::res://assets/animation/background/congrats/congrats-bg - 6.png<>uid://dm0ha63iba0an::::res://assets/animation/background/congrats/congrats-bg - 7.png<>uid://cald1hkeqqlqq::::res://assets/animation/background/congrats/congrats-bg - 8.png<>uid://cpf1dvam78aee::::res://assets/animation/background/congrats/congrats-bg - 9.png<>uid://53nimkai24w1::::res://assets/animation/background/congrats/congrats-bg - 10.png<>uid://irmbhnef658a::::res://assets/animation/background/congrats/congrats-bg - 11.png<>uid://hew2x8w8oxgj::::res://assets/animation/background/congrats/congrats-bg - 12.png<>uid://caisl3ns7rfm::::res://assets/animation/background/congrats/congrats-bg - 13.png<>uid://phb2sx3s1t70::::res://assets/animation/background/congrats/congrats-bg - 14.png
 choose_grid_size.tscn::PackedScene::6161481332770674822::1763737871::0::1::::<><><>0<>0<><>::uid://5472v0lm1nfk::::res://scripts/choose_grid_size.gd<>uid://c6q53hbadsdhn::::res://assets/animation/background/nature_4/1.png<>uid://douajqs02guic::::res://assets/buttons/back.png<>uid://bofb6w4p78k0u::::res://assets/animation/background/nature_4/2.png<>uid://dn8to0lwc6jmg::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 1.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://r5ed0c7adayk::::res://assets/buttons/7x7.png<>uid://d156snrou3m1a::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 2.png<>uid://2xahvbhkydg3::::res://assets/buttons/9x9.png<>uid://bwcdddpqp8h3u::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 3.png<>uid://4birnkvc50xn::::res://assets/buttons/13x13.png<>uid://d4k6w8rylkvjr::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 4.png<>uid://cq6alqiqu0oxq::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 5.png<>uid://cr2lqdgupdt1e::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 6.png<>uid://d2iumses7do8p::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 7.png<>uid://dhdresqvv08ln::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 8.png<>uid://ceekywfdd1rpq::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 9.png<>uid://8asebldklucx::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 10.png<>uid://pn2xu6f7soio::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 11.png<>uid://mtsxkqqsbklj::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 12.png<>uid://cbpbwqy6631k4::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 13.png<>uid://cgkjlntjb145h::::res://assets/animation/title/choose-grid-size/choose-grid-size-animation - 14.png
 loading_screen.tscn::PackedScene::25207818048382087::1763922284::0::1::::<><><>0<>0<><>::uid://dlhtb05o0asg0::::res://scripts/loading_screen.gd<>uid://ghpdpvqy26pj::::res://assets/animation/background/loading-bg/Loading-bg - 1.png<>uid://d20ousf6wm4sm::::res://assets/animation/background/loading-bg/Loading-bg - 2.png<>uid://wewdtjb45ija::::res://assets/animation/background/loading-bg/Loading-bg - 3.png<>uid://c2gtmp2cwwhai::::res://assets/animation/background/loading-bg/Loading-bg - 4.png<>uid://bbwkebkgkptic::::res://assets/animation/background/loading-bg/Loading-bg - 5.png<>uid://dcacnhpt3qolw::::res://assets/animation/background/loading-bg/Loading-bg - 6.png<>uid://cwjr48b8kbn6b::::res://assets/animation/background/loading-bg/Loading-bg - 7.png<>uid://biddhj2c1cyqj::::res://assets/animation/background/loading-bg/Loading-bg - 8.png<>uid://dnq0nqyu8ii7j::::res://assets/animation/background/loading-bg/Loading-bg - 9.png<>uid://bgk23eiyudkr6::::res://assets/animation/background/loading-bg/Loading-bg - 10.png<>uid://dnnaybi1bp3hq::::res://assets/animation/background/loading-bg/Loading-bg - 11.png<>uid://d2b2c5vjxlnio::::res://assets/animation/background/loading-bg/Loading-bg - 12.png<>uid://co2hsm7c5hxsv::::res://assets/animation/background/loading-bg/Loading-bg - 13.png<>uid://d065jscr55v0c::::res://assets/animation/background/loading-bg/Loading-bg - 14.png<>uid://bxpabkmjxyc5k::::res://assets/fonts/PixelOperator8-Bold.ttf<>uid://b3w6v5pfyxddp::::res://assets/fonts/PixelOperator8.ttf
+<<<<<<< HEAD
+>>>>>>> parent of 3b691ff (Revert "init")
+=======
 >>>>>>> parent of 3b691ff (Revert "init")
 main_menu.tscn::PackedScene::3365797704796750848::1763784872::0::1::::<><><>0<>0<><>::uid://ctonvtmcl34jn::::res://scripts/main_menu.gd<>uid://c6q53hbadsdhn::::res://assets/animation/background/nature_4/1.png<>uid://dyimwhkjfv70o::::res://assets/animation/background/nature_4/4.png<>uid://cfjg6er43b6qt::::res://assets/animation/background/nature_4/3.png<>uid://bofb6w4p78k0u::::res://assets/animation/background/nature_4/2.png<>uid://h8yp0qsv1gln::::res://assets/animation/title/new-title-animation/title-animation - 1.png<>uid://dxxod8xp2avt2::::res://assets/animation/title/new-title-animation/title-animation - 2.png<>uid://dv1i5liwysj0f::::res://assets/animation/title/new-title-animation/title-animation - 3.png<>uid://dmoa1l5wesx5k::::res://assets/buttons/exit.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://sb4jnkjs5pk::::res://assets/animation/title/new-title-animation/title-animation - 4.png<>uid://b1epb05o8yj3q::::res://assets/animation/title/new-title-animation/title-animation - 5.png<>uid://bolll0swjco7l::::res://assets/animation/title/new-title-animation/title-animation - 6.png<>uid://2nueym37vwrx::::res://assets/animation/title/new-title-animation/title-animation - 7.png<>uid://bro6rwtdba3eb::::res://assets/animation/title/new-title-animation/title-animation - 8.png<>uid://ddje8ndismyjx::::res://assets/buttons/Go-button.png<>uid://dudhcdh2o5kj5::::res://assets/animation/title/new-title-animation/title-animation - 9.png
 menu_popup_panel.tscn::PackedScene::5432332173227736817::1763796452::0::1::::<><><>0<>0<><>::uid://go4unjo12d6o::::res://scripts/menu-panel.gd<>uid://dtq77lpxhe54j::::res://assets/window/menu-window.png<>uid://ds2npb75hcd4y::::res://assets/buttons/Restart.png<>uid://c71mg5m6q3xfj::::res://assets/buttons/New-game.png<>uid://wvh4xnp37qfg::::res://assets/buttons/Quit.png<>uid://5bu8vxys2apf::::res://assets/buttons/Cancel.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3
 music.tscn::PackedScene::266733096418495037::1762924734::0::1::::<><><>0<>0<><>::uid://87x7usufpsyn::::res://music/time_for_adventure.mp3
 scene_transition.tscn::PackedScene::3618192991747779307::1763628432::0::1::::<><><>0<>0<><>::uid://c3hdheknt8qwl::::res://scripts/scene_transition.gd
+<<<<<<< HEAD
 <<<<<<< HEAD
 ::res://scenes/custom-ai/::1762924734
 custom_or_ai-2.tscn::PackedScene::7159178969709484640::1762924734::0::1::::<><><>0<>0<><>::uid://bq5hcyjhpjo5q::::res://scripts/custom_or_ai_2.gd<>uid://du36gdi4bwn5e::::res://fonts/PixelOperator8-Bold.ttf<>uid://douajqs02guic::::res://assets/buttons/back.png<>uid://c5cnsgf4r7q88::::res://assets/buttons/custom-made.png<>uid://beeg7quk56ine::::res://assets/buttons/made-ai.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3
@@ -222,6 +250,8 @@ menu-panel.gd::GDScript::451831556432054576::1763801264::0::1::::<>Control<><>0<
 scene_transition.gd::GDScript::6752774511223972879::1763621504::0::1::::<>CanvasLayer<><>0<>0<><>::
 solver.gd::GDScript::1535203291376671992::1763836582::0::1::::PuzzleSolver<>RefCounted<><>0<>0<><>::
 =======
+=======
+>>>>>>> parent of 3b691ff (Revert "init")
 ::res://scenes/grids/::1763963519
 7x_7.tscn::PackedScene::6586831752022420016::1763963519::0::1::::<><><>0<>0<><>::uid://ckkwx1ern17kb::::res://scripts/7x_7.gd<>uid://du7xbqtjabqcd::::res://assets/animation/background/puzzle-background/Puzzle-bg - 1.png<>uid://nnrrsk8an14x::::res://assets/animation/background/puzzle-background/Puzzle-bg - 2.png<>uid://vf6b1fa5xgr8::::res://assets/animation/background/puzzle-background/Puzzle-bg - 3.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://nha5vkl3mqx5::::res://assets/buttons/hint.png<>uid://bampjpg003esd::::res://assets/buttons/solve.png<>uid://gnwd841on3am::::res://assets/animation/background/puzzle-background/Puzzle-bg - 4.png<>uid://b5bq1a4md3jqr::::res://assets/animation/background/puzzle-background/Puzzle-bg - 5.png<>uid://c7yi4yu11k2n7::::res://assets/animation/background/puzzle-background/Puzzle-bg - 6.png<>uid://cbropxq5yc00n::::res://assets/animation/background/puzzle-background/Puzzle-bg - 7.png<>uid://3r3arps5fcqy::::res://assets/animation/background/puzzle-background/Puzzle-bg - 8.png<>uid://rnee02fq0vwg::::res://assets/animation/background/congrats/congrats-bg - 1.png<>uid://bvcmvh1bt26li::::res://assets/animation/background/congrats/congrats-bg - 2.png<>uid://hfukqmc8arax::::res://assets/animation/background/congrats/congrats-bg - 3.png<>uid://cl6p7tn4og0s7::::res://assets/animation/background/congrats/congrats-bg - 4.png<>uid://d1e8onskqoo1v::::res://assets/animation/background/congrats/congrats-bg - 5.png<>uid://pkp20ysqadal::::res://assets/buttons/setting.png<>uid://c0lgjyd6hpx13::::res://assets/animation/background/congrats/congrats-bg - 6.png<>uid://dm0ha63iba0an::::res://assets/animation/background/congrats/congrats-bg - 7.png<>uid://cald1hkeqqlqq::::res://assets/animation/background/congrats/congrats-bg - 8.png<>uid://cpf1dvam78aee::::res://assets/animation/background/congrats/congrats-bg - 9.png<>uid://53nimkai24w1::::res://assets/animation/background/congrats/congrats-bg - 10.png<>uid://irmbhnef658a::::res://assets/animation/background/congrats/congrats-bg - 11.png<>uid://hew2x8w8oxgj::::res://assets/animation/background/congrats/congrats-bg - 12.png<>uid://caisl3ns7rfm::::res://assets/animation/background/congrats/congrats-bg - 13.png<>uid://phb2sx3s1t70::::res://assets/animation/background/congrats/congrats-bg - 14.png
 9x_9.tscn::PackedScene::4320806878053602412::1763916593::0::1::::<><><>0<>0<><>::uid://lyklbctpoyoc::::res://scripts/9x_9.gd<>uid://du7xbqtjabqcd::::res://assets/animation/background/puzzle-background/Puzzle-bg - 1.png<>uid://nnrrsk8an14x::::res://assets/animation/background/puzzle-background/Puzzle-bg - 2.png<>uid://nha5vkl3mqx5::::res://assets/buttons/hint.png<>uid://bampjpg003esd::::res://assets/buttons/solve.png<>uid://csjm46gsdq2em::::res://music/button-sound.mp3<>uid://vf6b1fa5xgr8::::res://assets/animation/background/puzzle-background/Puzzle-bg - 3.png<>uid://gnwd841on3am::::res://assets/animation/background/puzzle-background/Puzzle-bg - 4.png<>uid://b5bq1a4md3jqr::::res://assets/animation/background/puzzle-background/Puzzle-bg - 5.png<>uid://c7yi4yu11k2n7::::res://assets/animation/background/puzzle-background/Puzzle-bg - 6.png<>uid://cbropxq5yc00n::::res://assets/animation/background/puzzle-background/Puzzle-bg - 7.png<>uid://3r3arps5fcqy::::res://assets/animation/background/puzzle-background/Puzzle-bg - 8.png<>uid://rnee02fq0vwg::::res://assets/animation/background/congrats/congrats-bg - 1.png<>uid://bvcmvh1bt26li::::res://assets/animation/background/congrats/congrats-bg - 2.png<>uid://pkp20ysqadal::::res://assets/buttons/setting.png<>uid://hfukqmc8arax::::res://assets/animation/background/congrats/congrats-bg - 3.png<>uid://cl6p7tn4og0s7::::res://assets/animation/background/congrats/congrats-bg - 4.png<>uid://d1e8onskqoo1v::::res://assets/animation/background/congrats/congrats-bg - 5.png<>uid://c0lgjyd6hpx13::::res://assets/animation/background/congrats/congrats-bg - 6.png<>uid://dm0ha63iba0an::::res://assets/animation/background/congrats/congrats-bg - 7.png<>uid://cald1hkeqqlqq::::res://assets/animation/background/congrats/congrats-bg - 8.png<>uid://cpf1dvam78aee::::res://assets/animation/background/congrats/congrats-bg - 9.png<>uid://53nimkai24w1::::res://assets/animation/background/congrats/congrats-bg - 10.png<>uid://irmbhnef658a::::res://assets/animation/background/congrats/congrats-bg - 11.png<>uid://hew2x8w8oxgj::::res://assets/animation/background/congrats/congrats-bg - 12.png<>uid://caisl3ns7rfm::::res://assets/animation/background/congrats/congrats-bg - 13.png<>uid://phb2sx3s1t70::::res://assets/animation/background/congrats/congrats-bg - 14.png
@@ -236,4 +266,7 @@ main_menu.gd::GDScript::6136158524231631747::1763628459::0::1::::<>Control<><>0<
 menu-panel.gd::GDScript::451831556432054576::1763801264::0::1::::<>Control<><>0<>0<><>::
 scene_transition.gd::GDScript::6752774511223972879::1763621504::0::1::::<>CanvasLayer<><>0<>0<><>::
 solver.gd::GDScript::1535203291376671992::1764078400::0::1::::PuzzleSolver<>RefCounted<><>0<>0<><>::
+<<<<<<< HEAD
+>>>>>>> parent of 3b691ff (Revert "init")
+=======
 >>>>>>> parent of 3b691ff (Revert "init")

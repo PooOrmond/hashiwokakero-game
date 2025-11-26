@@ -53,6 +53,18 @@ var island_colors := {
 	8: Color(0.9, 0.9, 0.9)     # Light gray
 }
 
+# Island colors for different bridge counts
+var island_colors := {
+	1: Color(0.8, 0.9, 1.0),    # Light blue
+	2: Color(0.9, 0.8, 1.0),    # Light purple
+	3: Color(1.0, 0.9, 0.8),    # Light orange
+	4: Color(0.9, 1.0, 0.8),    # Light green
+	5: Color(1.0, 0.8, 0.9),    # Light pink
+	6: Color(0.8, 1.0, 0.9),    # Light mint
+	7: Color(1.0, 1.0, 0.8),    # Light yellow
+	8: Color(0.9, 0.9, 0.9)     # Light gray
+}
+
 # Initialize method
 func initialize(grid_size_param: Vector2i, cell_size_param: int, grid_offset_param: Vector2) -> void:
 	grid_size = grid_size_param
@@ -467,7 +479,11 @@ func csp_based_hint() -> void:
 		
 		hint_visible = true
 <<<<<<< HEAD
+<<<<<<< HEAD
 		hint_timer = 3.0  # Show for 3 seconds
+=======
+		hint_timer = 1.0  # CHANGED: Show for 1 second instead of 3 seconds
+>>>>>>> parent of 3b691ff (Revert "init")
 =======
 		hint_timer = 1.0  # CHANGED: Show for 1 second instead of 3 seconds
 >>>>>>> parent of 3b691ff (Revert "init")
