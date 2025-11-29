@@ -332,7 +332,7 @@ func csp_based_hint() -> void:
 		})
 		
 		hint_visible = true
-		hint_timer = 1.0  # Show for 3 seconds
+		hint_timer = 3.0  # Show for 3 seconds
 		
 		print("💡 CSP HINT: Add %d bridge(s) between island at (%d,%d) and (%d,%d)" % [
 			suggested_bridge.count,
