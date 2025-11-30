@@ -74,7 +74,7 @@ func start_step_by_step_solution() -> bool:
 	Start step-by-step solution animation using CSP
 	Returns true if solution was found and animation started
 	"""
-	print("🎬 Starting step-by-step solution animation...")
+	print("Starting step-by-step solution animation...")
 	
 	# Clear current bridges for fresh start
 	bridges.clear()
@@ -82,11 +82,11 @@ func start_step_by_step_solution() -> bool:
 		island.connected_bridges = 0
 	
 	# Compute solution using CSP
-	print("🔄 Computing solution for animation...")
+	print("Computing solution for animation...")
 	var success = _compute_solution_for_animation()
 	
 	if success:
-		print("✅ Solution computed, starting animation with %d steps" % step_by_step_bridges.size())
+		print("Solution computed, starting animation with %d steps" % step_by_step_bridges.size())
 		current_animation_step = 0
 		animation_timer = animation_delay
 		is_animating_solution = true
@@ -103,11 +103,11 @@ func start_step_by_step_solution() -> bool:
 		# MAKE FIRST BRIDGE VISIBLE
 		if step_by_step_bridges.size() > 0:
 			bridges[0]["visible"] = true
-			print("🔧 Made first bridge visible")
+			print("Made first bridge visible")
 		
 		return true
 	else:
-		print("❌ Failed to compute solution for animation")
+		print("Failed to compute solution for animation")
 		return false
 
 func _compute_solution_for_animation() -> bool:
@@ -128,7 +128,7 @@ func _compute_solution_for_animation() -> bool:
 	var success = _csp_solve_for_animation(temp_islands, temp_bridges)
 	
 	if success:
-		print("✅ CSP solution found with %d bridges" % temp_bridges.size())
+		print("CSP solution found with %d bridges" % temp_bridges.size())
 		
 		# Convert solution to step-by-step format
 		_convert_to_step_by_step(temp_bridges)
@@ -177,15 +177,20 @@ func _convert_to_step_by_step(temp_bridges: Array):
 				"count": temp_br.count
 			})
 	
-	print("📊 Animation prepared with %d bridge steps" % step_by_step_bridges.size())
+	print("Animation prepared with %d bridge steps" % step_by_step_bridges.size())
 	
 	# Debug: Log all bridges in animation
 	for i in range(step_by_step_bridges.size()):
 		var br = step_by_step_bridges[i]
-		print("  Step %d: %d bridge(s) between (%d,%d) and (%d,%d)" % [
-			i + 1, br.count,
-			br.start_island.pos.x - 1, br.start_island.pos.y - 1,
-			br.end_island.pos.x - 1, br.end_island.pos.y - 1
+		var start_x = br.start_island.pos.x
+		var start_y = br.start_island.pos.y
+		var end_x = br.end_island.pos.x
+		var end_y = br.end_island.pos.y
+		var bridge_text = "bridge" if br.count == 1 else "bridges"
+		print("  Step %d: %d %s between (%d,%d) and (%d,%d)" % [
+			i + 1, br.count, bridge_text,
+			start_x, start_y,
+			end_x, end_y
 		])
 
 func _sort_bridges_for_animation(a, b) -> bool:
@@ -209,25 +214,31 @@ func _apply_next_animation_step():
 		current_animation_step += 1
 		bridges[current_animation_step]["visible"] = true
 		
-		print("🔧 Animation step %d/%d: Made bridge visible between (%d,%d) and (%d,%d)" % [
+		var br = step_by_step_bridges[current_animation_step]
+		var start_x = br.start_island.pos.x
+		var start_y = br.start_island.pos.y
+		var end_x = br.end_island.pos.x
+		var end_y = br.end_island.pos.y
+		var bridge_text = "bridge" if br.count == 1 else "bridges"
+		
+		print("Step %d/%d: Made %d %s between (%d,%d) and (%d,%d)" % [
 			current_animation_step + 1, step_by_step_bridges.size(),
-			step_by_step_bridges[current_animation_step].start_island.pos.x - 1,
-			step_by_step_bridges[current_animation_step].start_island.pos.y - 1,
-			step_by_step_bridges[current_animation_step].end_island.pos.x - 1,
-			step_by_step_bridges[current_animation_step].end_island.pos.y - 1
+			br.count, bridge_text,
+			start_x, start_y,
+			end_x, end_y
 		])
 		
 		animation_timer = animation_delay
 	else:
 		# All bridges are now visible
-		print("🎯 All bridges are now visible, animation complete!")
+		print("All bridges are now visible, animation complete!")
 		_animation_complete()
 
 func _animation_complete():
 	"""
 	Called when step-by-step animation is complete
 	"""
-	print("🎉 Step-by-step animation complete!")
+	print("Step-by-step animation complete!")
 	is_animating_solution = false
 	animation_completed = true
 	puzzle_solved = true
@@ -235,7 +246,7 @@ func _animation_complete():
 	# Notify the main scene to update UI
 	_notify_puzzle_scene()
 	
-	print("📢 Animation completed, puzzle solved!")
+	print("Animation completed, puzzle solved!")
 
 func _update_puzzle_state():
 	"""
@@ -246,9 +257,9 @@ func _update_puzzle_state():
 	puzzle_solved = is_solved
 	
 	if is_solved:
-		print("🎉 Puzzle is correctly solved!")
+		print("Puzzle is correctly solved!")
 	else:
-		print("❌ Puzzle verification failed!")
+		print("Puzzle verification failed!")
 	
 	# Notify the main scene to update UI
 	_notify_puzzle_scene()
@@ -268,7 +279,7 @@ func _deferred_notify_puzzle_scene():
 	if Engine.get_main_loop().has_method("call_group"):
 		Engine.get_main_loop().call_group("puzzle_scene", "_on_solver_state_changed")
 	
-	print("📢 Notified puzzle scene to update display")
+	print("Notified puzzle scene to update display")
 
 func stop_animation():
 	"""
@@ -276,7 +287,7 @@ func stop_animation():
 	"""
 	is_animating_solution = false
 	animation_completed = false
-	print("⏹️ Step-by-step animation stopped")
+	print("Step-by-step animation stopped")
 
 func is_animating() -> bool:
 	"""
@@ -307,16 +318,16 @@ func csp_based_hint() -> void:
 	hint_bridges.clear()
 	hint_visible = false
 	
-	print("💡 Generating CSP-based hint...")
+	print("Generating CSP-based hint...")
 	
 	# If CSP solution is not ready, compute it first
 	if not csp_hint_ready:
-		print("🔄 Computing CSP solution for hints...")
+		print("Computing CSP solution for hints...")
 		if _compute_csp_hint_solution():
-			print("✅ CSP solution computed and stored for hints")
+			print("CSP solution computed and stored for hints")
 			csp_hint_ready = true
 		else:
-			print("❌ Failed to compute CSP solution for hints")
+			print("Failed to compute CSP solution for hints")
 			return
 	
 	# Find the next bridge from CSP solution that should be placed
@@ -332,18 +343,24 @@ func csp_based_hint() -> void:
 		})
 		
 		hint_visible = true
-		hint_timer = 3.0  # Show for 3 seconds
+		hint_timer = 1.0  # Show for 1 seconds
 		
-		print("💡 CSP HINT: Add %d bridge(s) between island at (%d,%d) and (%d,%d)" % [
-			suggested_bridge.count,
-			suggested_bridge.start_island.pos.x - 1, suggested_bridge.start_island.pos.y - 1,
-			suggested_bridge.end_island.pos.x - 1, suggested_bridge.end_island.pos.y - 1
+		var start_x = suggested_bridge.start_island.pos.x
+		var start_y = suggested_bridge.start_island.pos.y
+		var end_x = suggested_bridge.end_island.pos.x
+		var end_y = suggested_bridge.end_island.pos.y
+		var bridge_text = "bridge" if suggested_bridge.count == 1 else "bridges"
+		
+		print("CSP HINT: Add %d %s between island at (%d,%d) and (%d,%d)" % [
+			suggested_bridge.count, bridge_text,
+			start_x, start_y,
+			end_x, end_y
 		])
 		
 		# Mark this bridge as suggested (but don't apply it yet)
 		var _bridge_key = _get_bridge_key(suggested_bridge.start_island, suggested_bridge.end_island)
 	else:
-		print("💡 All CSP solution bridges are already placed!")
+		print("All CSP solution bridges are already placed!")
 
 func _compute_csp_hint_solution() -> bool:
 	"""
@@ -353,7 +370,7 @@ func _compute_csp_hint_solution() -> bool:
 	csp_hint_solution.clear()
 	csp_hint_applied_bridges.clear()
 	
-	print("🧠 Computing CSP solution for hint system...")
+	print("Computing CSP solution for hint system...")
 	
 	# Create a temporary solver state
 	var temp_bridges = []
@@ -368,9 +385,9 @@ func _compute_csp_hint_solution() -> bool:
 	var end_time = Time.get_ticks_msec()
 	
 	if success:
-		print("✅ CSP hint solution found in %d ms!" % (end_time - start_time))
+		print("CSP hint solution found in %d ms!" % (end_time - start_time))
 		
-		# Store the solution
+		# Store the solution (sorted for consistent hint ordering)
 		for bridge in temp_bridges:
 			csp_hint_solution.append({
 				"start_island": _find_corresponding_island_for_hint(bridge.start_island),
@@ -378,11 +395,26 @@ func _compute_csp_hint_solution() -> bool:
 				"count": bridge.count
 			})
 		
-		print("💾 Stored %d bridges in CSP hint solution" % csp_hint_solution.size())
+		# Sort hints using the same logic as animation for consistency
+		csp_hint_solution.sort_custom(_sort_hints_for_consistency)
+		
+		print("Stored %d bridges in CSP hint solution" % csp_hint_solution.size())
 		return true
 	else:
-		print("❌ Failed to compute CSP solution for hints")
+		print("Failed to compute CSP solution for hints")
 		return false
+
+func _sort_hints_for_consistency(a, b) -> bool:
+	"""
+	Sort hints using the same logic as animation for consistent ordering
+	"""
+	if a.start_island.pos.x != b.start_island.pos.x:
+		return a.start_island.pos.x < b.start_island.pos.x
+	if a.start_island.pos.y != b.start_island.pos.y:
+		return a.start_island.pos.y < b.start_island.pos.y
+	if a.end_island.pos.x != b.end_island.pos.x:
+		return a.end_island.pos.x < b.end_island.pos.x
+	return a.end_island.pos.y < b.end_island.pos.y
 
 func _csp_solve_for_hints(islands: Array, current_bridges: Array) -> bool:
 	"""
@@ -739,7 +771,7 @@ func reset_csp_hint_solution():
 	csp_hint_solution.clear()
 	csp_hint_ready = false
 	csp_hint_applied_bridges.clear()
-	print("🔄 CSP hint solution reset")
+	print("CSP hint solution reset")
 
 # ==================== CSP SOLVER ====================
 
@@ -747,7 +779,7 @@ func csp_based_solver() -> bool:
 	"""
 	CSP-based solver using constraint satisfaction techniques
 	"""
-	print("🧠 Starting CSP solver...")
+	print("Starting CSP solver...")
 	
 	# Save current state
 	var original_bridges = _duplicate_bridges()
@@ -763,11 +795,11 @@ func csp_based_solver() -> bool:
 	var end_time = Time.get_ticks_msec()
 	
 	if success:
-		print("✅ CSP solver found solution in %d ms!" % (end_time - start_time))
+		print("CSP solver found solution in %d ms!" % (end_time - start_time))
 		puzzle_solved = true
 		return true
 	else:
-		print("❌ CSP solver failed")
+		print("CSP solver failed")
 		_restore_bridges(original_bridges)
 		_restore_island_states(original_island_states)
 		puzzle_solved = false
@@ -1188,7 +1220,7 @@ func _find_island_by_pos(pos: Vector2):
 	for island in puzzle_data:
 		if island.pos == pos:
 			return island
-	print("❌ Could not find island for position (%d, %d)" % [pos.x, pos.y])
+	print("Could not find island for position (%d, %d)" % [pos.x, pos.y])
 	return null
 
 func _create_island_copy() -> Array:
@@ -1212,7 +1244,7 @@ func _find_corresponding_island(solver_island):
 	for actual_island in puzzle_data:
 		if actual_island.pos == solver_island.pos:
 			return actual_island
-	print("❌ Could not find corresponding island for position (%d, %d)" % [solver_island.pos.x, solver_island.pos.y])
+	print("Could not find corresponding island for position (%d, %d)" % [solver_island.pos.x, solver_island.pos.y])
 	return null
 
 func _add_bridge_internal(a, b, count: int):
@@ -1225,30 +1257,38 @@ func _add_bridge_internal(a, b, count: int):
 	})
 	a.connected_bridges += count
 	b.connected_bridges += count
+	
+	# Print user action
+	var bridge_text = "bridge" if count == 1 else "bridges"
+	print("USER ACTION: Added %d %s between (%d,%d) and (%d,%d)" % [
+		count, bridge_text,
+		a.pos.x, a.pos.y,
+		b.pos.x, b.pos.y
+	])
 
 func _verify_solution() -> bool:
-	print("🔍 Verifying solution...")
+	print("Verifying solution...")
 	
 	# Check if all islands have correct number of bridges
 	for island in puzzle_data:
 		if island.connected_bridges != island.bridges_target:
-			print("❌ Island at (%d,%d) has %d bridges but needs %d" % [
-				island.pos.x-1, island.pos.y-1,
+			print("Island at (%d,%d) has %d bridges but needs %d" % [
+				island.pos.x, island.pos.y,
 				island.connected_bridges, island.bridges_target
 			])
 			return false
 	
 	# Check if puzzle is connected
 	if not _is_puzzle_connected():
-		print("❌ Puzzle is not fully connected")
+		print("Puzzle is not fully connected")
 		return false
 	
 	# Check for bridge intersections
 	if not _no_bridge_intersections():
-		print("❌ Bridges intersect")
+		print("Bridges intersect")
 		return false
 	
-	print("🎉 Solution verified successfully!")
+	print("Solution verified successfully!")
 	return true
 
 func _is_puzzle_connected() -> bool:
@@ -1295,7 +1335,7 @@ func _check_puzzle_completion():
 	
 	if all_correct:
 		puzzle_solved = true
-		print("🎉 PUZZLE SOLVED! Congratulations!")
+		print("PUZZLE SOLVED! Congratulations!")
 	else:
 		puzzle_solved = false
 
@@ -1390,6 +1430,15 @@ func _remove_bridge(br):
 	br.start_island.connected_bridges -= br.count
 	br.end_island.connected_bridges -= br.count
 	bridges.erase(br)
+	
+	# Print user action
+	var bridge_text = "bridge" if br.count == 1 else "bridges"
+	print("USER ACTION: Removed %d %s between (%d,%d) and (%d,%d)" % [
+		br.count, bridge_text,
+		br.start_island.pos.x, br.start_island.pos.y,
+		br.end_island.pos.x, br.end_island.pos.y
+	])
+	
 	_check_puzzle_completion()
 
 func _try_place_bridge(a, b):
@@ -1411,6 +1460,14 @@ func _try_place_bridge(a, b):
 				br.count += 1
 				a.connected_bridges += 1
 				b.connected_bridges += 1
+				
+				# Print user action
+				print("USER ACTION: Upgraded to %d bridges between (%d,%d) and (%d,%d)" % [
+					br.count,
+					a.pos.x, a.pos.y,
+					b.pos.x, b.pos.y
+				])
+				
 				_check_puzzle_completion()
 				return true
 			else:
@@ -1426,6 +1483,13 @@ func _try_place_bridge(a, b):
 	})
 	a.connected_bridges += 1
 	b.connected_bridges += 1
+	
+	# Print user action
+	print("USER ACTION: Added 1 bridge between (%d,%d) and (%d,%d)" % [
+		a.pos.x, a.pos.y,
+		b.pos.x, b.pos.y
+	])
+	
 	_check_puzzle_completion()
 	return true
 
@@ -1452,7 +1516,7 @@ func load_custom_puzzle(file_path: String, parent_node: Node) -> void:
 	if file_name.begins_with("input-") and file_name.ends_with(".txt"):
 		var index_str = file_name.trim_prefix("input-").trim_suffix(".txt")
 		current_puzzle_index = int(index_str)
-		print("🎯 Detected puzzle index: ", current_puzzle_index, " from file: ", file_name)
+		print("Detected puzzle index: ", current_puzzle_index, " from file: ", file_name)
 
 	var file = FileAccess.open(file_path, FileAccess.READ)
 	if file == null:
@@ -1498,7 +1562,7 @@ func load_custom_puzzle(file_path: String, parent_node: Node) -> void:
 			})
 
 	_calculate_neighbors()
-	print("✅ Custom puzzle loaded from ", file_path)
+	print("Custom puzzle loaded from ", file_path)
 
 func _calculate_neighbors():
 	"""

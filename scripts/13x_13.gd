@@ -17,6 +17,9 @@ extends Node2D
 @onready var solve_button: TextureButton = $"buttons/solve-button"
 @onready var hint_button: TextureButton = $"buttons/hint-button"
 
+@onready var loading_screen = preload("res://scenes/loading_screen.tscn")
+var loading_instance: Control = null
+
 var panel
 
 # Grid variables
@@ -59,24 +62,40 @@ func _process(delta):
 	# Update the puzzle solver for hint timer and animation functionality
 	if puzzle_solver:
 		puzzle_solver.update(delta)
+		
+		# Update loading progress during animation
+		if puzzle_solver.is_animating() and loading_instance and loading_instance.is_loading():
+			var progress = puzzle_solver.get_animation_progress()
+			_update_loading_progress(0.5 + (progress * 0.5))  # 50% to 100% during animation
+		
+		# Check if animation just completed and puzzle is solved
+		if puzzle_solver.is_animation_completed() and puzzle_solver.is_puzzle_solved() and not was_solved:
+			print("Animation completed and puzzle solved, updating UI...")
+			was_solved = true
+			_on_puzzle_solved()
+			# Reset the animation completed flag to prevent multiple triggers
+			puzzle_solver.animation_completed = false
+		
+		# NEW: Check if puzzle was just solved manually (non-animation)
+		if puzzle_solver.is_puzzle_solved() and not was_solved and not puzzle_solver.is_animating():
+			print("Puzzle solved manually! Updating UI...")
+			was_solved = true
+			_on_puzzle_solved()
+		elif not puzzle_solver.is_puzzle_solved() and was_solved:
+			print("Puzzle no longer solved, resetting UI...")
+			was_solved = false
+			_on_puzzle_unsolved()
+		
 		# Always redraw when animating to ensure smooth updates
 		if puzzle_solver.is_animating():
 			queue_redraw()
-		# Also redraw when hints change or animation completes
+		# Also redraw when hints change
 		elif puzzle_solver.get_hint_bridges().size() > 0:
 			queue_redraw()
-	
-	# Check if puzzle was just solved to update UI
-	if puzzle_solver and puzzle_solver.is_puzzle_solved() and not was_solved:
-		was_solved = true
-		_on_puzzle_solved()
-	elif puzzle_solver and not puzzle_solver.is_puzzle_solved() and was_solved:
-		was_solved = false
-		_on_puzzle_unsolved()
 
 func _on_puzzle_solved():
 	"""Called when puzzle is solved"""
-	print("🎉 Puzzle solved! Updating UI...")
+	print("Puzzle solved! Updating UI...")
 	_update_ui_state()
 	
 	# Show congratulations background
@@ -88,13 +107,13 @@ func _on_puzzle_solved():
 
 func _on_puzzle_unsolved():
 	"""Called when puzzle is no longer solved (restart/new game)"""
-	print("🔄 Puzzle reset, restoring normal UI...")
+	print("Puzzle reset, restoring normal UI...")
 	_update_ui_state()
 	_reset_background_to_normal()
 
 func _reset_background_to_normal():
 	"""Force reset background to normal state"""
-	print("🔄 Resetting background to normal...")
+	print("Resetting background to normal...")
 	if congrats_bg:
 		congrats_bg.visible = false
 		congrats_bg.stop()  # Stop animation if it's an AnimatedSprite2D
@@ -234,13 +253,28 @@ func _on_csp_solve_pressed() -> void:
 	click.play()
 	puzzle_solver.clear_hint_bridges()
 	
-	print("🔄 Starting CSP solver...")
+	# Show loading screen for instant solve
+	_show_loading_screen()
+	_update_loading_progress(0.1)  # 10% - starting
+	
+	print("Starting CSP solver...")
+	
+	# Small delay to show loading screen
+	await get_tree().create_timer(0.1).timeout
+	
 	var success = puzzle_solver.csp_based_solver()
 	
 	if success:
-		print("🎉 CSP solver completed!")
+		print("CSP solver completed successfully!")
+		_update_loading_progress(1.0)  # 100% - solved
+		_on_puzzle_solved()
 	else:
-		print("❌ CSP solver failed!")
+		print("CSP solver failed to find solution.")
+		_update_loading_progress(1.0)  # 100% - failed
+	
+	# Hide loading screen after a short delay
+	await get_tree().create_timer(0.5).timeout
+	_hide_loading_screen()
 	
 	queue_redraw()
 
@@ -259,16 +293,38 @@ func _on_solvebutton_pressed() -> void:
 	click.play()
 	puzzle_solver.clear_hint_bridges()
 	
+	# Show loading screen
+	_show_loading_screen()
+	_update_loading_progress(0.1)  # 10% - starting
+	
+	# Reset animation completion flag and solved state
+	puzzle_solver.animation_completed = false
+	was_solved = false
+	
 	# Use step-by-step solver animation
-	print("🎬 Starting step-by-step solver animation...")
+	print("Starting step-by-step solver animation...")
+	
+	# Small delay to show loading screen before heavy computation
+	await get_tree().create_timer(0.1).timeout
+	
 	var success = puzzle_solver.start_step_by_step_solution()
 	
 	if success:
-		print("✅ Step-by-step animation started!")
+		print("Step-by-step animation started successfully!")
+		_update_loading_progress(0.5)  # 50% - computation done
+		# Update UI to show animation in progress
+		_update_ui_state()
 	else:
-		print("❌ Failed to start animation, using instant solver...")
+		print("Failed to start animation, using instant solver...")
+		_update_loading_progress(0.8)  # 80% - fallback
 		# Fallback to instant solver
-		puzzle_solver.csp_based_solver()
+		if puzzle_solver.csp_based_solver():
+			# If instant solver worked, update UI
+			_on_puzzle_solved()
+	
+	# Hide loading screen after a short delay to ensure it's visible
+	await get_tree().create_timer(0.5).timeout
+	_hide_loading_screen()
 	
 	queue_redraw()
 
@@ -279,8 +335,21 @@ func _on_hintbutton_pressed() -> void:
 	
 	click.play()
 	
+	# Show loading screen for hint generation
+	_show_loading_screen()
+	_update_loading_progress(0.1)  # 10% - starting
+	
+	# Small delay to show loading screen
+	await get_tree().create_timer(0.1).timeout
+	
 	# Use CSP-based hints
 	puzzle_solver.csp_based_hint()
+	
+	_update_loading_progress(1.0)  # 100% - hint generated
+	
+	# Hide loading screen after a short delay
+	await get_tree().create_timer(0.3).timeout
+	_hide_loading_screen()
 	
 	queue_redraw()
 	
@@ -298,7 +367,7 @@ func load_new_puzzle():
 	"""
 	Load a completely new puzzle with different input/output files
 	"""
-	print("🔄 Loading new puzzle...")
+	print("Loading new puzzle...")
 	
 	# Clear current state
 	_clear_current_puzzle()
@@ -309,7 +378,7 @@ func load_new_puzzle():
 		new_puzzle_index = randi() % 5 + 1
 	
 	current_puzzle_index = new_puzzle_index
-	print("🎲 Selected new puzzle index: ", current_puzzle_index)
+	print("Selected new puzzle index: ", current_puzzle_index)
 	
 	# Reload with new puzzle
 	_reload_puzzle()
@@ -321,13 +390,13 @@ func restart_current_puzzle():
 	"""
 	Restart the current puzzle (same input/output files)
 	"""
-	print("🔄 Restarting current puzzle...")
+	print("Restarting current puzzle...")
 	
 	# Clear current state
 	_clear_current_puzzle()
 	
 	# Reload with same puzzle index
-	print("🔄 Reloading puzzle index: ", current_puzzle_index)
+	print("Reloading puzzle index: ", current_puzzle_index)
 	_reload_puzzle()
 	
 	# Force reset background
@@ -375,13 +444,13 @@ func _reload_puzzle():
 	was_solved = false
 	_update_ui_state()
 	queue_redraw()
-	print("✅ Puzzle reloaded successfully!")
+	print("Puzzle reloaded successfully!")
 
 
 # ==================== AI SOLVER SUPPORT FUNCTIONS ====================
 
 func start_auto_solve_mode():
-	print("🚀 Starting auto-solve mode")
+	print("Starting auto-solve mode")
 	# Start a timer to auto-complete steps
 	if not has_node("AutoSolveTimer"):
 		var timer = Timer.new()
@@ -393,7 +462,7 @@ func start_auto_solve_mode():
 
 func show_ai_hint_popup(hint_text: String):
 	# Show AI-generated hint
-	print("💡 AI HINT: ", hint_text)
+	print("AI HINT: ", hint_text)
 	
 	# If you have a UI label for hints, update it:
 	# $UI/HintLabel.text = hint_text
@@ -408,6 +477,23 @@ func _on_auto_solve_timer_timeout():
 		queue_redraw()
 	else:
 		$AutoSolveTimer.stop()
-		print("✅ Auto-solve completed!")
+		print("Auto-solve completed!")
 		puzzle_solver.clear_hint_bridges()
 		queue_redraw()
+
+func _show_loading_screen():
+	"""Show loading screen"""
+	if not loading_instance:
+		loading_instance = loading_screen.instantiate()
+		add_child(loading_instance)
+	loading_instance.show_loading()
+
+func _hide_loading_screen():
+	"""Hide loading screen"""
+	if loading_instance:
+		loading_instance.hide_loading()
+
+func _update_loading_progress(progress: float):
+	"""Update loading progress"""
+	if loading_instance and loading_instance.is_loading():
+		loading_instance.set_progress(progress)

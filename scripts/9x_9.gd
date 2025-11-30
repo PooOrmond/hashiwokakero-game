@@ -76,7 +76,7 @@ func _process(delta):
 
 func _on_puzzle_solved():
 	"""Called when puzzle is solved"""
-	print("🎉 Puzzle solved! Updating UI...")
+	print("Puzzle solved! Updating UI...")
 	_update_ui_state()
 	
 	# Show congratulations background
@@ -88,13 +88,13 @@ func _on_puzzle_solved():
 
 func _on_puzzle_unsolved():
 	"""Called when puzzle is no longer solved (restart/new game)"""
-	print("🔄 Puzzle reset, restoring normal UI...")
+	print("Puzzle reset, restoring normal UI...")
 	_update_ui_state()
 	_reset_background_to_normal()
 
 func _reset_background_to_normal():
 	"""Force reset background to normal state"""
-	print("🔄 Resetting background to normal...")
+	print("Resetting background to normal...")
 	if congrats_bg:
 		congrats_bg.visible = false
 		congrats_bg.stop()  # Stop animation if it's an AnimatedSprite2D
@@ -225,13 +225,13 @@ func _on_csp_solve_pressed() -> void:
 	click.play()
 	puzzle_solver.clear_hint_bridges()
 	
-	print("🔄 Starting CSP solver...")
+	print("Starting CSP solver...")
 	var success = puzzle_solver.csp_based_solver()
 	
 	if success:
-		print("🎉 CSP solver completed!")
+		print("CSP solver completed successfully!")
 	else:
-		print("❌ CSP solver failed!")
+		print("CSP solver failed to find solution.")
 	
 	queue_redraw()
 
@@ -251,13 +251,13 @@ func _on_solvebutton_pressed() -> void:
 	puzzle_solver.clear_hint_bridges()
 	
 	# Use step-by-step solver animation
-	print("🎬 Starting step-by-step solver animation...")
+	print("Starting step-by-step solver animation...")
 	var success = puzzle_solver.start_step_by_step_solution()
 	
 	if success:
-		print("✅ Step-by-step animation started!")
+		print("Step-by-step animation started successfully!")
 	else:
-		print("❌ Failed to start animation, using instant solver...")
+		print("Failed to start animation, using instant solver...")
 		# Fallback to instant solver
 		puzzle_solver.csp_based_solver()
 	
@@ -289,7 +289,7 @@ func load_new_puzzle():
 	"""
 	Load a completely new puzzle with different input/output files
 	"""
-	print("🔄 Loading new puzzle...")
+	print("Loading new puzzle...")
 	
 	# Clear current state
 	_clear_current_puzzle()
@@ -300,7 +300,7 @@ func load_new_puzzle():
 		new_puzzle_index = randi() % 5 + 1
 	
 	current_puzzle_index = new_puzzle_index
-	print("🎲 Selected new puzzle index: ", current_puzzle_index)
+	print("Selected new puzzle index: ", current_puzzle_index)
 	
 	# Reload with new puzzle
 	_reload_puzzle()
@@ -312,13 +312,13 @@ func restart_current_puzzle():
 	"""
 	Restart the current puzzle (same input/output files)
 	"""
-	print("🔄 Restarting current puzzle...")
+	print("Restarting current puzzle...")
 	
 	# Clear current state
 	_clear_current_puzzle()
 	
 	# Reload with same puzzle index
-	print("🔄 Reloading puzzle index: ", current_puzzle_index)
+	print("Reloading puzzle index: ", current_puzzle_index)
 	_reload_puzzle()
 	
 	# Force reset background
@@ -366,13 +366,13 @@ func _reload_puzzle():
 	was_solved = false
 	_update_ui_state()
 	queue_redraw()
-	print("✅ Puzzle reloaded successfully!")
+	print("Puzzle reloaded successfully!")
 
 
 # ==================== AI SOLVER SUPPORT FUNCTIONS ====================
 
 func start_auto_solve_mode():
-	print("🚀 Starting auto-solve mode")
+	print("Starting auto-solve mode")
 	# Start a timer to auto-complete steps
 	if not has_node("AutoSolveTimer"):
 		var timer = Timer.new()
@@ -384,7 +384,7 @@ func start_auto_solve_mode():
 
 func show_ai_hint_popup(hint_text: String):
 	# Show AI-generated hint
-	print("💡 AI HINT: ", hint_text)
+	print("AI HINT: ", hint_text)
 	
 	# If you have a UI label for hints, update it:
 	# $UI/HintLabel.text = hint_text
@@ -399,6 +399,6 @@ func _on_auto_solve_timer_timeout():
 		queue_redraw()
 	else:
 		$AutoSolveTimer.stop()
-		print("✅ Auto-solve completed!")
+		print("Auto-solve completed!")
 		puzzle_solver.clear_hint_bridges()
 		queue_redraw()
