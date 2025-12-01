@@ -7,7 +7,7 @@ extends Node2D
 
 #bg change
 @onready var congrats_bg: AnimatedSprite2D = $background/congrats_bg
-@onready var normal_bg: AnimatedSprite2D = $background/normal_bg  # Add this for normal background
+@onready var normal_bg: AnimatedSprite2D = $background/normal_bg 
 
 # Audio
 @onready var click: AudioStreamPlayer2D = $click

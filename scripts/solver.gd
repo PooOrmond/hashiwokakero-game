@@ -33,6 +33,7 @@ var csp_constraints := []
 var csp_hint_solution := []  # Stores the complete CSP solution for hints
 var csp_hint_ready := false  # Whether CSP solution is computed and ready
 var csp_hint_applied_bridges := {}  # Track which bridges from solution have been applied
+var csp_hint_index := 0  # Track current hint position in solution
 
 # Step-by-step solver animation
 var step_by_step_bridges := []  # Bridges to be shown step by step
@@ -67,23 +68,18 @@ func set_puzzle_info(folder: String, index: int):
 	puzzle_folder = folder
 	current_puzzle_index = index
 
-# ==================== STEP-BY-STEP SOLVER ANIMATION ====================
+# ==================== STEP-BY-STEP SOLVER ANIMATION (PRESERVING PROGRESS) ====================
 
 func start_step_by_step_solution() -> bool:
 	"""
-	Start step-by-step solution animation using CSP
+	Start step-by-step solution animation using CSP, preserving player progress
 	Returns true if solution was found and animation started
 	"""
-	print("Starting step-by-step solution animation...")
+	print("Starting step-by-step solution animation with player progress...")
 	
-	# Clear current bridges for fresh start
-	bridges.clear()
-	for island in puzzle_data:
-		island.connected_bridges = 0
-	
-	# Compute solution using CSP
-	print("Computing solution for animation...")
-	var success = _compute_solution_for_animation()
+	# Compute solution using CSP that builds upon existing bridges
+	print("Computing solution that builds upon current progress...")
+	var success = _compute_solution_from_current_state()
 	
 	if success:
 		print("Solution computed, starting animation with %d steps" % step_by_step_bridges.size())
@@ -93,176 +89,486 @@ func start_step_by_step_solution() -> bool:
 		animation_completed = false
 		puzzle_solved = false
 		
-		# ADD ALL BRIDGES IMMEDIATELY BUT MARK THEM AS HIDDEN
-		for bridge_data in step_by_step_bridges:
-			_add_bridge_internal(bridge_data.start_island, bridge_data.end_island, bridge_data.count)
-			# Mark the bridge as hidden for animation
-			if bridges.size() > 0:
-				bridges[bridges.size() - 1]["visible"] = false
-		
-		# MAKE FIRST BRIDGE VISIBLE
+		# Apply first bridge immediately if there are bridges to add
 		if step_by_step_bridges.size() > 0:
-			bridges[0]["visible"] = true
-			print("Made first bridge visible")
+			_apply_next_animation_step()
+		else:
+			print("No bridges to add - puzzle may already be complete!")
+			_check_puzzle_completion_simple()  # Use simple check
+			if puzzle_solved:
+				_animation_complete()
+			else:
+				print("Puzzle not complete but no bridges to add - something wrong!")
 		
 		return true
 	else:
 		print("Failed to compute solution for animation")
 		return false
 
-func _compute_solution_for_animation() -> bool:
+func _compute_solution_from_current_state() -> bool:
 	"""
-	Compute solution using CSP and prepare step-by-step bridges for animation
+	Compute solution that builds upon current bridge state
 	"""
 	step_by_step_bridges.clear()
 	
-	# Create temporary solver state
-	var temp_bridges = []
+	# Create a complete solution
 	var temp_islands = _create_island_copy()
+	var temp_bridges = []
 	
-	# Reset temporary islands
-	for island in temp_islands:
-		island.connected_bridges = 0
-	
-	# Solve using CSP
-	var success = _csp_solve_for_animation(temp_islands, temp_bridges)
+	# Solve from scratch
+	var success = _csp_solve_complete(temp_islands, temp_bridges)
 	
 	if success:
-		print("CSP solution found with %d bridges" % temp_bridges.size())
+		# Extract only the missing bridges
+		_extract_missing_bridges(temp_bridges)
 		
-		# Convert solution to step-by-step format
-		_convert_to_step_by_step(temp_bridges)
+		# Sort bridges in a logical order
+		step_by_step_bridges.sort_custom(_sort_bridges_for_animation)
+		
+		print("Found %d missing bridges to add" % step_by_step_bridges.size())
 		return true
 	
 	return false
 
-func _csp_solve_for_animation(islands: Array, current_bridges: Array) -> bool:
+func _csp_solve_complete(islands: Array, current_bridges: Array) -> bool:
 	"""
-	CSP solver for animation preparation
+	Solve the complete puzzle using CSP
 	"""
-	# Initialize CSP variables
-	_init_csp_variables_for_hints(islands)
+	# Initialize CSP variables for complete solving
+	_init_csp_variables_complete(islands)
 	
 	# Use backtracking with constraint propagation
 	var assignment = {}
-	var success = _csp_backtrack_for_hints(assignment, islands)
+	var success = _csp_backtrack_complete(assignment, islands)
 	
 	if success:
 		# Apply the solution to temporary bridges
-		_apply_csp_solution_to_hints(assignment, islands, current_bridges)
+		_apply_csp_solution_complete(assignment, islands, current_bridges)
 		return true
 	return false
 
-func _convert_to_step_by_step(temp_bridges: Array):
+func _init_csp_variables_complete(islands: Array):
 	"""
-	Convert solution bridges to step-by-step format for animation
+	Initialize CSP variables for complete solving
+	"""
+	csp_domains.clear()
+	csp_constraints.clear()
+	
+	# Create variables for each possible bridge
+	var possible_bridges = _get_all_possible_bridges_complete(islands)
+	
+	for bridge in possible_bridges:
+		var var_name = _get_bridge_variable_name(bridge.start_island, bridge.end_island)
+		# Domain: 0 (no bridge), 1 (single bridge), 2 (double bridge)
+		csp_domains[var_name] = [0, 1, 2]
+	
+	# Add constraints
+	_add_bridge_count_constraints_complete(islands)
+	_add_intersection_constraints_complete(possible_bridges)
+
+func _get_all_possible_bridges_complete(islands: Array) -> Array:
+	"""
+	Get all possible bridges between islands for complete solving
+	"""
+	var possible_bridges = []
+	
+	for i in range(islands.size()):
+		var island_a = islands[i]
+		for j in range(i + 1, islands.size()):
+			var island_b = islands[j]
+			if _can_connect_directly(island_a, island_b, islands):
+				possible_bridges.append({
+					"start_island": island_a,
+					"end_island": island_b,
+					"start_pos": Vector2(island_a.pos.x * cell_size, island_a.pos.y * cell_size),
+					"end_pos": Vector2(island_b.pos.x * cell_size, island_b.pos.y * cell_size)
+				})
+	
+	return possible_bridges
+
+func _add_bridge_count_constraints_complete(islands: Array):
+	"""
+	Add constraints for island bridge counts for complete solving
+	"""
+	for island in islands:
+		var connected_bridges = []
+		
+		# Find all possible bridges connected to this island
+		for other in islands:
+			if island != other and _can_connect_directly(island, other, islands):
+				var var_name = _get_bridge_variable_name(island, other)
+				connected_bridges.append(var_name)
+		
+		if not connected_bridges.is_empty():
+			csp_constraints.append({
+				"type": "bridge_count",
+				"island": island,
+				"variables": connected_bridges,
+				"target": island.bridges_target
+			})
+
+func _add_intersection_constraints_complete(possible_bridges: Array):
+	"""
+	Add constraints to prevent bridge intersections for complete solving
+	"""
+	for i in range(possible_bridges.size()):
+		var br1 = possible_bridges[i]
+		for j in range(i + 1, possible_bridges.size()):
+			var br2 = possible_bridges[j]
+			
+			if _bridges_cross(br1.start_pos, br1.end_pos, br2.start_pos, br2.end_pos):
+				var var1 = _get_bridge_variable_name(br1.start_island, br1.end_island)
+				var var2 = _get_bridge_variable_name(br2.start_island, br2.end_island)
+				
+				csp_constraints.append({
+					"type": "no_intersection",
+					"variables": [var1, var2],
+					"condition": "not_both_nonzero"
+				})
+
+func _csp_backtrack_complete(assignment: Dictionary, islands: Array) -> bool:
+	"""
+	Backtracking search for complete solution
+	"""
+	if assignment.size() == csp_domains.size():
+		return _is_csp_solution_complete_for_complete(assignment, islands)
+	
+	var var_name = _select_unassigned_variable(assignment)
+	if var_name == "":
+		return false
+	
+	var domain = csp_domains[var_name].duplicate()
+	domain.sort()  # Try values in order
+	
+	for value in domain:
+		if _is_value_consistent_for_complete(var_name, value, assignment, islands):
+			assignment[var_name] = value
+			
+			# Forward checking
+			var inferences = {}
+			if _forward_check_for_complete(var_name, value, inferences, assignment, islands):
+				var result = _csp_backtrack_complete(assignment, islands)
+				if result:
+					return true
+			
+			# Backtrack
+			assignment.erase(var_name)
+			_remove_inferences(inferences)
+	
+	return false
+
+func _is_value_consistent_for_complete(var_name: String, value: int, assignment: Dictionary, _islands: Array) -> bool:
+	"""
+	Check if a value is consistent with current assignment for complete solving
+	"""
+	for constraint in csp_constraints:
+		if not _satisfies_constraint_for_complete(constraint, var_name, value, assignment):
+			return false
+	return true
+
+func _satisfies_constraint_for_complete(constraint: Dictionary, changed_var: String, value: int, assignment: Dictionary) -> bool:
+	match constraint.type:
+		"bridge_count":
+			# Check if this constraint involves the changed variable
+			if constraint.variables.has(changed_var):
+				var total = value
+				for var_name in constraint.variables:
+					if var_name != changed_var:
+						if assignment.has(var_name):
+							total += assignment[var_name]
+				
+				# If all variables are assigned, check exact match
+				var all_assigned = true
+				for var_name in constraint.variables:
+					if not assignment.has(var_name) and var_name != changed_var:
+						all_assigned = false
+						break
+				
+				if all_assigned:
+					return total == constraint.target
+				else:
+					return total <= constraint.target
+			return true
+		
+		"no_intersection":
+			if constraint.variables.has(changed_var):
+				var other_var = constraint.variables[0] if constraint.variables[1] == changed_var else constraint.variables[1]
+				if assignment.has(other_var):
+					return not (value > 0 and assignment[other_var] > 0)
+			return true
+	
+	return true
+
+func _forward_check_for_complete(var_name: String, _value: int, inferences: Dictionary, assignment: Dictionary, islands: Array) -> bool:
+	"""
+	Perform forward checking for complete solving
+	"""
+	for constraint in csp_constraints:
+		if constraint.variables.has(var_name):
+			for other_var in constraint.variables:
+				if other_var != var_name and not assignment.has(other_var):
+					var original_domain = csp_domains[other_var].duplicate()
+					var new_domain = []
+					
+					for other_value in csp_domains[other_var]:
+						# Temporarily assign to check consistency
+						assignment[other_var] = other_value
+						if _is_value_consistent_for_complete(other_var, other_value, assignment, islands):
+							new_domain.append(other_value)
+						assignment.erase(other_var)
+					
+					if new_domain.is_empty():
+						return false
+					
+					if new_domain.size() < original_domain.size():
+						if not inferences.has(other_var):
+							inferences[other_var] = original_domain
+						csp_domains[other_var] = new_domain
+	
+	return true
+
+func _is_csp_solution_complete_for_complete(assignment: Dictionary, islands: Array) -> bool:
+	"""
+	Check if CSP assignment represents a complete valid solution for complete solving
+	"""
+	# Check all bridge count constraints
+	for constraint in csp_constraints:
+		if constraint.type == "bridge_count":
+			var total = 0
+			for var_name in constraint.variables:
+				total += assignment[var_name]
+			if total != constraint.target:
+				return false
+	
+	# Check intersection constraints
+	for constraint in csp_constraints:
+		if constraint.type == "no_intersection":
+			var var1 = constraint.variables[0]
+			var var2 = constraint.variables[1]
+			if assignment[var1] > 0 and assignment[var2] > 0:
+				return false
+	
+	# Check connectivity
+	return _is_csp_solution_connected_for_complete(assignment, islands)
+
+func _is_csp_solution_connected_for_complete(assignment: Dictionary, islands: Array) -> bool:
+	"""
+	Check if the complete solution forms a connected graph
+	"""
+	var graph = {}
+	
+	# Build graph from assignment
+	for island in islands:
+		graph[island] = []
+	
+	for var_name in assignment:
+		if assignment[var_name] > 0:
+			var parts = var_name.split("_")
+			var pos1 = Vector2(int(parts[1]), int(parts[2]))
+			var pos2 = Vector2(int(parts[3]), int(parts[4]))
+			
+			var island1 = _find_island_by_pos_for_complete(islands, pos1)
+			var island2 = _find_island_by_pos_for_complete(islands, pos2)
+			
+			if island1 and island2:
+				graph[island1].append(island2)
+				graph[island2].append(island1)
+	
+	# Check connectivity using BFS
+	if islands.is_empty():
+		return true
+	
+	var visited = {}
+	var queue = [islands[0]]
+	
+	while not queue.is_empty():
+		var current = queue.pop_front()
+		visited[current] = true
+		
+		for neighbor in graph[current]:
+			if not visited.has(neighbor):
+				queue.append(neighbor)
+	
+	return visited.size() == islands.size()
+
+func _find_island_by_pos_for_complete(islands: Array, pos: Vector2):
+	"""
+	Find island by position in complete solver islands
+	"""
+	for island in islands:
+		if island.pos == pos:
+			return island
+	return null
+
+func _apply_csp_solution_complete(assignment: Dictionary, islands: Array, current_bridges: Array):
+	"""
+	Apply the CSP solution to temporary bridges for complete solving
+	"""
+	current_bridges.clear()
+	
+	# Reset connected bridges
+	for island in islands:
+		island.connected_bridges = 0
+	
+	# Apply bridges from CSP assignment
+	for var_name in assignment:
+		var value = assignment[var_name]
+		if value > 0:
+			var parts = var_name.split("_")
+			var pos1 = Vector2(int(parts[1]), int(parts[2]))
+			var pos2 = Vector2(int(parts[3]), int(parts[4]))
+			
+			var island1 = _find_island_by_pos_for_complete(islands, pos1)
+			var island2 = _find_island_by_pos_for_complete(islands, pos2)
+			
+			if island1 and island2:
+				current_bridges.append({
+					"start_island": island1,
+					"end_island": island2,
+					"start_pos": Vector2(island1.pos.x * cell_size, island1.pos.y * cell_size),
+					"end_pos": Vector2(island2.pos.x * cell_size, island2.pos.y * cell_size),
+					"count": value
+				})
+				island1.connected_bridges += value
+				island2.connected_bridges += value
+
+func _extract_missing_bridges(complete_solution: Array):
+	"""
+	Extract only the bridges that are missing from current state
 	"""
 	step_by_step_bridges.clear()
 	
-	# Sort bridges in a logical order (by position, count, etc.)
-	var sorted_bridges = temp_bridges.duplicate()
-	sorted_bridges.sort_custom(_sort_bridges_for_animation)
-	
-	# Convert to actual island references
-	for temp_br in sorted_bridges:
-		var actual_start = _find_corresponding_island(temp_br.start_island)
-		var actual_end = _find_corresponding_island(temp_br.end_island)
+	for sol_br in complete_solution:
+		# Find the actual islands in puzzle_data
+		var actual_start = _find_island_by_pos(sol_br.start_island.pos)
+		var actual_end = _find_island_by_pos(sol_br.end_island.pos)
 		
 		if actual_start and actual_end:
-			step_by_step_bridges.append({
-				"start_island": actual_start,
-				"end_island": actual_end,
-				"start_pos": actual_start.node.position,
-				"end_pos": actual_end.node.position,
-				"count": temp_br.count
-			})
-	
-	print("Animation prepared with %d bridge steps" % step_by_step_bridges.size())
-	
-	# Debug: Log all bridges in animation
-	for i in range(step_by_step_bridges.size()):
-		var br = step_by_step_bridges[i]
-		var start_x = br.start_island.pos.x
-		var start_y = br.start_island.pos.y
-		var end_x = br.end_island.pos.x
-		var end_y = br.end_island.pos.y
-		var bridge_text = "bridge" if br.count == 1 else "bridges"
-		print("  Step %d: %d %s between (%d,%d) and (%d,%d)" % [
-			i + 1, br.count, bridge_text,
-			start_x, start_y,
-			end_x, end_y
-		])
-
-func _sort_bridges_for_animation(a, b) -> bool:
-	"""
-	Sort bridges for animation - simple left-to-right, top-to-bottom order
-	"""
-	if a.start_island.pos.x != b.start_island.pos.x:
-		return a.start_island.pos.x < b.start_island.pos.x
-	if a.start_island.pos.y != b.start_island.pos.y:
-		return a.start_island.pos.y < b.start_island.pos.y
-	if a.end_island.pos.x != b.end_island.pos.x:
-		return a.end_island.pos.x < b.end_island.pos.x
-	return a.end_island.pos.y < b.end_island.pos.y
+			# Check if this bridge already exists
+			var existing_count = 0
+			for current_br in bridges:
+				if _bridges_match(current_br, {"start_island": actual_start, "end_island": actual_end}):
+					existing_count = current_br.count
+					break
+			
+			# If we need more bridges than we have
+			if sol_br.count > existing_count:
+				var missing_count = sol_br.count - existing_count
+				step_by_step_bridges.append({
+					"start_island": actual_start,
+					"end_island": actual_end,
+					"start_pos": actual_start.node.position,
+					"end_pos": actual_end.node.position,
+					"count": missing_count,
+					"total_needed": sol_br.count,
+					"existing": existing_count
+				})
 
 func _apply_next_animation_step():
 	"""
-	Apply the next bridge in the animation sequence - SIMPLIFIED
+	Apply the next bridge in the animation sequence - FIXED VERSION
 	"""
-	if current_animation_step < step_by_step_bridges.size() - 1:
-		# Make the next bridge visible
-		current_animation_step += 1
-		bridges[current_animation_step]["visible"] = true
-		
+	if current_animation_step < step_by_step_bridges.size():
 		var br = step_by_step_bridges[current_animation_step]
-		var start_x = br.start_island.pos.x
-		var start_y = br.start_island.pos.y
-		var end_x = br.end_island.pos.x
-		var end_y = br.end_island.pos.y
-		var bridge_text = "bridge" if br.count == 1 else "bridges"
 		
-		print("Step %d/%d: Made %d %s between (%d,%d) and (%d,%d)" % [
-			current_animation_step + 1, step_by_step_bridges.size(),
-			br.count, bridge_text,
-			start_x, start_y,
-			end_x, end_y
-		])
+		# Check if we need to add or upgrade a bridge
+		var existing_bridge = null
+		var existing_count = 0
 		
-		animation_timer = animation_delay
+		for current_br in bridges:
+			if _bridges_match(current_br, {"start_island": br.start_island, "end_island": br.end_island}):
+				existing_bridge = current_br
+				existing_count = current_br.count
+				break
+		
+		if existing_bridge:
+			# Upgrade existing bridge
+			var upgrade_amount = br.total_needed - existing_count
+			existing_bridge.count = br.total_needed
+			br.start_island.connected_bridges += upgrade_amount
+			br.end_island.connected_bridges += upgrade_amount
+			
+			print("Step %d/%d: Upgraded bridge between (%d,%d) and (%d,%d) from %d to %d" % [
+				current_animation_step + 1, step_by_step_bridges.size(),
+				br.start_island.pos.x, br.start_island.pos.y,
+				br.end_island.pos.x, br.end_island.pos.y,
+				existing_count, br.total_needed
+			])
+		else:
+			# Add new bridge
+			_add_bridge_internal(br.start_island, br.end_island, br.count)
+			print("Step %d/%d: Added %d bridge(s) between (%d,%d) and (%d,%d)" % [
+				current_animation_step + 1, step_by_step_bridges.size(),
+				br.count,
+				br.start_island.pos.x, br.start_island.pos.y,
+				br.end_island.pos.x, br.end_island.pos.y
+			])
+		
+		current_animation_step += 1
+		
+		# Force immediate notification for UI update
+		_notify_puzzle_scene_immediate()
+		
+		if current_animation_step < step_by_step_bridges.size():
+			animation_timer = animation_delay
+		else:
+			# Last bridge added - complete animation with small delay
+			print("All %d bridges added, completing animation..." % step_by_step_bridges.size())
+			# Small delay to ensure last bridge is drawn before animation completes
+			call_deferred("_final_animation_complete")
 	else:
-		# All bridges are now visible
-		print("All bridges are now visible, animation complete!")
 		_animation_complete()
+
+func _final_animation_complete():
+	"""
+	Final animation completion with delay to ensure last bridge is drawn
+	"""
+	print("Final animation completion called...")
+	_animation_complete()
 
 func _animation_complete():
 	"""
 	Called when step-by-step animation is complete
 	"""
-	print("Step-by-step animation complete!")
+	print("Step-by-step animation complete! All %d bridges added." % step_by_step_bridges.size())
 	is_animating_solution = false
 	animation_completed = true
-	puzzle_solved = true
 	
-	# Notify the main scene to update UI
-	_notify_puzzle_scene()
+	# Force final check
+	_check_puzzle_completion_simple()
 	
-	print("Animation completed, puzzle solved!")
+	# Force immediate UI update
+	_notify_puzzle_scene_immediate()
+	
+	print("Animation fully completed!")
 
-func _update_puzzle_state():
+# ==================== SIMPLE COMPLETION CHECK ====================
+
+func _check_puzzle_completion_simple():
 	"""
-	Update the puzzle state and trigger UI refresh
+	Simple puzzle completion check - only checks bridge counts
+	(Doesn't do expensive connectivity/intersection checks)
 	"""
-	# Check if puzzle is actually solved
-	var is_solved = _verify_solution()
-	puzzle_solved = is_solved
+	var all_correct = true
 	
-	if is_solved:
-		print("Puzzle is correctly solved!")
+	# Quick check: all islands have correct number of bridges
+	for island in puzzle_data:
+		if island.connected_bridges != island.bridges_target:
+			all_correct = false
+			print("Island at (%d,%d) has %d bridges but needs %d" % [
+				island.pos.x, island.pos.y,
+				island.connected_bridges, island.bridges_target
+			])
+			break
+	
+	if all_correct:
+		puzzle_solved = true
+		print("PUZZLE SOLVED! Congratulations!")
 	else:
-		print("Puzzle verification failed!")
-	
-	# Notify the main scene to update UI
-	_notify_puzzle_scene()
+		puzzle_solved = false
+		print("Puzzle not complete")
+
+# ==================== NOTIFICATION METHODS ====================
 
 func _notify_puzzle_scene():
 	"""
@@ -270,6 +576,16 @@ func _notify_puzzle_scene():
 	"""
 	# Use call_deferred to ensure this happens in the next frame
 	call_deferred("_deferred_notify_puzzle_scene")
+
+func _notify_puzzle_scene_immediate():
+	"""
+	Immediate notification for animation steps
+	"""
+	# Direct call for animation steps to ensure immediate update
+	if Engine.get_main_loop().has_method("call_group"):
+		Engine.get_main_loop().call_group("puzzle_scene", "_on_solver_state_changed")
+	
+	print("Immediate notification sent to update display")
 
 func _deferred_notify_puzzle_scene():
 	"""
@@ -281,39 +597,11 @@ func _deferred_notify_puzzle_scene():
 	
 	print("Notified puzzle scene to update display")
 
-func stop_animation():
-	"""
-	Stop the step-by-step animation
-	"""
-	is_animating_solution = false
-	animation_completed = false
-	print("Step-by-step animation stopped")
-
-func is_animating() -> bool:
-	"""
-	Check if step-by-step animation is in progress
-	"""
-	return is_animating_solution
-
-func is_animation_completed() -> bool:
-	"""
-	Check if step-by-step animation has completed
-	"""
-	return animation_completed
-
-func get_animation_progress() -> float:
-	"""
-	Get animation progress (0.0 to 1.0)
-	"""
-	if step_by_step_bridges.is_empty():
-		return 0.0
-	return float(current_animation_step + 1) / float(step_by_step_bridges.size())
-
-# ==================== CSP-BASED HINT SYSTEM ====================
+# ==================== CSP-BASED HINT SYSTEM (MOVES TO NEXT HINT) ====================
 
 func csp_based_hint() -> void:
 	"""
-	Generate hints using CSP algorithm - solves once, stores solution, provides hints from stored solution
+	Generate hints using CSP algorithm - moves to next hint even if user partially followed previous hint
 	"""
 	hint_bridges.clear()
 	hint_visible = false
@@ -326,6 +614,7 @@ func csp_based_hint() -> void:
 		if _compute_csp_hint_solution():
 			print("CSP solution computed and stored for hints")
 			csp_hint_ready = true
+			csp_hint_index = 0  # Start from first hint
 		else:
 			print("Failed to compute CSP solution for hints")
 			return
@@ -339,7 +628,8 @@ func csp_based_hint() -> void:
 			"end_island": suggested_bridge.end_island,
 			"start_pos": suggested_bridge.start_island.node.position,
 			"end_pos": suggested_bridge.end_island.node.position,
-			"count": suggested_bridge.count
+			"count": suggested_bridge.count,
+			"full_count": suggested_bridge.count  # Store the full needed count
 		})
 		
 		hint_visible = true
@@ -351,16 +641,48 @@ func csp_based_hint() -> void:
 		var end_y = suggested_bridge.end_island.pos.y
 		var bridge_text = "bridge" if suggested_bridge.count == 1 else "bridges"
 		
-		print("CSP HINT: Add %d %s between island at (%d,%d) and (%d,%d)" % [
+		print("CSP HINT %d/%d: Add %d %s between island at (%d,%d) and (%d,%d)" % [
+			csp_hint_index + 1, csp_hint_solution.size(),
 			suggested_bridge.count, bridge_text,
 			start_x, start_y,
 			end_x, end_y
 		])
 		
-		# Mark this bridge as suggested (but don't apply it yet)
-		var _bridge_key = _get_bridge_key(suggested_bridge.start_island, suggested_bridge.end_island)
+		# Move to next hint for next time
+		csp_hint_index += 1
+		if csp_hint_index >= csp_hint_solution.size():
+			csp_hint_index = 0  # Wrap around if needed
 	else:
 		print("All CSP solution bridges are already placed!")
+		# Reset index to start from beginning if all hints shown
+		csp_hint_index = 0
+
+func _find_next_csp_hint_bridge():
+	"""
+	Find the next bridge from CSP solution that should be placed
+	Skips bridges that are already complete, even if partially correct
+	"""
+	# Start from current hint index and search forward
+	for i in range(csp_hint_solution.size()):
+		var idx = (csp_hint_index + i) % csp_hint_solution.size()
+		var sol_br = csp_hint_solution[idx]
+		
+		# Check current bridge count
+		var current_count = 0
+		for current_br in bridges:
+			if _bridges_match(current_br, sol_br):
+				current_count = current_br.count
+				break
+		
+		# If we don't have enough bridges, suggest this one
+		if current_count < sol_br.count:
+			# Calculate how many more bridges are needed
+			var needed_count = sol_br.count - current_count
+			var hint_bridge = sol_br.duplicate()
+			hint_bridge["count"] = needed_count  # Only suggest the missing amount
+			return hint_bridge
+	
+	return null
 
 func _compute_csp_hint_solution() -> bool:
 	"""
@@ -368,7 +690,6 @@ func _compute_csp_hint_solution() -> bool:
 	Returns true if successful
 	"""
 	csp_hint_solution.clear()
-	csp_hint_applied_bridges.clear()
 	
 	print("Computing CSP solution for hint system...")
 	
@@ -389,11 +710,16 @@ func _compute_csp_hint_solution() -> bool:
 		
 		# Store the solution (sorted for consistent hint ordering)
 		for bridge in temp_bridges:
-			csp_hint_solution.append({
-				"start_island": _find_corresponding_island_for_hint(bridge.start_island),
-				"end_island": _find_corresponding_island_for_hint(bridge.end_island),
-				"count": bridge.count
-			})
+			# Find the actual islands
+			var actual_start = _find_island_by_pos(bridge.start_island.pos)
+			var actual_end = _find_island_by_pos(bridge.end_island.pos)
+			
+			if actual_start and actual_end:
+				csp_hint_solution.append({
+					"start_island": actual_start,
+					"end_island": actual_end,
+					"count": bridge.count
+				})
 		
 		# Sort hints using the same logic as animation for consistency
 		csp_hint_solution.sort_custom(_sort_hints_for_consistency)
@@ -718,52 +1044,6 @@ func _apply_csp_solution_to_hints(assignment: Dictionary, islands: Array, curren
 				island1.connected_bridges += value
 				island2.connected_bridges += value
 
-func _find_next_csp_hint_bridge():
-	"""
-	Find the next bridge from CSP solution that should be placed
-	"""
-	for sol_br in csp_hint_solution:
-		# Check if this bridge is already placed in the actual puzzle
-		var already_placed = false
-		var current_count = 0
-		
-		for current_br in bridges:
-			if _bridges_match(current_br, sol_br):
-				current_count = current_br.count
-				if current_count >= sol_br.count:
-					already_placed = true
-				break
-		
-		if not already_placed:
-			# Check if we can add this bridge (basic validation)
-			var can_add = _can_add_bridge_for_hint(sol_br.start_island, sol_br.end_island, sol_br.count)
-			if can_add:
-				return sol_br
-	
-	return null
-
-func _get_bridge_key(a, b) -> String:
-	"""
-	Create a unique key for a bridge
-	"""
-	var pos1 = a.pos
-	var pos2 = b.pos
-	# Sort positions to ensure consistent key
-	if pos1.x > pos2.x or (pos1.x == pos2.x and pos1.y > pos2.y):
-		var temp = pos1
-		pos1 = pos2
-		pos2 = temp
-	return "%d_%d_%d_%d" % [pos1.x, pos1.y, pos2.x, pos2.y]
-
-func _find_corresponding_island_for_hint(solver_island):
-	"""
-	Find the actual island corresponding to a solver island for hints
-	"""
-	for actual_island in puzzle_data:
-		if actual_island.pos == solver_island.pos:
-			return actual_island
-	return null
-
 func reset_csp_hint_solution():
 	"""
 	Reset the CSP hint solution (call when puzzle changes)
@@ -771,9 +1051,10 @@ func reset_csp_hint_solution():
 	csp_hint_solution.clear()
 	csp_hint_ready = false
 	csp_hint_applied_bridges.clear()
+	csp_hint_index = 0
 	print("CSP hint solution reset")
 
-# ==================== CSP SOLVER ====================
+# ==================== CSP SOLVER (COMPLETE) ====================
 
 func csp_based_solver() -> bool:
 	"""
@@ -1601,6 +1882,20 @@ func reset_solver():
 	current_animation_step = 0
 	animation_completed = false
 
+# ==================== ADDITIONAL HELPER METHODS ====================
+
+func _sort_bridges_for_animation(a, b) -> bool:
+	"""
+	Sort bridges for animation - simple left-to-right, top-to-bottom order
+	"""
+	if a.start_island.pos.x != b.start_island.pos.x:
+		return a.start_island.pos.x < b.start_island.pos.x
+	if a.start_island.pos.y != b.start_island.pos.y:
+		return a.start_island.pos.y < b.start_island.pos.y
+	if a.end_island.pos.x != b.end_island.pos.x:
+		return a.end_island.pos.x < b.end_island.pos.x
+	return a.end_island.pos.y < b.end_island.pos.y
+
 # ==================== GETTERS ====================
 
 func get_puzzle_data():
@@ -1637,3 +1932,31 @@ func get_csp_hint_solution_size() -> int:
 	Get the number of bridges in CSP hint solution
 	"""
 	return csp_hint_solution.size()
+
+func stop_animation():
+	"""
+	Stop the step-by-step animation
+	"""
+	is_animating_solution = false
+	animation_completed = false
+	print("Step-by-step animation stopped")
+
+func is_animating() -> bool:
+	"""
+	Check if step-by-step animation is in progress
+	"""
+	return is_animating_solution
+
+func is_animation_completed() -> bool:
+	"""
+	Check if step-by-step animation has completed
+	"""
+	return animation_completed
+
+func get_animation_progress() -> float:
+	"""
+	Get animation progress (0.0 to 1.0)
+	"""
+	if step_by_step_bridges.is_empty():
+		return 0.0
+	return float(current_animation_step) / float(step_by_step_bridges.size())
