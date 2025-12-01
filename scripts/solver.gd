@@ -119,13 +119,13 @@ func _compute_solution_from_current_state() -> bool:
 	var success = _csp_solve_complete(temp_islands, temp_bridges)
 	
 	if success:
-		# Extract only the missing bridges
+		# Extract only the missing bridges AND identify bridges to remove
 		_extract_missing_bridges(temp_bridges)
 		
-		# Sort bridges in a logical order
+		# Sort bridges in a logical order (removals first)
 		step_by_step_bridges.sort_custom(_sort_bridges_for_animation)
 		
-		print("Found %d missing bridges to add" % step_by_step_bridges.size())
+		print("Found %d steps to apply" % step_by_step_bridges.size())
 		return true
 	
 	return false
@@ -434,10 +434,56 @@ func _apply_csp_solution_complete(assignment: Dictionary, islands: Array, curren
 
 func _extract_missing_bridges(complete_solution: Array):
 	"""
-	Extract only the bridges that are missing from current state
+	Extract only the bridges that are missing from current state AND identify bridges to remove
 	"""
 	step_by_step_bridges.clear()
 	
+	# First, identify bridges that need to be removed
+	var bridges_to_remove = []
+	
+	for current_br in bridges:
+		var should_exist = false
+		var required_count = 0
+		
+		# Check if this bridge exists in the complete solution
+		for sol_br in complete_solution:
+			if _bridges_match_by_position(current_br, sol_br):
+				should_exist = true
+				required_count = sol_br.count
+				break
+		
+		if should_exist:
+			# Bridge exists in solution, but might have wrong count
+			if current_br.count > required_count:
+				# Too many bridges - mark for reduction
+				var excess_count = current_br.count - required_count
+				bridges_to_remove.append({
+					"type": "remove",
+					"bridge": current_br,
+					"remove_count": excess_count,
+					"new_count": required_count
+				})
+		else:
+			# Bridge doesn't exist in solution at all - mark for complete removal
+			bridges_to_remove.append({
+				"type": "remove",
+				"bridge": current_br,
+				"remove_count": current_br.count,
+				"new_count": 0,
+				"remove_completely": true
+			})
+	
+	# Add removal steps first
+	for removal in bridges_to_remove:
+		step_by_step_bridges.append({
+			"type": "remove",
+			"bridge": removal.bridge,
+			"remove_count": removal.remove_count,
+			"new_count": removal.new_count,
+			"remove_completely": removal.get("remove_completely", false)
+		})
+	
+	# Then add bridges that need to be added/upgraded
 	for sol_br in complete_solution:
 		# Find the actual islands in puzzle_data
 		var actual_start = _find_island_by_pos(sol_br.start_island.pos)
@@ -447,7 +493,7 @@ func _extract_missing_bridges(complete_solution: Array):
 			# Check if this bridge already exists
 			var existing_count = 0
 			for current_br in bridges:
-				if _bridges_match(current_br, {"start_island": actual_start, "end_island": actual_end}):
+				if _bridges_match_by_position(current_br, sol_br):
 					existing_count = current_br.count
 					break
 			
@@ -455,6 +501,7 @@ func _extract_missing_bridges(complete_solution: Array):
 			if sol_br.count > existing_count:
 				var missing_count = sol_br.count - existing_count
 				step_by_step_bridges.append({
+					"type": "add",
 					"start_island": actual_start,
 					"end_island": actual_end,
 					"start_pos": actual_start.node.position,
@@ -464,66 +511,111 @@ func _extract_missing_bridges(complete_solution: Array):
 					"existing": existing_count
 				})
 
+func _bridges_match_by_position(br1, br2) -> bool:
+	"""
+	Check if two bridges connect the same islands by comparing positions
+	"""
+	var br1_start_pos = br1.start_island.pos if "pos" in br1.start_island else br1.start_island["pos"]
+	var br1_end_pos = br1.end_island.pos if "pos" in br1.end_island else br1.end_island["pos"]
+	var br2_start_pos = br2.start_island.pos if "pos" in br2.start_island else br2.start_island["pos"]
+	var br2_end_pos = br2.end_island.pos if "pos" in br2.end_island else br2.end_island["pos"]
+	
+	return ((br1_start_pos == br2_start_pos and br1_end_pos == br2_end_pos) or
+			(br1_start_pos == br2_end_pos and br1_end_pos == br2_start_pos))
+
 func _apply_next_animation_step():
 	"""
-	Apply the next bridge in the animation sequence - FIXED VERSION
+	Apply the next bridge in the animation sequence - FIXED VERSION to handle removals
 	"""
 	if current_animation_step < step_by_step_bridges.size():
-		var br = step_by_step_bridges[current_animation_step]
+		var step = step_by_step_bridges[current_animation_step]
 		
-		# Check if we need to add or upgrade a bridge
-		var existing_bridge = null
-		var existing_count = 0
-		
-		for current_br in bridges:
-			if _bridges_match(current_br, {"start_island": br.start_island, "end_island": br.end_island}):
-				existing_bridge = current_br
-				existing_count = current_br.count
-				break
-		
-		if existing_bridge:
-			# Upgrade existing bridge
-			var upgrade_amount = br.total_needed - existing_count
-			existing_bridge.count = br.total_needed
-			br.start_island.connected_bridges += upgrade_amount
-			br.end_island.connected_bridges += upgrade_amount
+		if step.type == "remove":
+			# Handle bridge removal or reduction
+			var bridge = step.bridge
+			var remove_count = step.remove_count
 			
-			print("Step %d/%d: Upgraded bridge between (%d,%d) and (%d,%d) from %d to %d" % [
-				current_animation_step + 1, step_by_step_bridges.size(),
-				br.start_island.pos.x, br.start_island.pos.y,
-				br.end_island.pos.x, br.end_island.pos.y,
-				existing_count, br.total_needed
-			])
-		else:
-			# Add new bridge
-			_add_bridge_internal(br.start_island, br.end_island, br.count)
-			print("Step %d/%d: Added %d bridge(s) between (%d,%d) and (%d,%d)" % [
-				current_animation_step + 1, step_by_step_bridges.size(),
-				br.count,
-				br.start_island.pos.x, br.start_island.pos.y,
-				br.end_island.pos.x, br.end_island.pos.y
-			])
+			if step.get("remove_completely", false):
+				# Remove the bridge completely
+				_remove_bridge_internal(bridge)
+				print("Step %d/%d: Removed bridge between (%d,%d) and (%d,%d)" % [
+					current_animation_step + 1, step_by_step_bridges.size(),
+					bridge.start_island.pos.x, bridge.start_island.pos.y,
+					bridge.end_island.pos.x, bridge.end_island.pos.y
+				])
+			else:
+				# Reduce bridge count
+				bridge.count = step.new_count
+				bridge.start_island.connected_bridges -= remove_count
+				bridge.end_island.connected_bridges -= remove_count
+				print("Step %d/%d: Reduced bridge between (%d,%d) and (%d,%d) from %d to %d" % [
+					current_animation_step + 1, step_by_step_bridges.size(),
+					bridge.start_island.pos.x, bridge.start_island.pos.y,
+					bridge.end_island.pos.x, bridge.end_island.pos.y,
+					bridge.count + remove_count, bridge.count
+				])
+				
+		elif step.type == "add":
+			# Handle bridge addition or upgrade (existing logic)
+			var br = step
+			var existing_bridge = null
+			var existing_count = 0
+			
+			for current_br in bridges:
+				if _bridges_match_by_position(current_br, {"start_island": br.start_island, "end_island": br.end_island}):
+					existing_bridge = current_br
+					existing_count = current_br.count
+					break
+			
+			if existing_bridge:
+				# Upgrade existing bridge
+				var upgrade_amount = br.total_needed - existing_count
+				existing_bridge.count = br.total_needed
+				br.start_island.connected_bridges += upgrade_amount
+				br.end_island.connected_bridges += upgrade_amount
+				
+				print("Step %d/%d: Upgraded bridge between (%d,%d) and (%d,%d) from %d to %d" % [
+					current_animation_step + 1, step_by_step_bridges.size(),
+					br.start_island.pos.x, br.start_island.pos.y,
+					br.end_island.pos.x, br.end_island.pos.y,
+					existing_count, br.total_needed
+				])
+			else:
+				# Add new bridge
+				_add_bridge_internal(br.start_island, br.end_island, br.count)
+				print("Step %d/%d: Added %d bridge(s) between (%d,%d) and (%d,%d)" % [
+					current_animation_step + 1, step_by_step_bridges.size(),
+					br.count,
+					br.start_island.pos.x, br.start_island.pos.y,
+					br.end_island.pos.x, br.end_island.pos.y
+				])
 		
 		current_animation_step += 1
 		
-		# Force immediate notification for UI update
-		_notify_puzzle_scene_immediate()
+		# Notify the puzzle scene to update display (silently, no print)
+		call_deferred("_deferred_notify_puzzle_scene")
 		
 		if current_animation_step < step_by_step_bridges.size():
 			animation_timer = animation_delay
 		else:
 			# Last bridge added - complete animation with small delay
 			print("All %d bridges added, completing animation..." % step_by_step_bridges.size())
-			# Small delay to ensure last bridge is drawn before animation completes
 			call_deferred("_final_animation_complete")
 	else:
 		_animation_complete()
+
+func _remove_bridge_internal(bridge):
+	"""
+	Internal method to remove a bridge
+	"""
+	bridge.start_island.connected_bridges -= bridge.count
+	bridge.end_island.connected_bridges -= bridge.count
+	bridges.erase(bridge)
 
 func _final_animation_complete():
 	"""
 	Final animation completion with delay to ensure last bridge is drawn
 	"""
-	print("Final animation completion called...")
 	_animation_complete()
 
 func _animation_complete():
@@ -536,11 +628,6 @@ func _animation_complete():
 	
 	# Force final check
 	_check_puzzle_completion_simple()
-	
-	# Force immediate UI update
-	_notify_puzzle_scene_immediate()
-	
-	print("Animation fully completed!")
 
 # ==================== SIMPLE COMPLETION CHECK ====================
 
@@ -570,23 +657,6 @@ func _check_puzzle_completion_simple():
 
 # ==================== NOTIFICATION METHODS ====================
 
-func _notify_puzzle_scene():
-	"""
-	Notify the puzzle scene to update its display
-	"""
-	# Use call_deferred to ensure this happens in the next frame
-	call_deferred("_deferred_notify_puzzle_scene")
-
-func _notify_puzzle_scene_immediate():
-	"""
-	Immediate notification for animation steps
-	"""
-	# Direct call for animation steps to ensure immediate update
-	if Engine.get_main_loop().has_method("call_group"):
-		Engine.get_main_loop().call_group("puzzle_scene", "_on_solver_state_changed")
-	
-	print("Immediate notification sent to update display")
-
 func _deferred_notify_puzzle_scene():
 	"""
 	Deferred notification to avoid state issues
@@ -594,8 +664,6 @@ func _deferred_notify_puzzle_scene():
 	# Use groups to find and notify the puzzle scene
 	if Engine.get_main_loop().has_method("call_group"):
 		Engine.get_main_loop().call_group("puzzle_scene", "_on_solver_state_changed")
-	
-	print("Notified puzzle scene to update display")
 
 # ==================== CSP-BASED HINT SYSTEM (MOVES TO NEXT HINT) ====================
 
@@ -670,7 +738,7 @@ func _find_next_csp_hint_bridge():
 		# Check current bridge count
 		var current_count = 0
 		for current_br in bridges:
-			if _bridges_match(current_br, sol_br):
+			if _bridges_match_by_position(current_br, sol_br):
 				current_count = current_br.count
 				break
 		
@@ -1353,7 +1421,7 @@ func _is_csp_solution_complete(assignment: Dictionary) -> bool:
 			if assignment[var1] > 0 and assignment[var2] > 0:
 				return false
 	
-	# Check connectivity (simplified - we'll build the graph and check)
+	# Check connectivity
 	return _is_csp_solution_connected(assignment)
 
 func _is_csp_solution_connected(assignment: Dictionary) -> bool:
@@ -1886,15 +1954,31 @@ func reset_solver():
 
 func _sort_bridges_for_animation(a, b) -> bool:
 	"""
-	Sort bridges for animation - simple left-to-right, top-to-bottom order
+	Sort bridges for animation - removals first, then additions
 	"""
-	if a.start_island.pos.x != b.start_island.pos.x:
-		return a.start_island.pos.x < b.start_island.pos.x
-	if a.start_island.pos.y != b.start_island.pos.y:
-		return a.start_island.pos.y < b.start_island.pos.y
-	if a.end_island.pos.x != b.end_island.pos.x:
-		return a.end_island.pos.x < b.end_island.pos.x
-	return a.end_island.pos.y < b.end_island.pos.y
+	# Removals come before additions
+	if a.get("type") != b.get("type"):
+		if a.get("type") == "remove":
+			return true
+		elif b.get("type") == "remove":
+			return false
+	
+	# Then sort by position
+	if a.type == "remove":
+		var a_pos = a.bridge.start_island.pos
+		var b_pos = b.bridge.start_island.pos
+		if a_pos.x != b_pos.x:
+			return a_pos.x < b_pos.x
+		return a_pos.y < b_pos.y
+	else:
+		# For additions, use existing logic
+		if a.start_island.pos.x != b.start_island.pos.x:
+			return a.start_island.pos.x < b.start_island.pos.x
+		if a.start_island.pos.y != b.start_island.pos.y:
+			return a.start_island.pos.y < b.start_island.pos.y
+		if a.end_island.pos.x != b.end_island.pos.x:
+			return a.end_island.pos.x < b.end_island.pos.x
+		return a.end_island.pos.y < b.end_island.pos.y
 
 # ==================== GETTERS ====================
 

@@ -4,7 +4,7 @@ extends Control
 @onready var percent_label: Label = $Label
 
 var progress: float = 0.0
-var loading_visible: bool = false  # Changed from is_visible to avoid shadowing
+var loading_visible: bool = false 
 
 func _ready():
 	# Hide by default

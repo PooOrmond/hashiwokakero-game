@@ -1,8 +1,8 @@
 extends Node2D
 
-# Configuration for 9x9 - Updated values for 9x9 grid
-@export var grid_size: Vector2i = Vector2i(10, 10) # 9x9 grid with border
-@export var cell_size: int = 42  # Reduced from 48 to make grid smaller
+# Configuration for 9x9 - 
+@export var grid_size: Vector2i = Vector2i(10, 10) 
+@export var cell_size: int = 42 
 @export var puzzle_folder: String = "9x9"
 
 # Background

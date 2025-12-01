@@ -1,7 +1,7 @@
 extends Node2D
 
 # Configuration for 13x13
-@export var grid_size: Vector2i = Vector2i(14, 14) # 13x13 grid with border
+@export var grid_size: Vector2i = Vector2i(14, 14) 
 @export var cell_size: int = 32
 @export var puzzle_folder: String = "13x13"
 
