@@ -22,6 +22,7 @@ buses/default_bus_layout=""
 
 Music="*res://scenes/music.tscn"
 SceneTransition="*res://scenes/scene_transition.tscn"
+TimerManager="*res://scripts/timer_manager.gd"
 
 [display]
 

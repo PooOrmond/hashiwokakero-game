@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://b2tbb8b1rk0bg"]
+[gd_scene load_steps=40 format=3 uid="uid://b2tbb8b1rk0bg"]
 
 [ext_resource type="Script" uid="uid://lyklbctpoyoc" path="res://scripts/9x_9.gd" id="1_a7600"]
 [ext_resource type="Texture2D" uid="uid://du7xbqtjabqcd" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 1.png" id="2_2kfur"]
@@ -27,6 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://hew2x8w8oxgj" path="res://assets/animation/background/congrats/congrats-bg - 12.png" id="21_gq08l"]
 [ext_resource type="Texture2D" uid="uid://caisl3ns7rfm" path="res://assets/animation/background/congrats/congrats-bg - 13.png" id="22_uv1f5"]
 [ext_resource type="Texture2D" uid="uid://phb2sx3s1t70" path="res://assets/animation/background/congrats/congrats-bg - 14.png" id="23_6wylc"]
+[ext_resource type="FontFile" uid="uid://cebusgp831006" path="res://fonts/PixelOperator8.ttf" id="28_g211h"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_wbdsf"]
 animations = [{
@@ -166,20 +167,20 @@ sprite_frames = SubResource("SpriteFrames_wnarp")
 [node name="buttons" type="Node" parent="."]
 
 [node name="hint-button" type="TextureButton" parent="buttons"]
-offset_left = 419.0
-offset_top = 11.0
-offset_right = 555.0
-offset_bottom = 162.0
+offset_left = 713.0
+offset_top = 112.0
+offset_right = 849.0
+offset_bottom = 263.0
 scale = Vector2(0.5, 0.5)
 texture_normal = SubResource("AtlasTexture_6xauk")
 texture_pressed = SubResource("AtlasTexture_kb5me")
 texture_hover = SubResource("AtlasTexture_nnymg")
 
 [node name="solve-button" type="TextureButton" parent="buttons"]
-offset_left = 321.0
-offset_top = 12.0
-offset_right = 457.0
-offset_bottom = 163.0
+offset_left = 713.0
+offset_top = 30.0
+offset_right = 849.0
+offset_bottom = 181.0
 scale = Vector2(0.5, 0.5)
 texture_normal = SubResource("AtlasTexture_6n13q")
 texture_pressed = SubResource("AtlasTexture_2hofp")
@@ -197,6 +198,16 @@ texture_hover = SubResource("AtlasTexture_dmm4e")
 
 [node name="click" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_nnymg")
+
+[node name="timer" type="Label" parent="."]
+z_index = -1
+offset_left = 351.0
+offset_top = 41.0
+offset_right = 404.0
+offset_bottom = 72.0
+theme_override_fonts/font = ExtResource("28_g211h")
+theme_override_font_sizes/font_size = 30
+text = "00"
 
 [connection signal="pressed" from="buttons/hint-button" to="." method="_on_hintbutton_pressed"]
 [connection signal="pressed" from="buttons/solve-button" to="." method="_on_solvebutton_pressed"]

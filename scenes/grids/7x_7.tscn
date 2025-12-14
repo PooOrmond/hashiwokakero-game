@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://c03yflbko25d1"]
+[gd_scene load_steps=40 format=3 uid="uid://c03yflbko25d1"]
 
 [ext_resource type="Script" uid="uid://ckkwx1ern17kb" path="res://scripts/7x_7.gd" id="1_yl70g"]
 [ext_resource type="Texture2D" uid="uid://du7xbqtjabqcd" path="res://assets/animation/background/puzzle-background/Puzzle-bg - 1.png" id="2_e84ru"]
@@ -27,6 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://hew2x8w8oxgj" path="res://assets/animation/background/congrats/congrats-bg - 12.png" id="21_5v0cd"]
 [ext_resource type="Texture2D" uid="uid://caisl3ns7rfm" path="res://assets/animation/background/congrats/congrats-bg - 13.png" id="22_plipd"]
 [ext_resource type="Texture2D" uid="uid://phb2sx3s1t70" path="res://assets/animation/background/congrats/congrats-bg - 14.png" id="23_5eyul"]
+[ext_resource type="FontFile" uid="uid://cebusgp831006" path="res://assets/fonts/PixelOperator8.ttf" id="28_t8cpe"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ekg8d"]
 animations = [{
@@ -166,20 +167,20 @@ sprite_frames = SubResource("SpriteFrames_18iu6")
 [node name="buttons" type="Node" parent="."]
 
 [node name="hint-button" type="TextureButton" parent="buttons"]
-offset_left = 422.0
-offset_top = 10.0
-offset_right = 558.0
-offset_bottom = 161.0
+offset_left = 713.0
+offset_top = 106.0
+offset_right = 849.0
+offset_bottom = 257.0
 scale = Vector2(0.5, 0.5)
 texture_normal = SubResource("AtlasTexture_ijxyn")
 texture_pressed = SubResource("AtlasTexture_whvp7")
 texture_hover = SubResource("AtlasTexture_s4tbd")
 
 [node name="solve-button" type="TextureButton" parent="buttons"]
-offset_left = 312.0
-offset_top = 13.0
-offset_right = 448.0
-offset_bottom = 164.0
+offset_left = 711.0
+offset_top = 20.0
+offset_right = 847.0
+offset_bottom = 171.0
 scale = Vector2(0.5, 0.5)
 texture_normal = SubResource("AtlasTexture_ri4o3")
 texture_pressed = SubResource("AtlasTexture_cpsan")
@@ -197,6 +198,16 @@ texture_hover = SubResource("AtlasTexture_jbyo2")
 
 [node name="click" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_s4tbd")
+
+[node name="timer" type="Label" parent="."]
+z_index = -1
+offset_left = 351.0
+offset_top = 41.0
+offset_right = 404.0
+offset_bottom = 72.0
+theme_override_fonts/font = ExtResource("28_t8cpe")
+theme_override_font_sizes/font_size = 30
+text = "00"
 
 [connection signal="pressed" from="buttons/hint-button" to="." method="_on_hintbutton_pressed"]
 [connection signal="pressed" from="buttons/solve-button" to="." method="_on_solvebutton_pressed"]

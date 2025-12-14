@@ -1,7 +1,3 @@
-res://scripts/main_menu.gd
-res://scripts/solver.gd
-res://scenes/grids/7x_7.tscn
-res://scripts/7x_7.gd
 res://scripts/9x_9.gd
-res://scripts/13x_13.gd
-res://scripts/loading_screen.gd
+res://scenes/grids/9x_9.tscn
+res://scenes/grids/13x_13.tscn

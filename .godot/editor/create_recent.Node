@@ -1,8 +1,9 @@
-Node
+Label
 AnimatedSprite2D
+TextureButton
+Node
 VBoxContainer
 MarginContainer
-TextureButton
 Button
 TextureRect
 NinePatchRect

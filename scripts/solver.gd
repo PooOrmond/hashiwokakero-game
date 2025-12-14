@@ -63,6 +63,15 @@ func update(delta: float) -> void:
 		if animation_timer <= 0:
 			_apply_next_animation_step()
 
+# Set animation delay for speed control
+func set_animation_delay(delay: float) -> void:
+	"""
+	Set the animation delay for step-by-step solving
+	"""
+	if delay > 0:
+		animation_delay = delay
+		print("Animation delay set to: %.2f seconds" % delay)
+
 # Set puzzle info for hint system
 func set_puzzle_info(folder: String, index: int):
 	puzzle_folder = folder
@@ -104,6 +113,19 @@ func start_step_by_step_solution() -> bool:
 	else:
 		print("Failed to compute solution for animation")
 		return false
+
+func stop_animation() -> void:
+	"""
+	Stop the step-by-step animation immediately
+	"""
+	if is_animating_solution:
+		print("Stopping step-by-step animation...")
+		is_animating_solution = false
+		animation_completed = false
+		step_by_step_bridges.clear()
+		current_animation_step = 0
+		# Clear any temporary animation state
+		clear_hint_bridges()
 
 func _compute_solution_from_current_state() -> bool:
 	"""
@@ -2017,14 +2039,6 @@ func get_csp_hint_solution_size() -> int:
 	"""
 	return csp_hint_solution.size()
 
-func stop_animation():
-	"""
-	Stop the step-by-step animation
-	"""
-	is_animating_solution = false
-	animation_completed = false
-	print("Step-by-step animation stopped")
-
 func is_animating() -> bool:
 	"""
 	Check if step-by-step animation is in progress
@@ -2044,3 +2058,16 @@ func get_animation_progress() -> float:
 	if step_by_step_bridges.is_empty():
 		return 0.0
 	return float(current_animation_step) / float(step_by_step_bridges.size())
+
+func has_next_step() -> bool:
+	"""
+	Check if there are more steps in the animation
+	"""
+	return current_animation_step < step_by_step_bridges.size()
+
+func apply_next_step():
+	"""
+	Apply the next step in the animation (for auto-solve mode)
+	"""
+	if has_next_step():
+		_apply_next_animation_step()

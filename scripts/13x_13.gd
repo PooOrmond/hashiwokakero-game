@@ -1,5 +1,7 @@
 extends Node2D
 
+@onready var timer: Label = $timer
+
 # Configuration for 13x13
 @export var grid_size: Vector2i = Vector2i(14, 14) 
 @export var cell_size: int = 32
@@ -36,6 +38,14 @@ var temp_bridge_line = null
 var current_puzzle_index := 1
 var was_solved := false  # Track if puzzle was just solved
 
+# Timer state
+var is_time_up := false
+var is_puzzle_solved_and_locked := false  # NEW: Track if puzzle is solved and locked
+
+# Animation speed variables
+var original_animation_delay := 0.6  # Store original animation speed
+var current_animation_delay := 0.6   # Current animation speed (can be adjusted)
+
 func _ready():
 	# Add this line to register this node for group calls
 	add_to_group("puzzle_scene")
@@ -56,6 +66,26 @@ func _ready():
 	# Initialize background and button states
 	_reset_background_to_normal()
 	_update_ui_state()
+	
+	# Initialize timer
+	if TimerManager.get_selected_time() > 0:
+		timer.text = TimerManager.get_formatted_time()
+		timer.visible = true
+		
+		# Connect to timer signals
+		TimerManager.timer_updated.connect(_on_timer_updated)
+		TimerManager.timer_finished.connect(_on_time_up)
+	else:
+		timer.visible = false
+		is_time_up = false
+	
+	# Reset lock state
+	is_puzzle_solved_and_locked = false
+	
+	# Reset animation speed
+	original_animation_delay = 0.6
+	current_animation_delay = original_animation_delay
+	
 	queue_redraw()
 
 func _process(delta):
@@ -84,6 +114,7 @@ func _process(delta):
 		elif not puzzle_solver.is_puzzle_solved() and was_solved:
 			print("Puzzle no longer solved, resetting UI...")
 			was_solved = false
+			is_puzzle_solved_and_locked = false  # Reset lock when puzzle is no longer solved
 			_on_puzzle_unsolved()
 		
 		# Always redraw when animating to ensure smooth updates
@@ -92,10 +123,107 @@ func _process(delta):
 		# Also redraw when hints change
 		elif puzzle_solver.get_hint_bridges().size() > 0:
 			queue_redraw()
+	
+	# Update timer display
+	if TimerManager.get_selected_time() > 0 and TimerManager.is_timer_active and not TimerManager.is_paused:
+		timer.text = TimerManager.get_formatted_time()
+		
+		# Stop animation if timer runs out during animation
+		if TimerManager.is_time_up() and puzzle_solver and puzzle_solver.is_animating():
+			print("Timer ran out during animation - stopping animation")
+			puzzle_solver.stop_animation()
+			_on_time_up()
+
+func _on_timer_updated(time_left: float) -> void:
+	timer.text = TimerManager.get_formatted_time()
+	
+	# Change color when time is running low
+	if time_left <= 30:
+		timer.modulate = Color(1, 0.3, 0.3)  # Red
+	elif time_left <= 60:
+		timer.modulate = Color(1, 1, 0.3)  # Yellow
+	else:
+		timer.modulate = Color(1, 1, 1)  # White
+	
+	# Adjust animation speed based on remaining time
+	_adjust_animation_speed(time_left)
+
+func _adjust_animation_speed(time_left: float) -> void:
+	"""Adjust animation speed based on remaining time"""
+	if puzzle_solver and puzzle_solver.is_animating():
+		# Calculate speed multiplier based on time left
+		# When time is low, speed up the animation
+		var speed_multiplier = 1.0
+		
+		if time_left <= 10:
+			# Very low time - maximum speed (4x faster)
+			speed_multiplier = 4.0
+		elif time_left <= 30:
+			# Low time - faster animation (2x faster)
+			speed_multiplier = 2.0
+		elif time_left <= 60:
+			# Medium time - slightly faster (1.5x faster)
+			speed_multiplier = 1.5
+		
+		# Update animation delay in solver
+		current_animation_delay = original_animation_delay / speed_multiplier
+		puzzle_solver.set_animation_delay(current_animation_delay)
+		
+		# Optional: Print speed change for debugging
+		if speed_multiplier > 1.0:
+			print("Animation speed increased to %.1fx (%.2fs delay)" % [speed_multiplier, current_animation_delay])
+
+func _on_time_up() -> void:
+	print("Time's up!")
+	is_time_up = true
+	
+	# Stop any ongoing animation immediately
+	if puzzle_solver and puzzle_solver.is_animating():
+		print("Stopping animation due to time up")
+		puzzle_solver.stop_animation()
+	
+	# Stop auto-solve timer if running
+	if has_node("AutoSolveTimer"):
+		$AutoSolveTimer.stop()
+	
+	# Change timer label to "Time's Up!"
+	timer.text = "Time's Up!"
+	timer.modulate = Color(1, 0.3, 0.3)  # Red color
+	
+	# Hide hint and solve buttons
+	if hint_button:
+		hint_button.visible = false
+	if solve_button:
+		solve_button.visible = false
+	
+	# Reset background to normal (remove congratulations if shown)
+	_reset_background_to_normal()
+	
+	# Disable puzzle interaction
+	set_process_input(false)
+	
+	queue_redraw()
 
 func _on_puzzle_solved():
 	"""Called when puzzle is solved"""
 	print("Puzzle solved! Updating UI...")
+	
+	# Stop timer if active
+	if TimerManager.get_selected_time() > 0:
+		TimerManager.stop_timer()
+		is_time_up = false
+	
+	# Stop any ongoing animation
+	if puzzle_solver and puzzle_solver.is_animating():
+		puzzle_solver.stop_animation()
+	
+	# Stop auto-solve timer if running
+	if has_node("AutoSolveTimer"):
+		$AutoSolveTimer.stop()
+	
+	# LOCK the puzzle - player cannot modify bridges anymore
+	is_puzzle_solved_and_locked = true
+	
 	_update_ui_state()
 	
 	# Show congratulations background
@@ -108,6 +236,10 @@ func _on_puzzle_solved():
 func _on_puzzle_unsolved():
 	"""Called when puzzle is no longer solved (restart/new game)"""
 	print("Puzzle reset, restoring normal UI...")
+	
+	# UNLOCK the puzzle
+	is_puzzle_solved_and_locked = false
+	
 	_update_ui_state()
 	_reset_background_to_normal()
 
@@ -121,14 +253,14 @@ func _reset_background_to_normal():
 		normal_bg.visible = true
 
 func _update_ui_state():
-	"""Update button visibility based on puzzle state"""
+	"""Update button visibility based on puzzle and timer state"""
 	var is_solved = puzzle_solver and puzzle_solver.is_puzzle_solved()
 	
-	# Only hide solve and hint buttons when puzzle is solved
+	# Hide buttons when time's up or puzzle is solved
 	if hint_button:
-		hint_button.visible = not is_solved
+		hint_button.visible = not is_solved and not is_time_up
 	if solve_button:
-		solve_button.visible = not is_solved
+		solve_button.visible = not is_solved and not is_time_up
 
 func _calculate_grid_offset():
 	var window_size = Vector2(800, 650)
@@ -137,10 +269,36 @@ func _calculate_grid_offset():
 
 func _draw():
 	_draw_grid()
-	_draw_bridges()
+	if is_time_up:
+		_draw_bridges_red()  # Draw bridges in red when time's up
+	else:
+		_draw_bridges()
 	_draw_hint_bridges()
 	if temp_bridge_line:
 		draw_line(temp_bridge_line[0], temp_bridge_line[1], Color(0,0,0), 4)
+
+func _draw_bridges_red():
+	for br in puzzle_solver.get_bridges():
+		_draw_bridge_red(br)
+
+func _draw_bridge_red(br):
+	if not br or not br.start_island or not br.end_island:
+		return
+		
+	var color = Color(1, 0.3, 0.3, 0.7)  # Red with slight transparency
+	var width = 3  # Thinner bridges for smaller grid
+	var start_pos = br.start_island.node.position - global_position
+	var end_pos = br.end_island.node.position - global_position
+
+	if br.count == 2:
+		if start_pos.x == end_pos.x: # vertical
+			draw_line(start_pos + Vector2(-2,0), end_pos + Vector2(-2,0), color, width)
+			draw_line(start_pos + Vector2(2,0), end_pos + Vector2(2,0), color, width)
+		else: # horizontal
+			draw_line(start_pos + Vector2(0,-2), end_pos + Vector2(0,-2), color, width)
+			draw_line(start_pos + Vector2(0,2), end_pos + Vector2(0,2), color, width)
+	else:
+		draw_line(start_pos, end_pos, color, width)
 
 func _draw_grid():
 	# Draw horizontal lines
@@ -210,6 +368,10 @@ func _draw_hint_bridge(br):
 # ==================== PLAYER INTERACTION ====================
 
 func _input(event):
+	# Disable all input when time's up OR puzzle is solved and locked
+	if is_time_up or is_puzzle_solved_and_locked:
+		return
+	
 	if event is InputEventMouseButton:
 		if event.pressed:
 			var clicked = puzzle_solver._get_island_at_pos(event.position, global_position)
@@ -239,6 +401,9 @@ func _input(event):
 # ==================== SOLVER BUTTON FUNCTIONS ====================
 
 func _on_csp_solve_pressed() -> void:
+	if is_time_up or is_puzzle_solved_and_locked:
+		return
+	
 	"""
 	Solve using CSP-based algorithmic solver (instant)
 	"""
@@ -252,6 +417,10 @@ func _on_csp_solve_pressed() -> void:
 	
 	click.play()
 	puzzle_solver.clear_hint_bridges()
+	
+	# PAUSE TIMER DURING LOADING
+	if TimerManager.get_selected_time() > 0:
+		TimerManager.pause_timer()
 	
 	# Show loading screen for instant solve
 	_show_loading_screen()
@@ -276,9 +445,16 @@ func _on_csp_solve_pressed() -> void:
 	await get_tree().create_timer(0.5).timeout
 	_hide_loading_screen()
 	
+	# RESUME TIMER AFTER LOADING
+	if TimerManager.get_selected_time() > 0:
+		TimerManager.resume_timer()
+	
 	queue_redraw()
 
 func _on_solvebutton_pressed() -> void:
+	if is_time_up or is_puzzle_solved_and_locked:
+		return
+	
 	"""
 	Solve using step-by-step animation
 	"""
@@ -293,6 +469,17 @@ func _on_solvebutton_pressed() -> void:
 	click.play()
 	puzzle_solver.clear_hint_bridges()
 	
+	# Check time before starting - if very low time, warn user
+	if TimerManager.get_selected_time() > 0:
+		var time_left = TimerManager.get_time_left()
+		if time_left < 15:  # Less than 15 seconds left
+			print("Warning: Very little time left (%d seconds)" % time_left)
+			# You could add a warning popup here if desired
+	
+	# PAUSE TIMER DURING LOADING
+	if TimerManager.get_selected_time() > 0:
+		TimerManager.pause_timer()
+	
 	# Show loading screen
 	_show_loading_screen()
 	_update_loading_progress(0.1)  # 10% - starting
@@ -300,6 +487,9 @@ func _on_solvebutton_pressed() -> void:
 	# Reset animation completion flag and solved state
 	puzzle_solver.animation_completed = false
 	was_solved = false
+	
+	# Reset animation speed to normal before starting
+	current_animation_delay = original_animation_delay
 	
 	# Use step-by-step solver animation
 	print("Starting step-by-step solver animation...")
@@ -326,14 +516,21 @@ func _on_solvebutton_pressed() -> void:
 	await get_tree().create_timer(0.5).timeout
 	_hide_loading_screen()
 	
+	# RESUME TIMER AFTER LOADING (before animation starts)
+	if TimerManager.get_selected_time() > 0:
+		TimerManager.resume_timer()
+	
 	queue_redraw()
 
 func _on_hintbutton_pressed() -> void:
-	if puzzle_solver.is_puzzle_solved():
-		print("Puzzle already solved! No hints needed.")
+	if is_time_up or is_puzzle_solved_and_locked or puzzle_solver.is_puzzle_solved():
 		return
 	
 	click.play()
+	
+	# PAUSE TIMER DURING HINT GENERATION
+	if TimerManager.get_selected_time() > 0:
+		TimerManager.pause_timer()
 	
 	# Show loading screen for hint generation
 	_show_loading_screen()
@@ -350,6 +547,10 @@ func _on_hintbutton_pressed() -> void:
 	# Hide loading screen after a short delay
 	await get_tree().create_timer(0.3).timeout
 	_hide_loading_screen()
+	
+	# RESUME TIMER AFTER HINT GENERATION
+	if TimerManager.get_selected_time() > 0:
+		TimerManager.resume_timer()
 	
 	queue_redraw()
 	
@@ -372,6 +573,21 @@ func load_new_puzzle():
 	# Clear current state
 	_clear_current_puzzle()
 	
+	# Reset timer if active
+	if TimerManager.get_selected_time() > 0:
+		TimerManager.stop_timer()
+		TimerManager.start_timer(TimerManager.get_selected_time())
+		is_time_up = false
+		set_process_input(true)
+		timer.text = TimerManager.get_formatted_time()
+		timer.modulate = Color(1, 1, 1)
+	
+	# UNLOCK the puzzle
+	is_puzzle_solved_and_locked = false
+	
+	# Reset animation speed to normal
+	current_animation_delay = original_animation_delay
+	
 	# Generate a new random puzzle index (different from current)
 	var new_puzzle_index = current_puzzle_index
 	while new_puzzle_index == current_puzzle_index:
@@ -385,6 +601,9 @@ func load_new_puzzle():
 	
 	# Force reset background
 	_reset_background_to_normal()
+	
+	# Re-enable buttons
+	_update_ui_state()
 
 func restart_current_puzzle():
 	"""
@@ -395,12 +614,30 @@ func restart_current_puzzle():
 	# Clear current state
 	_clear_current_puzzle()
 	
+	# Reset timer if active
+	if TimerManager.get_selected_time() > 0:
+		TimerManager.stop_timer()
+		TimerManager.start_timer(TimerManager.get_selected_time())
+		is_time_up = false
+		set_process_input(true)
+		timer.text = TimerManager.get_formatted_time()
+		timer.modulate = Color(1, 1, 1)
+	
+	# UNLOCK the puzzle
+	is_puzzle_solved_and_locked = false
+	
+	# Reset animation speed to normal
+	current_animation_delay = original_animation_delay
+	
 	# Reload with same puzzle index
 	print("Reloading puzzle index: ", current_puzzle_index)
 	_reload_puzzle()
 	
 	# Force reset background
 	_reset_background_to_normal()
+	
+	# Re-enable buttons
+	_update_ui_state()
 
 func _clear_current_puzzle():
 	"""
@@ -453,19 +690,16 @@ func start_auto_solve_mode():
 	print("Starting auto-solve mode")
 	# Start a timer to auto-complete steps
 	if not has_node("AutoSolveTimer"):
-		var timer = Timer.new()
-		timer.name = "AutoSolveTimer"
-		timer.timeout.connect(_on_auto_solve_timer_timeout)
-		add_child(timer)
+		var auto_timer = Timer.new()  # Renamed to avoid shadowing
+		auto_timer.name = "AutoSolveTimer"
+		auto_timer.timeout.connect(_on_auto_solve_timer_timeout)
+		add_child(auto_timer)
 	
 	$AutoSolveTimer.start(0.3)  # One step every 0.3 seconds
 
 func show_ai_hint_popup(hint_text: String):
 	# Show AI-generated hint
 	print("AI HINT: ", hint_text)
-	
-	# If you have a UI label for hints, update it:
-	# $UI/HintLabel.text = hint_text
 	
 	# Optional: Show the hint as a visual bridge
 	puzzle_solver.show_next_hint_as_bridge()
@@ -497,3 +731,10 @@ func _update_loading_progress(progress: float):
 	"""Update loading progress"""
 	if loading_instance and loading_instance.is_loading():
 		loading_instance.set_progress(progress)
+
+# Clean up connections when scene changes
+func _exit_tree() -> void:
+	if TimerManager.timer_updated.is_connected(_on_timer_updated):
+		TimerManager.timer_updated.disconnect(_on_timer_updated)
+	if TimerManager.timer_finished.is_connected(_on_time_up):
+		TimerManager.timer_finished.disconnect(_on_time_up)
