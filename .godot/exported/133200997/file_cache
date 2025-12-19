@@ -1,9 +1,10 @@
-res://scenes/grids/7x_7.tscn::374a4a61c311da471ebba85d10ab25b1::1764599674::res://.godot/exported/133200997/export-c2c3fb44b638637ea34c061a3fc0501a-7x_7.scn
-res://scenes/grids/9x_9.tscn::b9e38cce2e8041a7e1f4b59fa83ca213::1764433190::res://.godot/exported/133200997/export-3d70722fc80949673fbc9f12ec7e0735-9x_9.scn
-res://scenes/grids/13x_13.tscn::7faba5919dd717d9d3fb46f5975c121d::1764433190::res://.godot/exported/133200997/export-ca3c1efa7c61235379874991b34d5073-13x_13.scn
+res://scenes/grids/7x_7.tscn::8916b0b242c7c730af0992ed6848273e::1765632599::res://.godot/exported/133200997/export-c2c3fb44b638637ea34c061a3fc0501a-7x_7.scn
+res://scenes/grids/9x_9.tscn::9bcc5c369e2fcd102f00de4e531e7a6a::1765693253::res://.godot/exported/133200997/export-3d70722fc80949673fbc9f12ec7e0735-9x_9.scn
+res://scenes/grids/13x_13.tscn::048a431a78312ecca1e424a9f6594e3f::1765693253::res://.godot/exported/133200997/export-ca3c1efa7c61235379874991b34d5073-13x_13.scn
 res://scenes/choose_grid_size.tscn::700db4b48264e05eb48ec8582fa326b6::1764161144::res://.godot/exported/133200997/export-79148675d8e083807fd6c4312198afa0-choose_grid_size.scn
-res://scenes/loading_screen.tscn::e9375bed70d2d4a760cff0602aa1f8d0::1764479898::res://.godot/exported/133200997/export-1e707b022a70ca8796c92eea804c0b29-loading_screen.scn
-res://scenes/main_menu.tscn::92ea1ec2f7190f80ddb8686f0d066530::1763784872::res://.godot/exported/133200997/export-ea5c6ad4629af728dc514cefde332394-main_menu.scn
-res://scenes/menu_popup_panel.tscn::8a29a7b8d7f723b8500d02947121cfb3::1764082671::res://.godot/exported/133200997/export-daf747c59c6ffd5c1ff2e456d5b7e498-menu_popup_panel.scn
+res://scenes/loading_screen.tscn::2ec9dca905601cc5fa2bb7c7842f30e5::1765630573::res://.godot/exported/133200997/export-1e707b022a70ca8796c92eea804c0b29-loading_screen.scn
+res://scenes/main_menu.tscn::92ea1ec2f7190f80ddb8686f0d066530::1765612334::res://.godot/exported/133200997/export-ea5c6ad4629af728dc514cefde332394-main_menu.scn
+res://scenes/menu_popup_panel.tscn::8a29a7b8d7f723b8500d02947121cfb3::1765608784::res://.godot/exported/133200997/export-daf747c59c6ffd5c1ff2e456d5b7e498-menu_popup_panel.scn
 res://scenes/music.tscn::0db17f1e6561641e0067f2b6815c9f8b::1764082671::res://.godot/exported/133200997/export-bfd8027ae1117ff610be6f2619a76089-music.scn
 res://scenes/scene_transition.tscn::d6ac3484c50d4438033f6e2294c0f87f::1763628432::res://.godot/exported/133200997/export-ebd2fb01fff4996529fd3ebfc40fddde-scene_transition.scn
+res://scenes/timer_selection.tscn::54176fc91dbaec4f12e1068d1293a3d5::1765632011::res://.godot/exported/133200997/export-95680553751ce60452e45422850e1a62-timer_selection.scn

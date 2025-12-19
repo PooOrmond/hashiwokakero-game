@@ -13,6 +13,7 @@ config_version=5
 config/name="Hashiwokakero"
 run/main_scene="uid://bn7ogxdhuxjnk"
 config/features=PackedStringArray("4.5", "GL Compatibility")
+boot_splash/image="uid://dmnxft2dwnhcu"
 
 [audio]
 

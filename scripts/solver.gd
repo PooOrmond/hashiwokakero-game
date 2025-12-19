@@ -70,7 +70,6 @@ func set_animation_delay(delay: float) -> void:
 	"""
 	if delay > 0:
 		animation_delay = delay
-		print("Animation delay set to: %.2f seconds" % delay)
 
 # Set puzzle info for hint system
 func set_puzzle_info(folder: String, index: int):

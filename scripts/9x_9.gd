@@ -23,6 +23,9 @@ var grid_offset := Vector2.ZERO
 # Puzzle solver instance
 var puzzle_solver
 
+# Puzzle maker instance
+var puzzle_maker
+
 # Interaction variables
 var bridge_start_island = null
 var temp_bridge_line = null
@@ -39,6 +42,9 @@ var is_puzzle_solved_and_locked := false  # Track if puzzle is solved and locked
 var original_animation_delay := 0.6  # Store original animation speed
 var current_animation_delay := 0.6   # Current animation speed (can be adjusted)
 
+# STORE THE CURRENT PUZZLE GRID
+var current_puzzle_grid = []
+
 func _ready():
 	# Add this line to register this node for group calls
 	add_to_group("puzzle_scene")
@@ -49,12 +55,11 @@ func _ready():
 	puzzle_solver = load("res://scripts/solver.gd").new()
 	puzzle_solver.initialize(grid_size, cell_size, grid_offset)
 	
-	current_puzzle_index = randi() % 5 + 1
-	# Set puzzle info BEFORE loading the puzzle
-	puzzle_solver.set_puzzle_info(puzzle_folder, current_puzzle_index)
+	# Initialize puzzle maker
+	puzzle_maker = load("res://scripts/automated_solvable_puzzle_maker.gd").new()
 	
-	var file_path = "res://assets/input/%s/input-%02d.txt" % [puzzle_folder, current_puzzle_index]
-	puzzle_solver.load_custom_puzzle(file_path, self)
+	# Generate a new puzzle
+	_generate_new_puzzle()
 	
 	# Initialize background and button states
 	_reset_background_to_normal()  # Ensure normal background on start
@@ -80,6 +85,48 @@ func _ready():
 	current_animation_delay = original_animation_delay
 	
 	queue_redraw()
+
+func _generate_new_puzzle():
+	"""Generate a new solvable puzzle using the puzzle maker"""
+	print("Generating new 7x7 puzzle...")
+	
+	# Clear current puzzle
+	_clear_current_puzzle()
+	
+	# Generate puzzle grid and STORE IT
+	current_puzzle_grid = puzzle_maker.generate_puzzle(grid_size, cell_size)
+	
+	# Load the generated puzzle
+	var puzzle_data = puzzle_maker.load_generated_puzzle(current_puzzle_grid, self, grid_offset)
+	
+	# Set the puzzle data in solver
+	puzzle_solver.puzzle_data = puzzle_data
+	
+	# Calculate neighbors for the solver
+	_calculate_neighbors_for_solver(puzzle_data)
+	
+	print("New puzzle generated successfully!")
+
+func _calculate_neighbors_for_solver(puzzle_data: Array):
+	"""Calculate which islands can connect to each other"""
+	for isl in puzzle_data:
+		isl["neighbors"] = []
+		for other in puzzle_data:
+			if isl == other:
+				continue
+			if isl.pos.x == other.pos.x or isl.pos.y == other.pos.y:
+				var blocked = false
+				for mid in puzzle_data:
+					if mid == isl or mid == other:
+						continue
+					if isl.pos.x == other.pos.x and mid.pos.x == isl.pos.x:
+						if mid.pos.y > min(isl.pos.y, other.pos.y) and mid.pos.y < max(isl.pos.y, other.pos.y):
+							blocked = true
+					elif isl.pos.y == other.pos.y and mid.pos.y == isl.pos.y:
+						if mid.pos.x > min(isl.pos.x, other.pos.x) and mid.pos.x < max(isl.pos.x, other.pos.x):
+							blocked = true
+				if not blocked:
+					isl["neighbors"].append(other)
 
 func _process(delta):
 	# Update the puzzle solver for hint timer and animation functionality
@@ -489,7 +536,7 @@ func _on_menupanelbutton_pressed() -> void:
 
 func load_new_puzzle():
 	"""
-	Load a completely new puzzle with different input/output files
+	Load a completely new puzzle (generated)
 	"""
 	print("Loading new puzzle...")
 	
@@ -511,30 +558,24 @@ func load_new_puzzle():
 	# Reset animation speed to normal
 	current_animation_delay = original_animation_delay
 	
-	# Generate a new random puzzle index (different from current)
-	var new_puzzle_index = current_puzzle_index
-	while new_puzzle_index == current_puzzle_index:
-		new_puzzle_index = randi() % 5 + 1
-	
-	current_puzzle_index = new_puzzle_index
-	print("Selected new puzzle index: ", current_puzzle_index)
-	
-	# Reload with new puzzle
-	_reload_puzzle()
+	# Generate a NEW puzzle
+	_generate_new_puzzle()
 	
 	# Force reset background
 	_reset_background_to_normal()
 	
 	# Re-enable buttons
 	_update_ui_state()
+	
+	queue_redraw()
 
 func restart_current_puzzle():
 	"""
-	Restart the current puzzle (same input/output files)
+	Restart the CURRENT puzzle (same islands, same layout)
 	"""
 	print("Restarting current puzzle...")
 	
-	# Clear current state
+	# Clear current state but KEEP the puzzle grid
 	_clear_current_puzzle()
 	
 	# Reset timer if active
@@ -552,15 +593,24 @@ func restart_current_puzzle():
 	# Reset animation speed to normal
 	current_animation_delay = original_animation_delay
 	
-	# Reload with same puzzle index
-	print("Reloading puzzle index: ", current_puzzle_index)
-	_reload_puzzle()
+	# If we have a stored puzzle grid, reload it (RESTART)
+	if not current_puzzle_grid.is_empty():
+		print("Reloading current puzzle for restart...")
+		var puzzle_data = puzzle_maker.load_generated_puzzle(current_puzzle_grid, self, grid_offset)
+		puzzle_solver.puzzle_data = puzzle_data
+		_calculate_neighbors_for_solver(puzzle_data)
+	else:
+		# Fallback: generate a new puzzle if no stored grid
+		print("No stored puzzle found, generating new one...")
+		_generate_new_puzzle()
 	
 	# Force reset background
 	_reset_background_to_normal()
 	
 	# Re-enable buttons
 	_update_ui_state()
+	
+	queue_redraw()
 
 func _clear_current_puzzle():
 	"""
@@ -573,39 +623,16 @@ func _clear_current_puzzle():
 		puzzle_solver.puzzle_solved = false
 		puzzle_solver.reset_solver()
 		
-		# Reset all islands' connected bridges count
-		for island in puzzle_solver.get_puzzle_data():
-			island.connected_bridges = 0
+		# Clear all island nodes
+		if puzzle_solver.puzzle_data:
+			for island in puzzle_solver.puzzle_data:
+				if island.has("node") and island.node:
+					island.node.queue_free()
+			puzzle_solver.puzzle_data.clear()
 	
 	# Clear interaction variables
 	bridge_start_island = null
 	temp_bridge_line = null
-
-func _reload_puzzle():
-	"""
-	Reload the puzzle with current index
-	"""
-	if puzzle_solver:
-		# Set puzzle info
-		puzzle_solver.set_puzzle_info(puzzle_folder, current_puzzle_index)
-		
-		# Load the puzzle file
-		var file_path = "res://assets/input/%s/input-%02d.txt" % [puzzle_folder, current_puzzle_index]
-		puzzle_solver.load_custom_puzzle(file_path, self)
-		
-		# Reset AI solver state if active
-		puzzle_solver.reset_solver()
-		
-		# Stop auto-solve timer if running
-		if has_node("AutoSolveTimer"):
-			$AutoSolveTimer.stop()
-	
-	# Reset UI state
-	was_solved = false
-	_update_ui_state()
-	queue_redraw()
-	print("Puzzle reloaded successfully!")
-
 
 # ==================== AI SOLVER SUPPORT FUNCTIONS ====================
 

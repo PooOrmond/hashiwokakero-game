@@ -1,3 +1,5 @@
+res://scripts/automated_solvable_puzzle_maker.gd
+res://scripts/solver.gd
+res://scripts/7x_7.gd
 res://scripts/9x_9.gd
-res://scenes/grids/9x_9.tscn
-res://scenes/grids/13x_13.tscn
+res://scripts/13x_13.gd
